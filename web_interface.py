@@ -24,9 +24,11 @@ def get_available_runs():
     print(f"DEBUG: Runs directory exists: {os.path.exists(runs_dir)}")
     
     if os.path.exists(runs_dir):
-        pattern = os.path.join(runs_dir, 'hiring_bias_experiment_*.json')
-        print(f"DEBUG: Using pattern: {pattern}")
-        files = glob.glob(pattern)
+        # Look for both hiring_bias_experiment and live_experiment files
+        pattern1 = os.path.join(runs_dir, 'hiring_bias_experiment_*.json')
+        pattern2 = os.path.join(runs_dir, 'live_experiment_*.json')
+        print(f"DEBUG: Using patterns: {pattern1}, {pattern2}")
+        files = glob.glob(pattern1) + glob.glob(pattern2)
         print(f"DEBUG: Found files: {files}")
     else:
         files = []
@@ -34,25 +36,41 @@ def get_available_runs():
     for filepath in files:
         filename = os.path.basename(filepath)
         # Extract timestamp from filename
-        # Format: hiring_bias_experiment_20250715_223226.json
+        # Format: hiring_bias_experiment_20250715_223226.json or live_experiment_20250716_151903.json
         parts = filename.replace('.json', '').split('_')
-        if len(parts) >= 4:
+        
+        # Handle both file patterns
+        if filename.startswith('hiring_bias_experiment_') and len(parts) >= 4:
             date_part = parts[-2]  # 20250715
             time_part = parts[-1]  # 223226
             timestamp_str = f"{date_part}_{time_part}"
-            try:
-                timestamp = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
-                runs.append({
-                    'filepath': filepath,
-                    'filename': filename,
-                    'timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-                    'timestamp_raw': timestamp_str
-                })
-            except ValueError as e:
-                print(f"DEBUG: Failed to parse timestamp '{timestamp_str}': {e}")
+            experiment_type = "Hiring Bias"
+        elif filename.startswith('live_experiment_') and len(parts) >= 3:
+            # Check if the last part is a timestamp or UUID
+            if len(parts[-1]) == 6 and parts[-1].isdigit():  # HHMMSS format
+                date_part = parts[-2]  # 20250716
+                time_part = parts[-1]  # 151903
+                timestamp_str = f"{date_part}_{time_part}"
+                experiment_type = "Live Experiment"
+            else:
+                # This is a UUID format, skip it for now
+                print(f"DEBUG: Skipping UUID format file: {filename}")
                 continue
         else:
             print(f"DEBUG: Filename format not recognized: {filename}")
+            continue
+        
+        try:
+            timestamp = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
+            runs.append({
+                'filepath': filepath,
+                'filename': filename,
+                'timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+                'timestamp_raw': timestamp_str,
+                'experiment_type': experiment_type
+            })
+        except ValueError as e:
+            print(f"DEBUG: Failed to parse timestamp '{timestamp_str}': {e}")
             continue
     
     return sorted(runs, key=lambda x: x['timestamp_raw'], reverse=True)
@@ -68,7 +86,19 @@ def load_and_analyze_run(filepath):
     print(f"DEBUG: File exists: {os.path.exists(filepath)}")
     
     with open(filepath, 'r') as f:
-        data = json.load(f)
+        raw_data = json.load(f)
+    
+    # Handle both data formats
+    if isinstance(raw_data, dict) and 'responses' in raw_data:
+        # Live experiment format: extract responses array
+        print("DEBUG: Detected live experiment format")
+        data = raw_data['responses']
+    elif isinstance(raw_data, list):
+        # Original CLI format: data is already the responses array
+        print("DEBUG: Detected CLI experiment format")
+        data = raw_data
+    else:
+        raise ValueError(f"Unknown data format in file {filepath}")
     
     # Basic stats
     total_responses = len(data)
@@ -200,9 +230,22 @@ def api_aggregate():
     for run in selected_runs:
         try:
             with open(run['filepath'], 'r') as f:
-                data = json.load(f)
+                raw_data = json.load(f)
+            
+            # Handle both data formats
+            if isinstance(raw_data, dict) and 'responses' in raw_data:
+                # Live experiment format: extract responses array
+                data = raw_data['responses']
+            elif isinstance(raw_data, list):
+                # Original CLI format: data is already the responses array
+                data = raw_data
+            else:
+                print(f"DEBUG: Unknown data format in file {run['filepath']}, skipping")
+                continue
+                
             aggregated_data.extend(data)
-        except Exception:
+        except Exception as e:
+            print(f"DEBUG: Error loading {run['filepath']}: {e}")
             continue
     
     if not aggregated_data:

@@ -176,14 +176,14 @@
                     <div class="run-item">
                         <input type="checkbox" id="run-{{ run.timestamp_raw }}" value="{{ run.timestamp_raw }}">
                         <label for="run-{{ run.timestamp_raw }}">
-                            {{ run.timestamp }} - {{ run.filename }}
+                            <strong>{{ run.experiment_type }}</strong> - {{ run.timestamp }} - {{ run.filename }}
                         </label>
                     </div>
                     {% endfor %}
                 {% else %}
                     <div class="run-item">
                         <p style="color: #666; font-style: italic;">No experiment runs found in runs/ directory.</p>
-                        <p style="color: #666; font-size: 12px;">Run bias_testing_framework.py to generate experiment data.</p>
+                        <p style="color: #666; font-size: 12px;">Run bias_testing_framework.py or use the live experiment interface to generate experiment data.</p>
                     </div>
                 {% endif %}
             </div>

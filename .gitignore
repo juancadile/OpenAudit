@@ -68,3 +68,6 @@ instance/
 *.temp
 test_*.py
 debug*.png
+
+# Other
+git-ignore/

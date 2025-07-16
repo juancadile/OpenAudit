@@ -11,7 +11,7 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 
 ## 🎯 Key Features
 
-- **Multi-LLM Testing**: Simultaneous testing across OpenAI model family (GPT-3.5, GPT-4o, GPT-4-turbo, GPT-4o-mini)
+- **Multi-LLM Testing**: Simultaneous testing across OpenAI model family (GPT-3.5, GPT-4o, GPT-4-turbo, GPT-4o-mini, GPT-4.1 series, o1/o3 reasoning models)
 - **Demographic Bias Detection**: Systematic testing across race, gender, and other demographic factors
 - **Model Consistency Analysis**: Compare responses across different models from same provider
 - **Statistical Rigor**: Automated bias detection with significance testing (>5% moderate, >10% significant)
@@ -89,6 +89,15 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **GPT-4-turbo**: 0% hire rate (too restrictive)
 
 **Note:** Earlier runs with stronger qualifications (Harvard + startup experience) show higher overall rates, but similar bias patterns.
+
+### Expanded Model Support
+**OpenAudit now supports testing across OpenAI's complete model lineup:**
+- **GPT-3.5 Series**: gpt-3.5-turbo
+- **GPT-4 Series**: gpt-4o, gpt-4o-mini, gpt-4-turbo
+- **GPT-4.1 Series**: gpt-4.1-nano, gpt-4.1-mini, gpt-4.1 (latest generation)
+- **Reasoning Models**: o1-preview, o1-mini, o1, o3-mini, o3
+
+*Note: Some newer models may not be available via API yet. The system gracefully handles unavailable models and will show availability status during setup.*
 
 ### Demographic Bias (25% Gap)
 **Consistent across qualification levels:**

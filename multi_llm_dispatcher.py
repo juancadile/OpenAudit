@@ -74,8 +74,87 @@ class MultiLLMDispatcher:
                 seed=42
             )
             
-            # Note: o3 models may not be available yet via API
-            # We'll test what's currently available
+            # GPT-4.1 series (latest generation)
+            try:
+                self.models["gpt-4.1-nano"] = ChatOpenAI(
+                    model="gpt-4.1-nano",
+                    temperature=0,
+                    seed=42
+                )
+                print("✓ Added GPT-4.1-nano")
+            except Exception as e:
+                print(f"✗ GPT-4.1-nano not available: {e}")
+            
+            try:
+                self.models["gpt-4.1-mini"] = ChatOpenAI(
+                    model="gpt-4.1-mini",
+                    temperature=0,
+                    seed=42
+                )
+                print("✓ Added GPT-4.1-mini")
+            except Exception as e:
+                print(f"✗ GPT-4.1-mini not available: {e}")
+            
+            try:
+                self.models["gpt-4.1"] = ChatOpenAI(
+                    model="gpt-4.1",
+                    temperature=0,
+                    seed=42
+                )
+                print("✓ Added GPT-4.1")
+            except Exception as e:
+                print(f"✗ GPT-4.1 not available: {e}")
+            
+            # Reasoning models (o1 series)
+            try:
+                self.models["o1-preview"] = ChatOpenAI(
+                    model="o1-preview",
+                    temperature=0,
+                    # Note: o1 models may not support seed parameter
+                )
+                print("✓ Added o1-preview")
+            except Exception as e:
+                print(f"✗ o1-preview not available: {e}")
+            
+            try:
+                self.models["o1-mini"] = ChatOpenAI(
+                    model="o1-mini",
+                    temperature=0,
+                )
+                print("✓ Added o1-mini")
+            except Exception as e:
+                print(f"✗ o1-mini not available: {e}")
+            
+            try:
+                self.models["o1"] = ChatOpenAI(
+                    model="o1",
+                    temperature=0,
+                )
+                print("✓ Added o1")
+            except Exception as e:
+                print(f"✗ o1 not available: {e}")
+            
+            # o3 models (newest reasoning models)
+            try:
+                self.models["o3-mini"] = ChatOpenAI(
+                    model="o3-mini",
+                    temperature=0,
+                )
+                print("✓ Added o3-mini")
+            except Exception as e:
+                print(f"✗ o3-mini not available: {e}")
+            
+            try:
+                self.models["o3"] = ChatOpenAI(
+                    model="o3",
+                    temperature=0,
+                )
+                print("✓ Added o3")
+            except Exception as e:
+                print(f"✗ o3 not available: {e}")
+            
+            # Note: Some models may not be available yet via API
+            # The dispatcher will gracefully handle unavailable models
         else:
             print("✗ No OpenAI API key found")
         

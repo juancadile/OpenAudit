@@ -38,25 +38,41 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 
 4. **Launch web dashboard**:
    ```bash
-   python3 web_interface.py
+   python3 web_interface.py         # Historical results dashboard
+   # Visit http://localhost:5002
+   
+   python3 live_experiment.py       # Live experiment monitor
+   # Visit http://localhost:5003
    ```
-   Then open http://localhost:5000 in your browser
 
-## 📊 Web Dashboard
+## 📊 Web Interfaces
 
-The web interface provides:
-
+### Historical Results Dashboard (`http://localhost:5002`)
 - **Run Selection**: Choose from historical experiment runs
 - **Aggregation**: Combine multiple runs for larger sample sizes
 - **Bias Visualization**: Interactive charts showing hiring rates by demographic
 - **Model Comparison**: Compare consistency across different LLM models
 - **Detailed Analysis**: Drill down into specific responses and reasoning
 
-### Using the Dashboard
+### Live Experiment Monitor (`http://localhost:5003`)
+- **Real-time Prompt Visualization**: See exactly what prompts are being sent
+- **Variable Highlighting**: Names and other variables highlighted in prompts
+- **Live Response Stream**: Watch model responses arrive in real-time
+- **Progress Tracking**: Monitor experiment progress and timing
+- **Instant Bias Detection**: Live statistics and bias alerts during experiments
 
+### Using the Interfaces
+
+**Historical Dashboard:**
 1. **Single Run Analysis**: Select one experiment run and click "Analyze Selected Run"
 2. **Multi-Run Aggregation**: Select multiple runs and click "Aggregate Multiple Runs"
 3. **View Results**: Interactive charts show bias patterns and model inconsistencies
+
+**Live Monitor:**
+1. **Configure Experiment**: Select job role, models, and iterations
+2. **Preview Prompts**: See exactly what will be sent before running
+3. **Start Live Experiment**: Watch real-time prompt dispatch and responses
+4. **Monitor Bias**: Live statistics show bias patterns as they emerge
 
 **Note:** The repository contains runs with different qualification levels:
 - **Early runs**: Harvard University + startup experience (higher baseline rates)

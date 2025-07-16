@@ -7,6 +7,7 @@ langchain-core>=0.3.0
 python-dotenv>=1.0.0
 pandas>=2.0.0
 flask>=2.0.0
+flask-socketio>=5.0.0
 
 # Note: Some packages have version conflicts in your environment
 # Consider using a virtual environment:

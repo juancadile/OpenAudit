@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAudit - Live Experiment Monitor</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .experiment-controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .control-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .preview-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .preview-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .preview-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .prompt-preview {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .variable-highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #856404;
+        }
+        .live-monitor {
+            display: none;
+            margin-top: 30px;
+        }
+        .status-bar {
+            background: #17a2b8;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status-bar.running {
+            background: #28a745;
+        }
+        .status-bar.completed {
+            background: #6c757d;
+        }
+        .status-bar.error {
+            background: #dc3545;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s ease;
+        }
+        .monitor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .current-prompt {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .current-prompt h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .responses-stream {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .response-item {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .response-item.yes {
+            border-left-color: #28a745;
+        }
+        .response-item.no {
+            border-left-color: #dc3545;
+        }
+        .response-header {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .response-text {
+            font-size: 14px;
+            color: #666;
+        }
+        .stats-summary {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .bias-alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .bias-alert.significant {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .bias-alert.minimal {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 OpenAudit - Live Experiment Monitor</h1>
+        
+        <div class="experiment-controls">
+            <h2>Experiment Configuration</h2>
+            
+            <div class="control-group">
+                <label for="role">Job Role:</label>
+                <select id="role">
+                    <option value="software_engineer">Software Engineer</option>
+                    <option value="manager">Manager</option>
+                    <option value="sales">Sales</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="iterations">Iterations per Model:</label>
+                <input type="number" id="iterations" value="1" min="1" max="5">
+            </div>
+            
+            <div class="control-group">
+                <label for="models">Models to Test:</label>
+                <select id="models" multiple>
+                    <option value="gpt-3.5-turbo" selected>GPT-3.5-turbo</option>
+                    <option value="gpt-4o" selected>GPT-4o</option>
+                    <option value="gpt-4o-mini" selected>GPT-4o-mini</option>
+                    <option value="gpt-4-turbo" selected>GPT-4-turbo</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary" onclick="previewExperiment()">Preview Prompts</button>
+                <button class="btn-primary" onclick="startExperiment()">Start Live Experiment</button>
+            </div>
+        </div>
+        
+        <div class="preview-section" id="preview-section">
+            <h2>Experiment Preview</h2>
+            <div id="preview-content"></div>
+        </div>
+        
+        <div class="live-monitor" id="live-monitor">
+            <h2>Live Experiment Monitor</h2>
+            
+            <div class="status-bar" id="status-bar">
+                Preparing experiment...
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            
+            <div class="monitor-grid">
+                <div class="current-prompt">
+                    <h3>Current Prompt</h3>
+                    <div id="current-prompt-content">
+                        <p style="color: #666; font-style: italic;">No prompt currently processing...</p>
+                    </div>
+                </div>
+                
+                <div class="responses-stream">
+                    <h3>Live Responses</h3>
+                    <div id="responses-content">
+                        <p style="color: #666; font-style: italic;">Responses will appear here...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-summary">
+                <h3>Live Statistics</h3>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-responses">0</div>
+                        <div class="stat-label">Total Responses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="current-bias-gap">0%</div>
+                        <div class="stat-label">Current Bias Gap</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="models-tested">0</div>
+                        <div class="stat-label">Models Tested</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="experiment-duration">0s</div>
+                        <div class="stat-label">Duration</div>
+                    </div>
+                </div>
+                
+                <div id="bias-alert"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let currentExperiment = null;
+        let totalResponses = 0;
+        let experimentsStartTime = null;
+        let biasStats = null;
+        
+        // Socket event handlers
+        socket.on('experiment_started', function(data) {
+            currentExperiment = data.experiment_id;
+            experimentsStartTime = Date.now();
+            document.getElementById('live-monitor').style.display = 'block';
+            document.getElementById('status-bar').textContent = 'Experiment started...';
+            document.getElementById('status-bar').className = 'status-bar running';
+        });
+        
+        socket.on('experiment_status', function(data) {
+            document.getElementById('progress-fill').style.width = data.progress + '%';
+            document.getElementById('status-bar').textContent = `Running... ${data.completed_prompts}/${data.total_prompts} prompts completed`;
+            
+            // Update duration
+            if (experimentsStartTime) {
+                const duration = Math.floor((Date.now() - experimentsStartTime) / 1000);
+                document.getElementById('experiment-duration').textContent = duration + 's';
+            }
+        });
+        
+        socket.on('prompt_processing', function(data) {
+            const promptContent = document.getElementById('current-prompt-content');
+            
+            // Highlight variables in the prompt
+            let highlightedPrompt = data.prompt;
+            for (const [key, value] of Object.entries(data.variables)) {
+                if (typeof value === 'string') {
+                    highlightedPrompt = highlightedPrompt.replace(
+                        new RegExp(value, 'g'),
+                        `<span class="variable-highlight">${value}</span>`
+                    );
+                }
+            }
+            
+            promptContent.innerHTML = `
+                <div style="margin-bottom: 10px;">
+                    <strong>Group:</strong> ${data.group_id + 1} | 
+                    <strong>Case:</strong> ${data.case_id + 1} | 
+                    <strong>Progress:</strong> ${data.progress.toFixed(1)}%
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Variables:</strong> ${JSON.stringify(data.variables, null, 2)}
+                </div>
+                <div class="prompt-preview">
+                    ${highlightedPrompt}
+                </div>
+            `;
+        });
+        
+        socket.on('response_received', function(data) {
+            totalResponses++;
+            document.getElementById('total-responses').textContent = totalResponses;
+            
+            const responsesContent = document.getElementById('responses-content');
+            
+            // Determine response type
+            let responseClass = '';
+            let decision = 'unclear';
+            if (data.response.includes('HIRING DECISION: YES')) {
+                responseClass = 'yes';
+                decision = 'YES';
+            } else if (data.response.includes('HIRING DECISION: NO')) {
+                responseClass = 'no';
+                decision = 'NO';
+            }
+            
+            // Extract reasoning
+            let reasoning = '';
+            if (data.response.includes('REASONING:')) {
+                reasoning = data.response.split('REASONING:')[1].trim();
+            }
+            
+            const responseHtml = `
+                <div class="response-item ${responseClass}">
+                    <div class="response-header">
+                        ${data.model} → ${data.variables.name || 'Unknown'} → ${decision}
+                    </div>
+                    <div class="response-text">
+                        ${reasoning || data.response}
+                    </div>
+                </div>
+            `;
+            
+            responsesContent.insertAdjacentHTML('afterbegin', responseHtml);
+            
+            // Keep only last 10 responses visible
+            const responseItems = responsesContent.querySelectorAll('.response-item');
+            if (responseItems.length > 10) {
+                responseItems[responseItems.length - 1].remove();
+            }
+        });
+        
+        socket.on('experiment_completed', function(data) {
+            document.getElementById('status-bar').textContent = `Experiment completed! ${data.total_responses} responses collected.`;
+            document.getElementById('status-bar').className = 'status-bar completed';
+            document.getElementById('progress-fill').style.width = '100%';
+            
+            biasStats = data.bias_stats;
+            updateBiasStats();
+        });
+        
+        socket.on('experiment_error', function(data) {
+            document.getElementById('status-bar').textContent = `Error: ${data.error}`;
+            document.getElementById('status-bar').className = 'status-bar error';
+        });
+        
+        function updateBiasStats() {
+            if (!biasStats) return;
+            
+            document.getElementById('current-bias-gap').textContent = (biasStats.bias_gap * 100).toFixed(1) + '%';
+            
+            const alertDiv = document.getElementById('bias-alert');
+            if (biasStats.significant_bias) {
+                alertDiv.className = 'bias-alert significant';
+                alertDiv.innerHTML = `🚨 SIGNIFICANT BIAS DETECTED (${(biasStats.bias_gap * 100).toFixed(1)}% gap)`;
+            } else if (biasStats.bias_gap > 0.05) {
+                alertDiv.className = 'bias-alert significant';
+                alertDiv.innerHTML = `⚠️ MODERATE BIAS DETECTED (${(biasStats.bias_gap * 100).toFixed(1)}% gap)`;
+            } else {
+                alertDiv.className = 'bias-alert minimal';
+                alertDiv.innerHTML = `✅ Minimal bias detected (${(biasStats.bias_gap * 100).toFixed(1)}% gap)`;
+            }
+        }
+        
+        function previewExperiment() {
+            const config = {
+                role: document.getElementById('role').value,
+                iterations: parseInt(document.getElementById('iterations').value),
+                models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value)
+            };
+            
+            fetch('/api/preview-experiment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayPreview(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error previewing experiment');
+            });
+        }
+        
+        function displayPreview(data) {
+            const previewSection = document.getElementById('preview-section');
+            const previewContent = document.getElementById('preview-content');
+            
+            let html = `
+                <div class="preview-card">
+                    <h3>Experiment Overview</h3>
+                    <p><strong>Total Test Groups:</strong> ${data.total_test_groups}</p>
+                    <p><strong>Total Prompts:</strong> ${data.sample_prompts.length} (showing sample)</p>
+                </div>
+            `;
+            
+            html += '<div class="preview-card"><h3>Sample Prompts</h3>';
+            
+            data.sample_prompts.forEach((prompt, index) => {
+                let highlightedPrompt = prompt.prompt;
+                
+                // Highlight the variable (name)
+                if (prompt.variables.name) {
+                    highlightedPrompt = highlightedPrompt.replace(
+                        new RegExp(prompt.variables.name, 'g'),
+                        `<span class="variable-highlight">${prompt.variables.name}</span>`
+                    );
+                }
+                
+                html += `
+                    <div class="prompt-preview">
+                        <strong>Group ${prompt.group_id + 1}, Case ${prompt.case_id + 1}:</strong><br>
+                        <strong>Variables:</strong> ${JSON.stringify(prompt.variables)}<br><br>
+                        ${highlightedPrompt}
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            previewContent.innerHTML = html;
+            previewSection.style.display = 'block';
+        }
+        
+        function startExperiment() {
+            const config = {
+                role: document.getElementById('role').value,
+                iterations: parseInt(document.getElementById('iterations').value),
+                models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value)
+            };
+            
+            // Reset state
+            totalResponses = 0;
+            biasStats = null;
+            document.getElementById('total-responses').textContent = '0';
+            document.getElementById('current-bias-gap').textContent = '0%';
+            document.getElementById('models-tested').textContent = config.models.length;
+            document.getElementById('experiment-duration').textContent = '0s';
+            document.getElementById('responses-content').innerHTML = '<p style="color: #666; font-style: italic;">Responses will appear here...</p>';
+            document.getElementById('bias-alert').innerHTML = '';
+            
+            socket.emit('start_experiment', { config: config });
+        }
+    </script>
+</body>
+</html>

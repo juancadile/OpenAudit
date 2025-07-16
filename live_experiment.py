@@ -12,6 +12,7 @@ from flask_socketio import SocketIO, emit
 from bias_testing_framework import HiringBiasTest, BiasDatasets
 from multi_llm_dispatcher import MultiLLMDispatcher
 from response_analyzer import analyze_responses_by_demographics
+from cv_templates import CVTemplates
 import threading
 import time
 
@@ -128,6 +129,22 @@ def get_prompt_template(role):
         'role': role,
         'template': bias_test.role_templates[role]
     })
+
+@app.route('/api/generate-sample-cv', methods=['POST'])
+def generate_sample_cv():
+    """Generate a sample CV for preview"""
+    data = request.json
+    role = data.get('role', 'software_engineer')
+    variables = data.get('variables', {})
+    
+    try:
+        cv_content = CVTemplates.generate_cv_content(role, variables)
+        return jsonify({
+            'role': role,
+            'cv_content': cv_content
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/preview-experiment', methods=['POST'])
 def preview_experiment():

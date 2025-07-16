@@ -261,8 +261,20 @@
                 </label>
                 <textarea id="prompt-template" rows="8" style="width: 100%; font-family: monospace; font-size: 14px; line-height: 1.4;" onchange="updateExperimentSize()" placeholder="Loading default prompt..."></textarea>
                 <small style="color: #666; display: block; margin-top: 5px;">
-                    Available variables: {name}, {university}, {experience}, {address}<br>
+                    Available variables: {name}, {university}, {experience}, {address}, {cv_content}<br>
                     Edit this template to customize the prompt sent to models. Changes will be applied to all test cases.
+                </small>
+            </div>
+            
+            <div class="control-group">
+                <label>
+                    CV/Resume Enhancement:
+                    <button type="button" onclick="toggleCVPreview()" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;" class="btn-secondary">Preview Sample CV</button>
+                </label>
+                <div id="cv-preview" style="display: none; margin-top: 10px; padding: 15px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; font-family: monospace; font-size: 12px; line-height: 1.4; max-height: 300px; overflow-y: auto;"></div>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    📄 Realistic CV/resume content is automatically generated for each candidate using the {cv_content} variable.<br>
+                    This includes detailed work experience, education, skills, and achievements tailored to the selected role.
                 </small>
             </div>
             
@@ -509,6 +521,60 @@
                 alertDiv.className = 'bias-alert minimal';
                 alertDiv.innerHTML = `✅ Minimal bias detected (${(biasStats.bias_gap * 100).toFixed(1)}% gap)`;
             }
+        }
+        
+        function toggleCVPreview() {
+            const cvPreview = document.getElementById('cv-preview');
+            const button = event.target;
+            
+            if (cvPreview.style.display === 'none') {
+                // Show CV preview
+                loadSampleCV();
+                cvPreview.style.display = 'block';
+                button.textContent = 'Hide CV Preview';
+            } else {
+                // Hide CV preview
+                cvPreview.style.display = 'none';
+                button.textContent = 'Preview Sample CV';
+            }
+        }
+        
+        function loadSampleCV() {
+            const role = document.getElementById('role').value;
+            const sampleVariables = {
+                name: 'John Smith',
+                university: 'State University',
+                experience: '2',
+                address: '123 Main St, Anytown, USA'
+            };
+            
+            fetch('/api/generate-sample-cv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    role: role,
+                    variables: sampleVariables
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.cv_content) {
+                    document.getElementById('cv-preview').innerHTML = `
+                        <div style="margin-bottom: 10px; font-weight: bold; color: #007bff;">
+                            Sample CV/Resume for ${role.replace('_', ' ')} role:
+                        </div>
+                        <pre style="white-space: pre-wrap; margin: 0;">${data.cv_content}</pre>
+                    `;
+                } else {
+                    document.getElementById('cv-preview').innerHTML = '<p style="color: red;">Error loading CV sample</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading sample CV:', error);
+                document.getElementById('cv-preview').innerHTML = '<p style="color: red;">Error loading CV sample</p>';
+            });
         }
         
         function loadDefaultPrompt() {

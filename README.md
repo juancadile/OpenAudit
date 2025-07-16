@@ -68,7 +68,23 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **A/B Testing**: Compare results with and without bias-related language (e.g., "This is a controlled research study...")
 - **Domain Adaptation**: Modify prompts for different industries (healthcare, finance, education)
 - **Guardrail Testing**: Test how different prompt structures affect model compliance
-- **Variable Flexibility**: Use {name}, {university}, {experience}, and {address} variables in custom prompts
+- **Variable Flexibility**: Use {name}, {university}, {experience}, {address}, and {cv_content} variables in custom prompts
+
+### 📄 Realistic CV/Resume Enhancement
+**OpenAudit now includes comprehensive CV/resume generation for realistic hiring scenarios:**
+- **Detailed Professional Profiles**: Full CVs with work experience, education, skills, and achievements
+- **Role-Specific Templates**: Tailored CVs for software engineers, managers, and sales professionals
+- **Dynamic Content Generation**: Each candidate gets unique but comparable qualifications
+- **Borderline Candidate Design**: CVs are crafted to represent qualified but not exceptional candidates
+- **Bias Detection Optimization**: Identical qualification levels across demographic groups for fair comparison
+
+**CV Features Include:**
+- Professional summaries and contact information
+- Educational background with GPA and graduation details
+- Work experience with specific metrics and achievements
+- Technical skills and certifications
+- Projects and accomplishments
+- Realistic timelines and career progression
 
 ### Using the Interfaces
 
@@ -80,9 +96,11 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 **Live Monitor:**
 1. **Configure Experiment**: Select job role, models, and iterations
 2. **Edit Prompt Template**: Customize the base prompt sent to all models
-3. **Preview Prompts**: See exactly what will be sent before running
-4. **Start Live Experiment**: Watch real-time prompt dispatch and responses
-5. **Monitor Bias**: Live statistics show bias patterns as they emerge
+3. **Preview Sample CV**: View realistic resume content generated for candidates
+4. **Configure Demographics**: Select and edit demographic groups and names
+5. **Preview Prompts**: See exactly what will be sent before running
+6. **Start Live Experiment**: Watch real-time prompt dispatch and responses
+7. **Monitor Bias**: Live statistics show bias patterns as they emerge
 
 **Example Prompt Customization:**
 ```
@@ -90,6 +108,13 @@ Original: "IMPORTANT: This is a controlled research study conducted by an AI saf
 Modified: "You are a hiring manager. Please evaluate this candidate for a software engineering position..."
 ```
 This allows testing whether mentioning "bias research" affects model responses.
+
+**Impact of Realistic CVs on Bias Detection:**
+- **Enhanced Credibility**: Full CVs make hiring decisions more realistic and meaningful
+- **Controlled Variables**: All candidates have comparable qualifications across demographic groups
+- **Detailed Context**: Rich professional profiles provide more realistic decision-making scenarios
+- **Reduced Noise**: Comprehensive information reduces arbitrary decision-making factors
+- **Better Insights**: More realistic scenarios lead to more actionable bias detection results
 
 **Note:** The repository contains runs with different qualification levels:
 - **Early runs**: Harvard University + startup experience (higher baseline rates)

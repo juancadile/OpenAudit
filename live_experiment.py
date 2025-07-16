@@ -23,6 +23,42 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 live_experiments = {}
 current_experiment = None
 
+def create_custom_test_cases(config):
+    """Create test cases based on selected demographics"""
+    from bias_testing_framework import BiasTestCase
+    
+    bias_test = HiringBiasTest()
+    role = config.get('role', 'software_engineer')
+    selected_demographics = config.get('demographics', {})
+    
+    test_cases = []
+    
+    if not selected_demographics:
+        # Fall back to default test cases
+        return bias_test.create_test_cases(role)
+    
+    for demo_key, demo_config in selected_demographics.items():
+        if demo_config.get('selected', False):
+            custom_names = demo_config.get('names', [])
+            
+            if custom_names:
+                # Create test case for this demographic
+                variables = {
+                    "name": custom_names,
+                    "university": ["State University", "Community College"],
+                    "experience": ["1", "3"],
+                    "address": ["123 Main St, Anytown, USA"]
+                }
+                
+                test_case = BiasTestCase(
+                    template=bias_test.role_templates[role],
+                    variables=variables,
+                    domain=f"hiring_{role}_{demo_key}"
+                )
+                test_cases.append(test_case)
+    
+    return test_cases if test_cases else bias_test.create_test_cases(role)
+
 class LiveExperiment:
     def __init__(self, experiment_id, config):
         self.experiment_id = experiment_id
@@ -53,18 +89,80 @@ def live_interface():
     """Main live experiment interface"""
     return render_template('live_experiment.html')
 
+@app.route('/api/get-demographics')
+def get_demographics():
+    """Get available demographic groups with names"""
+    datasets = BiasDatasets()
+    names = datasets.get_hiring_bias_names()
+    
+    demographic_groups = {}
+    for group_key, group_names in names.items():
+        demographic_groups[group_key] = {
+            'display_name': group_key.replace('_', ' ').title(),
+            'names': group_names,
+            'selected': True  # Default to all selected
+        }
+    
+    return jsonify(demographic_groups)
+
 @app.route('/api/preview-experiment', methods=['POST'])
 def preview_experiment():
     """Preview experiment setup without running"""
     config = request.json
     
-    # Create test cases
+    # Get selected demographics
+    selected_demographics = config.get('demographics', {})
+    models = config.get('models', [])
+    iterations = config.get('iterations', 1)
+    
+    # Create custom bias test with selected demographics
     bias_test = HiringBiasTest()
-    test_cases = bias_test.create_test_cases(config.get('role', 'software_engineer'))
+    datasets = BiasDatasets()
+    all_names = datasets.get_hiring_bias_names()
+    
+    # Filter to only selected demographics
+    filtered_names = {}
+    for demo_key, demo_config in selected_demographics.items():
+        if demo_config.get('selected', False):
+            # Use custom names if provided, otherwise use defaults
+            custom_names = demo_config.get('names', [])
+            if custom_names:
+                filtered_names[demo_key] = custom_names
+            else:
+                filtered_names[demo_key] = all_names.get(demo_key, [])
+    
+    # Generate test cases for each selected demographic
+    test_cases = []
+    for demo_key, names in filtered_names.items():
+        if names:  # Only if names exist
+            # Create a test case for this demographic
+            variables = {
+                "name": names[:2],  # Take first 2 names
+                "university": ["State University", "Community College"],
+                "experience": ["1", "3"],
+                "address": ["123 Main St, Anytown, USA"]
+            }
+            
+            from bias_testing_framework import BiasTestCase
+            test_case = BiasTestCase(
+                template=bias_test.role_templates[config.get('role', 'software_engineer')],
+                variables=variables,
+                domain=f"hiring_{config.get('role', 'software_engineer')}_{demo_key}"
+            )
+            test_cases.append(test_case)
+    
+    # Calculate totals
+    total_base_cases = sum(len(tc.test_cases) for tc in test_cases)
+    total_prompts = total_base_cases * iterations * len(models)
     
     # Generate preview of prompts
     preview_data = {
-        'total_test_groups': len(test_cases),
+        'total_demographics': len(filtered_names),
+        'total_base_cases': total_base_cases,
+        'total_prompts': total_prompts,
+        'iterations': iterations,
+        'models': models,
+        'calculation': f"{total_base_cases} base cases × {iterations} iterations × {len(models)} models = {total_prompts} total prompts",
         'test_groups': [],
         'sample_prompts': []
     }
@@ -73,7 +171,8 @@ def preview_experiment():
         group_info = {
             'group_id': i,
             'domain': test_case.domain,
-            'total_prompts': len(test_case.test_cases),
+            'demographic': test_case.domain.split('_')[-1],
+            'total_cases': len(test_case.test_cases),
             'variables': test_case.variables
         }
         preview_data['test_groups'].append(group_info)
@@ -120,13 +219,14 @@ def run_live_experiment(experiment):
         # Emit status update
         socketio.emit('experiment_status', experiment.to_dict())
         
-        # Create test cases
-        bias_test = HiringBiasTest()
-        test_cases = bias_test.create_test_cases(experiment.config.get('role', 'software_engineer'))
+        # Create test cases based on selected demographics
+        test_cases = create_custom_test_cases(experiment.config)
         
-        # Calculate total prompts
-        total_prompts = sum(len(test_case.test_cases) for test_case in test_cases)
-        experiment.total_prompts = total_prompts
+        # Calculate total prompts (includes iterations)
+        total_base_cases = sum(len(test_case.test_cases) for test_case in test_cases)
+        iterations = experiment.config.get('iterations', 1)
+        models = experiment.config.get('models', [])
+        experiment.total_prompts = total_base_cases * iterations * len(models)
         
         # Initialize dispatcher
         dispatcher = MultiLLMDispatcher()
@@ -141,7 +241,6 @@ def run_live_experiment(experiment):
             
             for case_idx, case in enumerate(test_case.test_cases):
                 experiment.current_prompt = case['prompt']
-                experiment.completed_prompts += 1
                 
                 # Emit prompt being processed
                 socketio.emit('prompt_processing', {
@@ -152,7 +251,7 @@ def run_live_experiment(experiment):
                     'progress': (experiment.completed_prompts / experiment.total_prompts * 100)
                 })
                 
-                # Run the prompt
+                # Run the prompt with iterations
                 asyncio.set_event_loop(asyncio.new_event_loop())
                 loop = asyncio.get_event_loop()
                 responses = loop.run_until_complete(
@@ -176,6 +275,9 @@ def run_live_experiment(experiment):
                         'timestamp': response.timestamp.isoformat(),
                         'variables': case['variables']
                     })
+                
+                # Update completed prompts after processing all responses for this case
+                experiment.completed_prompts += len(responses)
                 
                 # Small delay to make it visible
                 time.sleep(0.5)
@@ -274,4 +376,4 @@ def get_experiment(experiment_id):
     return jsonify({'error': 'Experiment not found'}), 404
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5003, host='0.0.0.0', allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, port=5004, host='0.0.0.0', allow_unsafe_werkzeug=True)

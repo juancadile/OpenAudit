@@ -178,7 +178,7 @@ This is an open-source project for AI safety research. Key areas for contributio
 
 ## 📄 License
 
-MIT License - see LICENSE file for details.
+GPL-3.0 License - see LICENSE file for details.
 
 ## 🙏 Acknowledgments
 

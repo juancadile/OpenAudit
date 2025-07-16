@@ -257,6 +257,7 @@
             <div class="control-group">
                 <label for="iterations">Iterations per Model:</label>
                 <input type="number" id="iterations" value="1" min="1" max="5">
+                <small style="color: #666;">Each prompt will be sent this many times to each model</small>
             </div>
             
             <div class="control-group">
@@ -267,6 +268,22 @@
                     <option value="gpt-4o-mini" selected>GPT-4o-mini</option>
                     <option value="gpt-4-turbo" selected>GPT-4-turbo</option>
                 </select>
+                <small style="color: #666;">Hold Ctrl/Cmd to select multiple models</small>
+            </div>
+            
+            <div class="control-group">
+                <label>Demographic Groups:</label>
+                <div id="demographics-container">
+                    <p style="color: #666; font-style: italic;">Loading demographic groups...</p>
+                </div>
+                <button type="button" class="btn-secondary" onclick="loadDemographics()" style="margin-top: 10px;">Load Demographics</button>
+            </div>
+            
+            <div class="control-group">
+                <label>Experiment Size:</label>
+                <div id="experiment-size" style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace;">
+                    <div id="calculation-display">Configure experiment to see totals</div>
+                </div>
             </div>
             
             <div style="display: flex; gap: 10px;">
@@ -464,11 +481,93 @@
             }
         }
         
+        function loadDemographics() {
+            fetch('/api/get-demographics')
+            .then(response => response.json())
+            .then(data => {
+                displayDemographics(data);
+                updateExperimentSize();
+            })
+            .catch(error => {
+                console.error('Error loading demographics:', error);
+                document.getElementById('demographics-container').innerHTML = '<p style="color: red;">Error loading demographics</p>';
+            });
+        }
+        
+        function displayDemographics(demographics) {
+            const container = document.getElementById('demographics-container');
+            let html = '';
+            
+            for (const [key, data] of Object.entries(demographics)) {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <label style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <input type="checkbox" id="demo-${key}" ${data.selected ? 'checked' : ''} onchange="updateExperimentSize()" style="margin-right: 10px; width: auto;">
+                            <strong>${data.display_name}</strong>
+                        </label>
+                        <div style="margin-left: 25px;">
+                            <small style="color: #666; display: block; margin-bottom: 5px;">Names (editable):</small>
+                            <textarea id="names-${key}" rows="2" style="width: 100%; font-size: 12px; padding: 5px;" onchange="updateExperimentSize()">${data.names.join(', ')}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function getSelectedDemographics() {
+            const demographics = {};
+            const checkboxes = document.querySelectorAll('[id^="demo-"]');
+            
+            checkboxes.forEach(checkbox => {
+                const key = checkbox.id.replace('demo-', '');
+                const textarea = document.getElementById(`names-${key}`);
+                if (checkbox.checked && textarea) {
+                    const names = textarea.value.split(',').map(n => n.trim()).filter(n => n);
+                    demographics[key] = {
+                        selected: true,
+                        names: names
+                    };
+                }
+            });
+            
+            return demographics;
+        }
+        
+        function updateExperimentSize() {
+            const selectedDemographics = getSelectedDemographics();
+            const iterations = parseInt(document.getElementById('iterations').value) || 1;
+            const models = Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value);
+            
+            // Calculate total cases
+            let totalCases = 0;
+            for (const [key, data] of Object.entries(selectedDemographics)) {
+                if (data.selected && data.names.length > 0) {
+                    // Each demographic creates test cases based on combinations
+                    totalCases += data.names.length * 2; // 2 experience levels per name
+                }
+            }
+            
+            const totalPrompts = totalCases * iterations * models.length;
+            
+            const display = document.getElementById('calculation-display');
+            display.innerHTML = `
+                <div><strong>Demographics:</strong> ${Object.keys(selectedDemographics).length} selected</div>
+                <div><strong>Base Cases:</strong> ${totalCases} (names × variations)</div>
+                <div><strong>Iterations:</strong> ${iterations} per model</div>
+                <div><strong>Models:</strong> ${models.length} selected</div>
+                <div style="margin-top: 10px; font-size: 16px; color: #007bff;"><strong>Total Prompts:</strong> ${totalPrompts}</div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">${totalCases} cases × ${iterations} iterations × ${models.length} models = ${totalPrompts} total</div>
+            `;
+        }
+        
         function previewExperiment() {
             const config = {
                 role: document.getElementById('role').value,
                 iterations: parseInt(document.getElementById('iterations').value),
-                models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value)
+                models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value),
+                demographics: getSelectedDemographics()
             };
             
             fetch('/api/preview-experiment', {
@@ -495,34 +594,52 @@
             let html = `
                 <div class="preview-card">
                     <h3>Experiment Overview</h3>
-                    <p><strong>Total Test Groups:</strong> ${data.total_test_groups}</p>
-                    <p><strong>Total Prompts:</strong> ${data.sample_prompts.length} (showing sample)</p>
+                    <p><strong>Total Demographics:</strong> ${data.total_demographics || 0}</p>
+                    <p><strong>Base Cases:</strong> ${data.total_base_cases || 0}</p>
+                    <p><strong>Total Prompts:</strong> ${data.total_prompts || 0}</p>
+                    <p><strong>Calculation:</strong> ${data.calculation || 'N/A'}</p>
                 </div>
             `;
             
-            html += '<div class="preview-card"><h3>Sample Prompts</h3>';
+            if (data.test_groups && data.test_groups.length > 0) {
+                html += '<div class="preview-card"><h3>Test Groups</h3>';
+                data.test_groups.forEach((group, index) => {
+                    html += `
+                        <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <strong>Group ${group.group_id + 1}:</strong> ${group.demographic}<br>
+                            <strong>Cases:</strong> ${group.total_cases}<br>
+                            <strong>Variables:</strong> ${JSON.stringify(group.variables)}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
             
-            data.sample_prompts.forEach((prompt, index) => {
-                let highlightedPrompt = prompt.prompt;
+            if (data.sample_prompts && data.sample_prompts.length > 0) {
+                html += '<div class="preview-card"><h3>Sample Prompts</h3>';
                 
-                // Highlight the variable (name)
-                if (prompt.variables.name) {
-                    highlightedPrompt = highlightedPrompt.replace(
-                        new RegExp(prompt.variables.name, 'g'),
-                        `<span class="variable-highlight">${prompt.variables.name}</span>`
-                    );
-                }
+                data.sample_prompts.forEach((prompt, index) => {
+                    let highlightedPrompt = prompt.prompt;
+                    
+                    // Highlight the variable (name)
+                    if (prompt.variables.name) {
+                        highlightedPrompt = highlightedPrompt.replace(
+                            new RegExp(prompt.variables.name, 'g'),
+                            `<span class="variable-highlight">${prompt.variables.name}</span>`
+                        );
+                    }
+                    
+                    html += `
+                        <div class="prompt-preview">
+                            <strong>Group ${prompt.group_id + 1}, Case ${prompt.case_id + 1}:</strong><br>
+                            <strong>Variables:</strong> ${JSON.stringify(prompt.variables)}<br><br>
+                            ${highlightedPrompt}
+                        </div>
+                    `;
+                });
                 
-                html += `
-                    <div class="prompt-preview">
-                        <strong>Group ${prompt.group_id + 1}, Case ${prompt.case_id + 1}:</strong><br>
-                        <strong>Variables:</strong> ${JSON.stringify(prompt.variables)}<br><br>
-                        ${highlightedPrompt}
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
+                html += '</div>';
+            }
             
             previewContent.innerHTML = html;
             previewSection.style.display = 'block';
@@ -532,8 +649,20 @@
             const config = {
                 role: document.getElementById('role').value,
                 iterations: parseInt(document.getElementById('iterations').value),
-                models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value)
+                models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value),
+                demographics: getSelectedDemographics()
             };
+            
+            // Validate configuration
+            if (Object.keys(config.demographics).length === 0) {
+                alert('Please select at least one demographic group');
+                return;
+            }
+            
+            if (config.models.length === 0) {
+                alert('Please select at least one model');
+                return;
+            }
             
             // Reset state
             totalResponses = 0;
@@ -547,6 +676,16 @@
             
             socket.emit('start_experiment', { config: config });
         }
+        
+        // Auto-load demographics on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDemographics();
+            
+            // Add event listeners for real-time updates
+            document.getElementById('iterations').addEventListener('input', updateExperimentSize);
+            document.getElementById('models').addEventListener('change', updateExperimentSize);
+            document.getElementById('role').addEventListener('change', updateExperimentSize);
+        });
     </script>
 </body>
 </html>

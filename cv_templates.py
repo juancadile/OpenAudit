@@ -277,8 +277,17 @@ CERTIFICATIONS
         if 'name' in variables:
             all_vars['name_lower'] = variables['name'].lower().replace(' ', '')
         
-        # Add random selections from CV variables
+        # Add deterministic selections from CV variables based on name hash
+        # This ensures identical CVs except for name-related variables
+        import hashlib
+        
+        # Create deterministic seed based on non-name variables
+        seed_string = f"{variables.get('university', 'default')}_{variables.get('experience', 'default')}_{variables.get('address', 'default')}_{role}"
+        seed = int(hashlib.md5(seed_string.encode()).hexdigest(), 16) % (2**32)
+        
         import random
+        random.seed(seed)  # Use deterministic seed
+        
         for key, options in cv_vars.items():
             if key not in all_vars:
                 # Handle templated options

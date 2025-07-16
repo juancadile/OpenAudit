@@ -373,6 +373,9 @@ def run_live_experiment(experiment):
             # Calculate final statistics
             bias_stats = calculate_bias_statistics(experiment.responses)
             
+            # Save experiment results to disk
+            save_experiment_results(experiment, results, bias_stats)
+            
             if experiment.should_stop:
                 socketio.emit('experiment_stopped', {
                     'experiment_id': experiment.experiment_id,
@@ -446,6 +449,97 @@ def calculate_bias_statistics(responses):
         }
     
     return {'demographics': {}, 'bias_gap': 0}
+
+def save_experiment_results(experiment, results, bias_stats):
+    """Save live experiment results to /runs directory"""
+    import os
+    
+    # Create runs directory if it doesn't exist
+    runs_dir = "runs"
+    if not os.path.exists(runs_dir):
+        os.makedirs(runs_dir)
+    
+    # Create timestamp for filenames
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Prepare experiment data
+    experiment_data = {
+        'experiment_id': experiment.experiment_id,
+        'experiment_type': 'live_experiment',
+        'config': experiment.config,
+        'start_time': experiment.start_time.isoformat() if experiment.start_time else None,
+        'end_time': experiment.end_time.isoformat() if experiment.end_time else None,
+        'duration': (experiment.end_time - experiment.start_time).total_seconds() if experiment.start_time and experiment.end_time else None,
+        'status': experiment.status,
+        'total_responses': len(experiment.responses),
+        'bias_statistics': bias_stats,
+        'demographics_analysis': results,
+        'responses': [
+            {
+                'model_name': r.model_name,
+                'provider': r.provider,
+                'prompt': r.prompt,
+                'response': r.response,
+                'timestamp': r.timestamp.isoformat(),
+                'metadata': r.metadata
+            } for r in experiment.responses
+        ]
+    }
+    
+    # Save main experiment file
+    experiment_filename = f"live_experiment_{timestamp}.json"
+    experiment_path = os.path.join(runs_dir, experiment_filename)
+    
+    try:
+        with open(experiment_path, 'w') as f:
+            json.dump(experiment_data, f, indent=2)
+        
+        # Also save a summary report
+        report_filename = f"live_experiment_report_{timestamp}.txt"
+        report_path = os.path.join(runs_dir, report_filename)
+        
+        with open(report_path, 'w') as f:
+            f.write("OpenAudit Live Experiment Report\n")
+            f.write("=" * 50 + "\n\n")
+            f.write(f"Experiment ID: {experiment.experiment_id}\n")
+            f.write(f"Status: {experiment.status}\n")
+            f.write(f"Start Time: {experiment.start_time}\n")
+            f.write(f"End Time: {experiment.end_time}\n")
+            f.write(f"Duration: {experiment_data['duration']:.2f} seconds\n")
+            f.write(f"Total Responses: {len(experiment.responses)}\n\n")
+            
+            # Configuration
+            f.write("Configuration:\n")
+            f.write("-" * 20 + "\n")
+            f.write(f"Role: {experiment.config.get('role', 'N/A')}\n")
+            f.write(f"Models: {', '.join(experiment.config.get('models', []))}\n")
+            f.write(f"Iterations: {experiment.config.get('iterations', 'N/A')}\n")
+            f.write(f"Demographics: {len(experiment.config.get('demographics', {}))}\n\n")
+            
+            # Bias Statistics
+            f.write("Bias Analysis:\n")
+            f.write("-" * 20 + "\n")
+            f.write(f"Bias Gap: {bias_stats.get('bias_gap', 0):.3f}\n")
+            f.write(f"Significant Bias: {'YES' if bias_stats.get('significant_bias', False) else 'NO'}\n")
+            f.write(f"Max Hire Rate: {bias_stats.get('max_rate', 0):.3f}\n")
+            f.write(f"Min Hire Rate: {bias_stats.get('min_rate', 0):.3f}\n\n")
+            
+            # Demographics breakdown
+            f.write("Demographics Breakdown:\n")
+            f.write("-" * 20 + "\n")
+            for demo, stats in bias_stats.get('demographics', {}).items():
+                f.write(f"{demo}: {stats['hire_rate']:.3f} ({stats['yes_count']}/{stats['total_count']})\n")
+        
+        print(f"✓ Live experiment results saved to {experiment_path}")
+        print(f"✓ Summary report saved to {report_path}")
+        
+    except Exception as e:
+        print(f"✗ Error saving experiment results: {e}")
+        # Emit error to client
+        socketio.emit('experiment_save_error', {
+            'experiment_id': experiment.experiment_id,
+            'error': str(e)
+        })
 
 @app.route('/api/experiments')
 def get_experiments():

@@ -270,7 +270,19 @@
                 <label>
                     CV/Resume Enhancement:
                     <button type="button" onclick="toggleCVPreview()" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;" class="btn-secondary">Preview Sample CV</button>
+                    <button type="button" onclick="toggleCVCustomization()" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;" class="btn-secondary">Customize CV Level</button>
                 </label>
+                <div id="cv-customization" style="display: none; margin-top: 10px; padding: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
+                    <h4>CV Qualification Level:</h4>
+                    <div style="margin: 10px 0;">
+                        <label><input type="radio" name="cv-level" value="weak" onchange="updateCVLevel()"> Weak Candidate (Low GPA, minimal experience)</label><br>
+                        <label><input type="radio" name="cv-level" value="borderline" checked onchange="updateCVLevel()"> Borderline Candidate (Average qualifications)</label><br>
+                        <label><input type="radio" name="cv-level" value="strong" onchange="updateCVLevel()"> Strong Candidate (High GPA, excellent experience)</label><br>
+                    </div>
+                    <div id="cv-level-description" style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px;">
+                        <strong>Borderline Candidate:</strong> 3.0-3.4 GPA, 1-3 years experience, modest achievements. Qualified but not exceptional.
+                    </div>
+                </div>
                 <div id="cv-preview" style="display: none; margin-top: 10px; padding: 15px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; font-family: monospace; font-size: 12px; line-height: 1.4; max-height: 300px; overflow-y: auto;"></div>
                 <small style="color: #666; display: block; margin-top: 5px;">
                     📄 Realistic CV/resume content is automatically generated for each candidate using the {cv_content} variable.<br>
@@ -346,6 +358,12 @@
                 Preparing experiment...
             </div>
             
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button id="stop-experiment" class="btn-danger" onclick="stopExperiment()" style="display: none;">
+                    Stop Experiment
+                </button>
+            </div>
+            
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
             </div>
@@ -355,6 +373,10 @@
                     <h3>Current Prompt</h3>
                     <div id="current-prompt-content">
                         <p style="color: #666; font-style: italic;">No prompt currently processing...</p>
+                    </div>
+                    <div id="current-cv-content" style="display: none; margin-top: 15px;">
+                        <h4>Candidate CV/Resume:</h4>
+                        <div style="background: #f1f3f4; padding: 10px; border-radius: 5px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; line-height: 1.3;"></div>
                     </div>
                 </div>
                 
@@ -406,6 +428,7 @@
             document.getElementById('live-monitor').style.display = 'block';
             document.getElementById('status-bar').textContent = 'Experiment started...';
             document.getElementById('status-bar').className = 'status-bar running';
+            document.getElementById('stop-experiment').style.display = 'inline-block';
         });
         
         socket.on('experiment_status', function(data) {
@@ -421,17 +444,22 @@
         
         socket.on('prompt_processing', function(data) {
             const promptContent = document.getElementById('current-prompt-content');
+            const cvContent = document.getElementById('current-cv-content');
             
             // Highlight variables in the prompt
             let highlightedPrompt = data.prompt;
             for (const [key, value] of Object.entries(data.variables)) {
-                if (typeof value === 'string') {
+                if (typeof value === 'string' && key !== 'cv_content') {
                     highlightedPrompt = highlightedPrompt.replace(
                         new RegExp(value, 'g'),
                         `<span class="variable-highlight">${value}</span>`
                     );
                 }
             }
+            
+            // Display variables without cv_content
+            const displayVariables = { ...data.variables };
+            delete displayVariables.cv_content;
             
             promptContent.innerHTML = `
                 <div style="margin-bottom: 10px;">
@@ -440,12 +468,20 @@
                     <strong>Progress:</strong> ${data.progress.toFixed(1)}%
                 </div>
                 <div style="margin-bottom: 10px;">
-                    <strong>Variables:</strong> ${JSON.stringify(data.variables, null, 2)}
+                    <strong>Variables:</strong> ${JSON.stringify(displayVariables, null, 2)}
                 </div>
                 <div class="prompt-preview">
                     ${highlightedPrompt}
                 </div>
             `;
+            
+            // Display CV content if available
+            if (data.variables.cv_content) {
+                cvContent.style.display = 'block';
+                cvContent.querySelector('div').innerHTML = `<pre style="margin: 0; white-space: pre-wrap;">${data.variables.cv_content}</pre>`;
+            } else {
+                cvContent.style.display = 'none';
+            }
         });
         
         socket.on('response_received', function(data) {
@@ -495,6 +531,7 @@
             document.getElementById('status-bar').textContent = `Experiment completed! ${data.total_responses} responses collected.`;
             document.getElementById('status-bar').className = 'status-bar completed';
             document.getElementById('progress-fill').style.width = '100%';
+            document.getElementById('stop-experiment').style.display = 'none';
             
             biasStats = data.bias_stats;
             updateBiasStats();
@@ -503,6 +540,13 @@
         socket.on('experiment_error', function(data) {
             document.getElementById('status-bar').textContent = `Error: ${data.error}`;
             document.getElementById('status-bar').className = 'status-bar error';
+            document.getElementById('stop-experiment').style.display = 'none';
+        });
+        
+        socket.on('experiment_stopped', function(data) {
+            document.getElementById('status-bar').textContent = `Experiment stopped by user. ${data.responses_collected} responses collected.`;
+            document.getElementById('status-bar').className = 'status-bar';
+            document.getElementById('stop-experiment').style.display = 'none';
         });
         
         function updateBiasStats() {
@@ -539,8 +583,40 @@
             }
         }
         
+        function toggleCVCustomization() {
+            const cvCustomization = document.getElementById('cv-customization');
+            const button = event.target;
+            
+            if (cvCustomization.style.display === 'none') {
+                cvCustomization.style.display = 'block';
+                button.textContent = 'Hide CV Customization';
+            } else {
+                cvCustomization.style.display = 'none';
+                button.textContent = 'Customize CV Level';
+            }
+        }
+        
+        function updateCVLevel() {
+            const selectedLevel = document.querySelector('input[name="cv-level"]:checked').value;
+            const description = document.getElementById('cv-level-description');
+            
+            const descriptions = {
+                'weak': '<strong>Weak Candidate:</strong> 2.5-3.0 GPA, 0-1 years experience, minimal achievements. May not meet minimum requirements.',
+                'borderline': '<strong>Borderline Candidate:</strong> 3.0-3.4 GPA, 1-3 years experience, modest achievements. Qualified but not exceptional.',
+                'strong': '<strong>Strong Candidate:</strong> 3.5-4.0 GPA, 3+ years experience, excellent achievements. Clearly qualified and competitive.'
+            };
+            
+            description.innerHTML = descriptions[selectedLevel];
+            
+            // Refresh CV preview if it's visible
+            if (document.getElementById('cv-preview').style.display === 'block') {
+                loadSampleCV();
+            }
+        }
+        
         function loadSampleCV() {
             const role = document.getElementById('role').value;
+            const cvLevel = document.querySelector('input[name="cv-level"]:checked').value;
             const sampleVariables = {
                 name: 'John Smith',
                 university: 'State University',
@@ -555,7 +631,8 @@
                 },
                 body: JSON.stringify({
                     role: role,
-                    variables: sampleVariables
+                    variables: sampleVariables,
+                    cv_level: cvLevel
                 })
             })
             .then(response => response.json())
@@ -682,7 +759,8 @@
                 iterations: parseInt(document.getElementById('iterations').value),
                 models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value),
                 demographics: getSelectedDemographics(),
-                prompt_template: document.getElementById('prompt-template').value
+                prompt_template: document.getElementById('prompt-template').value,
+                cv_level: document.querySelector('input[name="cv-level"]:checked').value
             };
             
             fetch('/api/preview-experiment', {
@@ -771,7 +849,8 @@
                 iterations: parseInt(document.getElementById('iterations').value),
                 models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value),
                 demographics: getSelectedDemographics(),
-                prompt_template: document.getElementById('prompt-template').value
+                prompt_template: document.getElementById('prompt-template').value,
+                cv_level: document.querySelector('input[name="cv-level"]:checked').value
             };
             
             // Validate configuration
@@ -796,6 +875,14 @@
             document.getElementById('bias-alert').innerHTML = '';
             
             socket.emit('start_experiment', { config: config });
+        }
+        
+        function stopExperiment() {
+            if (currentExperiment) {
+                socket.emit('stop_experiment', { experiment_id: currentExperiment });
+                document.getElementById('stop-experiment').disabled = true;
+                document.getElementById('stop-experiment').textContent = 'Stopping...';
+            }
         }
         
         // Auto-load demographics and prompt on page load

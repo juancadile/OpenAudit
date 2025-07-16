@@ -82,6 +82,7 @@ class LiveExperiment:
         self.completed_prompts = 0
         self.start_time = None
         self.end_time = None
+        self.should_stop = False
         
     def to_dict(self):
         return {
@@ -259,6 +260,21 @@ def handle_start_experiment(data):
     
     emit('experiment_started', {'experiment_id': experiment_id})
 
+@socketio.on('stop_experiment')
+def handle_stop_experiment(data):
+    """Stop a running experiment"""
+    experiment_id = data.get('experiment_id')
+    
+    if experiment_id in live_experiments:
+        experiment = live_experiments[experiment_id]
+        experiment.should_stop = True
+        experiment.status = "stopping"
+        
+        emit('experiment_stopped', {
+            'experiment_id': experiment_id,
+            'responses_collected': len(experiment.responses)
+        })
+
 def run_live_experiment(experiment):
     """Run the actual experiment with real-time updates"""
     try:
@@ -271,10 +287,11 @@ def run_live_experiment(experiment):
         # Create test cases based on selected demographics
         test_cases = create_custom_test_cases(experiment.config)
         
-        # Calculate total prompts (includes iterations)
+        # Calculate total prompts (dispatcher handles iterations internally)
         total_base_cases = sum(len(test_case.test_cases) for test_case in test_cases)
         iterations = experiment.config.get('iterations', 1)
         models = experiment.config.get('models', [])
+        # Total responses = base_cases × iterations × models (dispatcher handles this)
         experiment.total_prompts = total_base_cases * iterations * len(models)
         
         # Initialize dispatcher
@@ -282,6 +299,9 @@ def run_live_experiment(experiment):
         
         # Process each test case
         for group_idx, test_case in enumerate(test_cases):
+            if experiment.should_stop:
+                break
+                
             socketio.emit('group_started', {
                 'group_id': group_idx,
                 'domain': test_case.domain,
@@ -289,6 +309,9 @@ def run_live_experiment(experiment):
             })
             
             for case_idx, case in enumerate(test_case.test_cases):
+                if experiment.should_stop:
+                    break
+                    
                 experiment.current_prompt = case['prompt']
                 
                 # Emit prompt being processed
@@ -334,24 +357,36 @@ def run_live_experiment(experiment):
                 # Emit progress update
                 socketio.emit('experiment_status', experiment.to_dict())
         
-        # Experiment completed
-        experiment.status = "completed"
+        # Experiment completed or stopped
+        if experiment.should_stop:
+            experiment.status = "stopped"
+        else:
+            experiment.status = "completed"
         experiment.end_time = datetime.now()
         
-        # Analyze results
-        results = analyze_responses_by_demographics([
-            response.__dict__ for response in experiment.responses
-        ])
-        
-        # Calculate final statistics
-        bias_stats = calculate_bias_statistics(experiment.responses)
-        
-        socketio.emit('experiment_completed', {
-            'experiment_id': experiment.experiment_id,
-            'total_responses': len(experiment.responses),
-            'bias_stats': bias_stats,
-            'duration': (experiment.end_time - experiment.start_time).total_seconds()
-        })
+        # Analyze results if we have any
+        if experiment.responses:
+            results = analyze_responses_by_demographics([
+                response.__dict__ for response in experiment.responses
+            ])
+            
+            # Calculate final statistics
+            bias_stats = calculate_bias_statistics(experiment.responses)
+            
+            if experiment.should_stop:
+                socketio.emit('experiment_stopped', {
+                    'experiment_id': experiment.experiment_id,
+                    'responses_collected': len(experiment.responses),
+                    'bias_stats': bias_stats,
+                    'duration': (experiment.end_time - experiment.start_time).total_seconds()
+                })
+            else:
+                socketio.emit('experiment_completed', {
+                    'experiment_id': experiment.experiment_id,
+                    'total_responses': len(experiment.responses),
+                    'bias_stats': bias_stats,
+                    'duration': (experiment.end_time - experiment.start_time).total_seconds()
+                })
         
     except Exception as e:
         experiment.status = "error"

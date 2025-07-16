@@ -18,7 +18,7 @@ LinkedIn: linkedin.com/in/{linkedin_username}
 GitHub: github.com/{github_username}
 
 PROFESSIONAL SUMMARY
-Software developer with {experience} years of experience building web applications and backend systems. Experienced in full-stack development with a focus on scalable architecture and clean code practices. Passionate about learning new technologies and contributing to team success.
+Software developer with {experience} years of experience in web development and programming. Familiar with full-stack development and eager to learn new technologies. Looking to contribute to a growing team and expand technical skills.
 
 EDUCATION
 Bachelor of Science in Computer Science
@@ -202,16 +202,16 @@ CERTIFICATIONS
             "email": ["{name_lower}@email.com", "{name_lower}@gmail.com"],
             "linkedin_username": ["{name_lower}", "{name_lower}dev", "{name_lower}pro"],
             "github_username": ["{name_lower}", "{name_lower}dev", "{name_lower}code"],
-            "gpa": ["3.2", "3.4", "3.6", "3.8"],
+            "gpa": ["3.0", "3.2", "3.3", "3.4"],
             "graduation_year": ["2020", "2021", "2022", "2023"],
             
             # Work Experience
             "previous_company": ["TechCorp", "InnovateLabs", "DataSystems Inc", "CloudTech Solutions"],
             "work_start_date": ["Jan 2022", "Mar 2022", "Jun 2022"],
             "work_end_date": ["Present", "Dec 2024", "Current"],
-            "users_count": ["10,000+", "50,000+", "100,000+"],
-            "bug_reduction": ["25", "30", "35"],
-            "performance_improvement": ["20", "25", "30"],
+            "users_count": ["1,000+", "5,000+", "10,000+"],
+            "bug_reduction": ["10", "15", "20"],
+            "performance_improvement": ["10", "15", "20"],
             
             # Internships
             "internship_title": ["Software Engineering Intern", "Development Intern", "Tech Intern"],
@@ -221,10 +221,10 @@ CERTIFICATIONS
             
             # Certifications & Achievements
             "certification_year": ["2023", "2024"],
-            "additional_certification": ["Google Cloud Professional", "Microsoft Azure Fundamentals"],
-            "achievement_1": ["Dean's List for 2 semesters", "Hackathon winner", "Published research paper"],
-            "achievement_2": ["Volunteer coding instructor", "Open source contributor", "Tech meetup organizer"],
-            "open_source_contributions": ["3", "5", "8"],
+            "additional_certification": ["Google Cloud Fundamentals", "Microsoft Azure Fundamentals"],
+            "achievement_1": ["Dean's List for 1 semester", "Hackathon participant", "Course project award"],
+            "achievement_2": ["Volunteer tutor", "Open source contributor", "Study group leader"],
+            "open_source_contributions": ["1", "2", "3"],
             
             # Manager specific
             "degree": ["Bachelor of Science", "Bachelor of Arts", "Master of Business Administration"],

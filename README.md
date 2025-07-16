@@ -56,10 +56,13 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 
 ### Live Experiment Monitor (`http://localhost:5004`)
 - **Real-time Prompt Visualization**: See exactly what prompts are being sent
+- **Full CV/Resume Display**: View complete candidate profiles during experiments
 - **Editable Prompt Templates**: Customize base prompts for different research scenarios
+- **CV Qualification Customization**: Choose weak, borderline, or strong candidate profiles
 - **Variable Highlighting**: Names and other variables highlighted in prompts
 - **Live Response Stream**: Watch model responses arrive in real-time
-- **Progress Tracking**: Monitor experiment progress and timing
+- **Progress Tracking**: Monitor experiment progress and timing with accurate iteration counting
+- **Experiment Control**: Stop running experiments anytime with dedicated stop button
 - **Instant Bias Detection**: Live statistics and bias alerts during experiments
 
 ### 🎯 Prompt Customization Features
@@ -75,8 +78,14 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **Detailed Professional Profiles**: Full CVs with work experience, education, skills, and achievements
 - **Role-Specific Templates**: Tailored CVs for software engineers, managers, and sales professionals
 - **Dynamic Content Generation**: Each candidate gets unique but comparable qualifications
-- **Borderline Candidate Design**: CVs are crafted to represent qualified but not exceptional candidates
+- **Customizable Qualification Levels**: Choose between weak, borderline, or strong candidate profiles
 - **Bias Detection Optimization**: Identical qualification levels across demographic groups for fair comparison
+- **Live CV Preview**: See exactly what CVs are being generated during experiments
+
+**CV Qualification Levels:**
+- **Weak Candidates**: 2.5-3.0 GPA, minimal experience, basic achievements
+- **Borderline Candidates**: 3.0-3.4 GPA, modest experience, average achievements (default)
+- **Strong Candidates**: 3.5-4.0 GPA, excellent experience, outstanding achievements
 
 **CV Features Include:**
 - Professional summaries and contact information
@@ -85,6 +94,7 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - Technical skills and certifications
 - Projects and accomplishments
 - Realistic timelines and career progression
+- Deterministic generation ensuring ceteris paribus (only name varies)
 
 ### Using the Interfaces
 
@@ -96,11 +106,14 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 **Live Monitor:**
 1. **Configure Experiment**: Select job role, models, and iterations
 2. **Edit Prompt Template**: Customize the base prompt sent to all models
-3. **Preview Sample CV**: View realistic resume content generated for candidates
-4. **Configure Demographics**: Select and edit demographic groups and names
-5. **Preview Prompts**: See exactly what will be sent before running
-6. **Start Live Experiment**: Watch real-time prompt dispatch and responses
-7. **Monitor Bias**: Live statistics show bias patterns as they emerge
+3. **Customize CV Level**: Choose weak, borderline, or strong candidate qualifications
+4. **Preview Sample CV**: View realistic resume content generated for candidates
+5. **Configure Demographics**: Select and edit demographic groups and names
+6. **Preview Prompts**: See exactly what will be sent before running
+7. **Start Live Experiment**: Watch real-time prompt dispatch and responses
+8. **Monitor CVs**: View complete candidate profiles during experiments
+9. **Control Experiment**: Stop running experiments anytime if needed
+10. **Monitor Bias**: Live statistics show bias patterns as they emerge
 
 **Example Prompt Customization:**
 ```
@@ -115,6 +128,8 @@ This allows testing whether mentioning "bias research" affects model responses.
 - **Detailed Context**: Rich professional profiles provide more realistic decision-making scenarios
 - **Reduced Noise**: Comprehensive information reduces arbitrary decision-making factors
 - **Better Insights**: More realistic scenarios lead to more actionable bias detection results
+- **Customizable Difficulty**: Adjust candidate strength to avoid 100% hire rates
+- **Live Transparency**: See exactly what qualifications are being evaluated
 
 **Note:** The repository contains runs with different qualification levels:
 - **Early runs**: Harvard University + startup experience (higher baseline rates)
@@ -140,6 +155,22 @@ This allows testing whether mentioning "bias research" affects model responses.
 - **Reasoning Models**: o1-preview, o1-mini, o1, o3-mini, o3
 
 *Note: Some newer models may not be available via API yet. The system gracefully handles unavailable models and will show availability status during setup.*
+
+## 🔧 Recent Improvements
+
+### Live Experiment Enhancements
+- **Fixed Iteration Counting**: Resolved double-counting bug that was multiplying iterations
+- **Real-time CV Display**: Added full CV/resume visibility during experiments
+- **Stop Experiment Control**: Added ability to stop long-running experiments
+- **Prompt Processing Display**: Fixed "no prompt currently processing" issue
+- **CV Qualification Levels**: Added weak/borderline/strong candidate options
+- **Progress Tracking**: Accurate experiment progress with proper iteration counting
+
+### CV System Improvements
+- **Borderline Candidates**: Adjusted default CVs to create realistic hiring decisions
+- **Deterministic Generation**: Ensures ceteris paribus (only name varies between candidates)
+- **Live Preview**: Real-time CV preview with customization options
+- **Qualification Control**: Prevent 100% hire rates with appropriate candidate strength
 
 ### Demographic Bias (25% Gap)
 **Consistent across qualification levels:**
@@ -201,6 +232,32 @@ Use `response_analyzer.py` for detailed analysis:
 ```python
 python3 response_analyzer.py
 ```
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**Getting 100% hire rates:**
+- Use "Customize CV Level" to select "Weak" or "Borderline" candidates
+- Default borderline candidates should produce realistic hiring decisions
+- Preview CVs to ensure appropriate qualification levels
+
+**Experiment shows doubled iterations:**
+- This was a bug that has been fixed
+- Ensure you're using the latest version of the code
+
+**"No prompt currently processing" message:**
+- This display issue has been resolved
+- The interface now shows real-time prompt processing and CV content
+
+**Need to stop a running experiment:**
+- Use the red "Stop Experiment" button that appears during experiments
+- Experiments can be stopped gracefully with partial results
+
+**Can't see what CVs are being generated:**
+- Use "Preview Sample CV" to see example CVs
+- During experiments, CV content is displayed in real-time
+- Use "Customize CV Level" to control qualification strength
 
 ## 📈 Methodology
 

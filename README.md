@@ -58,15 +58,24 @@ The web interface provides:
 2. **Multi-Run Aggregation**: Select multiple runs and click "Aggregate Multiple Runs"
 3. **View Results**: Interactive charts show bias patterns and model inconsistencies
 
+**Note:** The repository contains runs with different qualification levels:
+- **Early runs**: Harvard University + startup experience (higher baseline rates)
+- **Recent runs**: State University + limited experience (lower baseline rates)
+- **Aggregation**: Combines all runs for larger sample sizes
+
 ## 🔍 Detailed Results
 
 ### Model Inconsistency (0% Agreement)
+**Latest Run Results (Borderline Candidates):**
 - **GPT-3.5-turbo**: 100% hire rate (too permissive)
 - **GPT-4o**: 47% hire rate (realistic but biased)
 - **GPT-4o-mini**: 0% hire rate (too restrictive)
 - **GPT-4-turbo**: 0% hire rate (too restrictive)
 
+**Note:** Earlier runs with stronger qualifications (Harvard + startup experience) show higher overall rates, but similar bias patterns.
+
 ### Demographic Bias (25% Gap)
+**Consistent across qualification levels:**
 - **Black females**: 50.0% hire rate (highest)
 - **White males**: 25.0% hire rate (lowest)
 - **Other groups**: 31.2% - 37.5% hire rate
@@ -74,7 +83,7 @@ The web interface provides:
 ### Statistical Significance
 - **Bias detection**: >10% gap triggers significant bias alert
 - **Sample size**: 128 responses across 8 demographic groups
-- **Reproducibility**: Consistent patterns across multiple runs
+- **Reproducibility**: Consistent bias patterns across multiple runs and qualification levels
 
 ## 📁 Project Structure
 

@@ -24,18 +24,29 @@ live_experiments = {}
 current_experiment = None
 
 def create_custom_test_cases(config):
-    """Create test cases based on selected demographics"""
+    """Create test cases based on selected demographics and custom prompt"""
     from bias_testing_framework import BiasTestCase
     
     bias_test = HiringBiasTest()
     role = config.get('role', 'software_engineer')
     selected_demographics = config.get('demographics', {})
+    custom_prompt = config.get('prompt_template', '')
     
     test_cases = []
     
+    # Use custom prompt if provided, otherwise use default
+    if custom_prompt.strip():
+        prompt_template = custom_prompt
+    else:
+        prompt_template = bias_test.role_templates.get(role, bias_test.role_templates['software_engineer'])
+    
     if not selected_demographics:
-        # Fall back to default test cases
-        return bias_test.create_test_cases(role)
+        # Fall back to default test cases with custom prompt
+        test_cases = bias_test.create_test_cases(role)
+        # Update all test cases with custom prompt
+        for test_case in test_cases:
+            test_case.template = prompt_template
+        return test_cases
     
     for demo_key, demo_config in selected_demographics.items():
         if demo_config.get('selected', False):
@@ -51,7 +62,7 @@ def create_custom_test_cases(config):
                 }
                 
                 test_case = BiasTestCase(
-                    template=bias_test.role_templates[role],
+                    template=prompt_template,
                     variables=variables,
                     domain=f"hiring_{role}_{demo_key}"
                 )
@@ -105,6 +116,19 @@ def get_demographics():
     
     return jsonify(demographic_groups)
 
+@app.route('/api/get-prompt-template/<role>')
+def get_prompt_template(role):
+    """Get the default prompt template for a given role"""
+    bias_test = HiringBiasTest()
+    
+    if role not in bias_test.role_templates:
+        return jsonify({'error': f'Unknown role: {role}'}), 400
+    
+    return jsonify({
+        'role': role,
+        'template': bias_test.role_templates[role]
+    })
+
 @app.route('/api/preview-experiment', methods=['POST'])
 def preview_experiment():
     """Preview experiment setup without running"""
@@ -114,11 +138,19 @@ def preview_experiment():
     selected_demographics = config.get('demographics', {})
     models = config.get('models', [])
     iterations = config.get('iterations', 1)
+    custom_prompt = config.get('prompt_template', '')
     
     # Create custom bias test with selected demographics
     bias_test = HiringBiasTest()
     datasets = BiasDatasets()
     all_names = datasets.get_hiring_bias_names()
+    
+    # Use custom prompt if provided, otherwise use default
+    role = config.get('role', 'software_engineer')
+    if custom_prompt.strip():
+        prompt_template = custom_prompt
+    else:
+        prompt_template = bias_test.role_templates.get(role, bias_test.role_templates['software_engineer'])
     
     # Filter to only selected demographics
     filtered_names = {}
@@ -145,9 +177,9 @@ def preview_experiment():
             
             from bias_testing_framework import BiasTestCase
             test_case = BiasTestCase(
-                template=bias_test.role_templates[config.get('role', 'software_engineer')],
+                template=prompt_template,
                 variables=variables,
-                domain=f"hiring_{config.get('role', 'software_engineer')}_{demo_key}"
+                domain=f"hiring_{role}_{demo_key}"
             )
             test_cases.append(test_case)
     

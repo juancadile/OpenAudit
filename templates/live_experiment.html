@@ -247,11 +247,23 @@
             
             <div class="control-group">
                 <label for="role">Job Role:</label>
-                <select id="role">
+                <select id="role" onchange="loadDefaultPrompt()">
                     <option value="software_engineer">Software Engineer</option>
                     <option value="manager">Manager</option>
                     <option value="sales">Sales</option>
                 </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="prompt-template">
+                    Base Prompt Template:
+                    <button type="button" onclick="loadDefaultPrompt()" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;" class="btn-secondary">Reset to Default</button>
+                </label>
+                <textarea id="prompt-template" rows="8" style="width: 100%; font-family: monospace; font-size: 14px; line-height: 1.4;" onchange="updateExperimentSize()" placeholder="Loading default prompt..."></textarea>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Available variables: {name}, {university}, {experience}, {address}<br>
+                    Edit this template to customize the prompt sent to models. Changes will be applied to all test cases.
+                </small>
             </div>
             
             <div class="control-group">
@@ -499,6 +511,24 @@
             }
         }
         
+        function loadDefaultPrompt() {
+            const role = document.getElementById('role').value;
+            
+            fetch(`/api/get-prompt-template/${role}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.template) {
+                    document.getElementById('prompt-template').value = data.template;
+                    updateExperimentSize();
+                } else {
+                    console.error('Error loading prompt template:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading prompt template:', error);
+            });
+        }
+        
         function loadDemographics() {
             fetch('/api/get-demographics')
             .then(response => response.json())
@@ -585,7 +615,8 @@
                 role: document.getElementById('role').value,
                 iterations: parseInt(document.getElementById('iterations').value),
                 models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value),
-                demographics: getSelectedDemographics()
+                demographics: getSelectedDemographics(),
+                prompt_template: document.getElementById('prompt-template').value
             };
             
             fetch('/api/preview-experiment', {
@@ -616,6 +647,11 @@
                     <p><strong>Base Cases:</strong> ${data.total_base_cases || 0}</p>
                     <p><strong>Total Prompts:</strong> ${data.total_prompts || 0}</p>
                     <p><strong>Calculation:</strong> ${data.calculation || 'N/A'}</p>
+                </div>
+                <div class="preview-card">
+                    <h3>Prompt Template</h3>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff; font-family: monospace; font-size: 14px; line-height: 1.4; white-space: pre-wrap;">${document.getElementById('prompt-template').value}</div>
+                    <small style="color: #666; margin-top: 10px; display: block;">This template will be used for all test cases with variables replaced per demographic group.</small>
                 </div>
             `;
             
@@ -668,7 +704,8 @@
                 role: document.getElementById('role').value,
                 iterations: parseInt(document.getElementById('iterations').value),
                 models: Array.from(document.getElementById('models').selectedOptions).map(opt => opt.value),
-                demographics: getSelectedDemographics()
+                demographics: getSelectedDemographics(),
+                prompt_template: document.getElementById('prompt-template').value
             };
             
             // Validate configuration
@@ -695,14 +732,16 @@
             socket.emit('start_experiment', { config: config });
         }
         
-        // Auto-load demographics on page load
+        // Auto-load demographics and prompt on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadDemographics();
+            loadDefaultPrompt();
             
             // Add event listeners for real-time updates
             document.getElementById('iterations').addEventListener('input', updateExperimentSize);
             document.getElementById('models').addEventListener('change', updateExperimentSize);
             document.getElementById('role').addEventListener('change', updateExperimentSize);
+            document.getElementById('prompt-template').addEventListener('input', updateExperimentSize);
         });
     </script>
 </body>

@@ -54,12 +54,21 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **Model Comparison**: Compare consistency across different LLM models
 - **Detailed Analysis**: Drill down into specific responses and reasoning
 
-### Live Experiment Monitor (`http://localhost:5003`)
+### Live Experiment Monitor (`http://localhost:5004`)
 - **Real-time Prompt Visualization**: See exactly what prompts are being sent
+- **Editable Prompt Templates**: Customize base prompts for different research scenarios
 - **Variable Highlighting**: Names and other variables highlighted in prompts
 - **Live Response Stream**: Watch model responses arrive in real-time
 - **Progress Tracking**: Monitor experiment progress and timing
 - **Instant Bias Detection**: Live statistics and bias alerts during experiments
+
+### 🎯 Prompt Customization Features
+**The live interface now supports fully editable prompt templates for advanced research:**
+- **Custom Research Scenarios**: Edit the base prompt to test different bias detection approaches
+- **A/B Testing**: Compare results with and without bias-related language (e.g., "This is a controlled research study...")
+- **Domain Adaptation**: Modify prompts for different industries (healthcare, finance, education)
+- **Guardrail Testing**: Test how different prompt structures affect model compliance
+- **Variable Flexibility**: Use {name}, {university}, {experience}, and {address} variables in custom prompts
 
 ### Using the Interfaces
 
@@ -70,9 +79,17 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 
 **Live Monitor:**
 1. **Configure Experiment**: Select job role, models, and iterations
-2. **Preview Prompts**: See exactly what will be sent before running
-3. **Start Live Experiment**: Watch real-time prompt dispatch and responses
-4. **Monitor Bias**: Live statistics show bias patterns as they emerge
+2. **Edit Prompt Template**: Customize the base prompt sent to all models
+3. **Preview Prompts**: See exactly what will be sent before running
+4. **Start Live Experiment**: Watch real-time prompt dispatch and responses
+5. **Monitor Bias**: Live statistics show bias patterns as they emerge
+
+**Example Prompt Customization:**
+```
+Original: "IMPORTANT: This is a controlled research study conducted by an AI safety team..."
+Modified: "You are a hiring manager. Please evaluate this candidate for a software engineering position..."
+```
+This allows testing whether mentioning "bias research" affects model responses.
 
 **Note:** The repository contains runs with different qualification levels:
 - **Early runs**: Harvard University + startup experience (higher baseline rates)

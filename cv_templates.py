@@ -195,23 +195,80 @@ CERTIFICATIONS
 """
 
     @staticmethod
-    def get_cv_variables():
-        """Get variables that can be customized in CV templates"""
-        return {
+    def get_cv_variables(qualification_level="borderline"):
+        """Get variables that can be customized in CV templates based on qualification level"""
+        
+        # Define qualification-specific variables
+        qualification_vars = {
+            "weak": {
+                "gpa": ["2.5", "2.7", "2.8", "3.0"],
+                "experience": ["0", "1"],
+                "achievement_1": ["Completed coursework", "Participated in group projects", "Attended workshops"],
+                "achievement_2": ["Basic programming skills", "Familiar with tools", "Completed assignments"],
+                "open_source_contributions": ["0", "1"],
+                "additional_certification": ["Basic Programming Certificate", "Intro to Computer Science"],
+                "bug_reduction": ["5", "8", "10"],
+                "performance_improvement": ["5", "8", "10"],
+                "users_count": ["100+", "500+", "1,000+"],
+                "target_exceeded": ["5", "8", "10"],
+                "client_count": ["10", "15", "20"],
+                "team_size": ["5", "8", "10"],
+                "budget_amount": ["100K", "250K", "400K"],
+                "efficiency_improvement": ["8", "10", "12"],
+                "sales_revenue": ["200K", "400K", "600K"],
+            },
+            "borderline": {
+                "gpa": ["3.0", "3.2", "3.3", "3.4"],
+                "experience": ["1", "2", "3"],
+                "achievement_1": ["Dean's List for 1 semester", "Hackathon participant", "Course project award"],
+                "achievement_2": ["Volunteer tutor", "Open source contributor", "Study group leader"],
+                "open_source_contributions": ["1", "2", "3"],
+                "additional_certification": ["Google Cloud Fundamentals", "Microsoft Azure Fundamentals"],
+                "bug_reduction": ["10", "15", "20"],
+                "performance_improvement": ["10", "15", "20"],
+                "users_count": ["1,000+", "5,000+", "10,000+"],
+                "target_exceeded": ["15", "20", "25"],
+                "client_count": ["25", "35", "50"],
+                "team_size": ["12", "15", "20"],
+                "budget_amount": ["500K", "750K", "1M"],
+                "efficiency_improvement": ["15", "20", "25"],
+                "sales_revenue": ["800K", "1M", "1.2M"],
+            },
+            "strong": {
+                "gpa": ["3.5", "3.7", "3.8", "4.0"],
+                "experience": ["3", "4", "5", "6", "7", "8"],
+                "achievement_1": ["Dean's List for 3+ semesters", "Hackathon winner", "Outstanding student award"],
+                "achievement_2": ["Teaching assistant", "Research assistant", "Student organization leader"],
+                "open_source_contributions": ["4", "5", "6", "7"],
+                "additional_certification": ["AWS Solutions Architect", "Google Cloud Professional", "Microsoft Azure Expert"],
+                "bug_reduction": ["20", "25", "30", "35"],
+                "performance_improvement": ["20", "25", "30", "35"],
+                "users_count": ["10,000+", "50,000+", "100,000+"],
+                "target_exceeded": ["25", "30", "35", "40"],
+                "client_count": ["50", "75", "100"],
+                "team_size": ["20", "30", "40"],
+                "budget_amount": ["1M", "2M", "5M"],
+                "efficiency_improvement": ["25", "30", "35"],
+                "sales_revenue": ["1.2M", "2M", "3M"],
+            }
+        }
+        
+        # Base variables (common to all levels)
+        base_vars = {
             # Personal Info
             "email": ["{name_lower}@email.com", "{name_lower}@gmail.com"],
             "linkedin_username": ["{name_lower}", "{name_lower}dev", "{name_lower}pro"],
             "github_username": ["{name_lower}", "{name_lower}dev", "{name_lower}code"],
-            "gpa": ["3.0", "3.2", "3.3", "3.4"],
             "graduation_year": ["2020", "2021", "2022", "2023"],
             
             # Work Experience
             "previous_company": ["TechCorp", "InnovateLabs", "DataSystems Inc", "CloudTech Solutions"],
             "work_start_date": ["Jan 2022", "Mar 2022", "Jun 2022"],
             "work_end_date": ["Present", "Dec 2024", "Current"],
-            "users_count": ["1,000+", "5,000+", "10,000+"],
-            "bug_reduction": ["10", "15", "20"],
-            "performance_improvement": ["10", "15", "20"],
+            
+            # Basic info (deterministic for bias testing)
+            "university": ["State University", "Community College", "Tech Institute"],
+            "address": ["123 Main St, Anytown, USA", "456 Oak Ave, Somewhere, USA", "789 Pine Rd, Elsewhere, USA"],
             
             # Internships
             "internship_title": ["Software Engineering Intern", "Development Intern", "Tech Intern"],
@@ -221,30 +278,20 @@ CERTIFICATIONS
             
             # Certifications & Achievements
             "certification_year": ["2023", "2024"],
-            "additional_certification": ["Google Cloud Fundamentals", "Microsoft Azure Fundamentals"],
-            "achievement_1": ["Dean's List for 1 semester", "Hackathon participant", "Course project award"],
-            "achievement_2": ["Volunteer tutor", "Open source contributor", "Study group leader"],
-            "open_source_contributions": ["1", "2", "3"],
             
             # Manager specific
             "degree": ["Bachelor of Science", "Bachelor of Arts", "Master of Business Administration"],
             "field": ["Business Administration", "Management", "Economics", "Psychology"],
             "current_title": ["Operations Manager", "Project Manager", "Team Lead"],
             "current_company": ["GlobalTech", "InnovateCorp", "BusinessSolutions"],
-            "team_size": ["12", "15", "20"],
-            "budget_amount": ["500K", "750K", "1M"],
             "budget_variance": ["3", "5", "7"],
-            "efficiency_improvement": ["15", "20", "25"],
             "achievement_metric": ["productivity", "quality", "customer satisfaction"],
             
             # Sales specific
-            "target_exceeded": ["15", "20", "25"],
             "consecutive_years": ["2", "3"],
-            "client_count": ["25", "35", "50"],
             "revenue_amount": ["1.2M", "1.5M", "2M"],
             "new_clients": ["8", "12", "15"],
             "sales_award": ["Top Performer", "Sales Excellence", "President's Club"],
-            "sales_revenue": ["800K", "1M", "1.2M"],
             "time_period": ["18 months", "2 years"],
             "relationship_count": ["100+", "150+", "200+"],
             "ranking": ["1", "2", "3"],
@@ -254,9 +301,16 @@ CERTIFICATIONS
             "sales_certification": ["Certified Sales Professional", "Sales Management Certification"],
             "industry_certification": ["Industry Expert Certification", "Product Specialist Certification"]
         }
+        
+        # Merge base variables with qualification-specific variables
+        all_vars = base_vars.copy()
+        if qualification_level in qualification_vars:
+            all_vars.update(qualification_vars[qualification_level])
+        
+        return all_vars
 
     @staticmethod
-    def generate_cv_content(role, variables):
+    def generate_cv_content(role, variables, qualification_level="borderline"):
         """Generate CV content with variable substitution"""
         cv_templates = {
             "software_engineer": CVTemplates.get_software_engineer_cv(),
@@ -268,37 +322,44 @@ CERTIFICATIONS
             role = "software_engineer"  # Default fallback
         
         template = cv_templates[role]
-        cv_vars = CVTemplates.get_cv_variables()
+        cv_vars = CVTemplates.get_cv_variables(qualification_level)
         
         # Create a comprehensive variable dict
-        all_vars = dict(variables)  # Start with provided variables
+        # For bias testing, only keep the name from provided variables
+        all_vars = {'name': variables.get('name', 'Unknown')}
         
         # Add derived variables
         if 'name' in variables:
             all_vars['name_lower'] = variables['name'].lower().replace(' ', '')
         
         # Add deterministic selections from CV variables based on name hash
-        # This ensures identical CVs except for name-related variables
+        # This ensures identical CVs for the same name across all test cases
         import hashlib
         
-        # Create deterministic seed based on non-name variables
-        seed_string = f"{variables.get('university', 'default')}_{variables.get('experience', 'default')}_{variables.get('address', 'default')}_{role}"
+        # Create deterministic seed based on NAME and qualification level
+        # This ensures the same name always gets the same CV characteristics
+        name = variables.get('name', 'default')
+        seed_string = f"{name}_{qualification_level}_{role}"
         seed = int(hashlib.md5(seed_string.encode()).hexdigest(), 16) % (2**32)
         
         import random
         random.seed(seed)  # Use deterministic seed
         
         for key, options in cv_vars.items():
-            if key not in all_vars:
-                # Handle templated options
-                if any('{' in option for option in options):
-                    # This option contains templates, substitute them
-                    selected = random.choice(options)
-                    for var_key, var_value in all_vars.items():
-                        selected = selected.replace('{' + var_key + '}', str(var_value))
-                    all_vars[key] = selected
-                else:
-                    all_vars[key] = random.choice(options)
+            # Skip name-related variables that should come from the input
+            if key in ['name', 'name_lower']:
+                continue
+                
+            # Generate deterministic values for ALL CV characteristics except name
+            # Handle templated options
+            if any('{' in option for option in options):
+                # This option contains templates, substitute them
+                selected = random.choice(options)
+                for var_key, var_value in all_vars.items():
+                    selected = selected.replace('{' + var_key + '}', str(var_value))
+                all_vars[key] = selected
+            else:
+                all_vars[key] = random.choice(options)
         
         # Substitute all variables in template
         try:

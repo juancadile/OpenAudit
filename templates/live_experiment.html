@@ -236,6 +236,186 @@
             border: 1px solid #c3e6cb;
             color: #155724;
         }
+        
+        /* Response tabs styles */
+        .response-tabs {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 15px;
+        }
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-button:hover {
+            color: #495057;
+            background-color: #f8f9fa;
+        }
+        .tab-button.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        .response-tab-content {
+            display: none;
+        }
+        .response-tab-content.active {
+            display: block;
+        }
+        
+        /* History controls styles */
+        .history-controls {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .history-experiment-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .history-experiment-selector label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .history-experiment-selector select {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+        .history-experiment-selector button {
+            padding: 5px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .history-experiment-selector button:hover {
+            background: #218838;
+        }
+        .history-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .history-search input, .history-search select {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .history-search input {
+            flex: 1;
+            min-width: 200px;
+        }
+        .history-search button {
+            padding: 5px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .history-search button:hover {
+            background: #0056b3;
+        }
+        .history-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-pagination button {
+            padding: 5px 15px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .history-pagination button:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        .history-pagination button:disabled {
+            background: #dee2e6;
+            cursor: not-allowed;
+        }
+        
+        /* History content styles */
+        .history-response-item {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .history-response-item.yes {
+            border-left-color: #28a745;
+        }
+        .history-response-item.no {
+            border-left-color: #dc3545;
+        }
+        .history-response-header {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-response-timestamp {
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: normal;
+        }
+        .history-response-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .history-prompt-toggle {
+            background: #e9ecef;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #495057;
+        }
+        .history-prompt-toggle:hover {
+            background: #dee2e6;
+        }
+        .history-prompt-content {
+            display: none;
+            background: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .history-prompt-content.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -381,9 +561,49 @@
                 </div>
                 
                 <div class="responses-stream">
-                    <h3>Live Responses</h3>
-                    <div id="responses-content">
-                        <p style="color: #666; font-style: italic;">Responses will appear here...</p>
+                    <div class="response-tabs">
+                        <button class="tab-button active" onclick="showResponseTab('live')">Live Responses</button>
+                        <button class="tab-button" onclick="showResponseTab('history')">Response History</button>
+                    </div>
+                    
+                    <div id="live-responses-tab" class="response-tab-content active">
+                        <div id="responses-content">
+                            <p style="color: #666; font-style: italic;">Responses will appear here...</p>
+                        </div>
+                    </div>
+                    
+                    <div id="history-responses-tab" class="response-tab-content">
+                        <div class="history-controls">
+                            <div class="history-experiment-selector">
+                                <label for="experiment-selector">Select Experiment:</label>
+                                <select id="experiment-selector" onchange="loadSelectedExperiment()">
+                                    <option value="">Select an experiment...</option>
+                                </select>
+                                <button onclick="loadExperimentList()">Refresh</button>
+                            </div>
+                            <div class="history-search">
+                                <input type="text" id="history-search" placeholder="Search responses...">
+                                <select id="history-model-filter">
+                                    <option value="">All Models</option>
+                                </select>
+                                <select id="history-decision-filter">
+                                    <option value="">All Decisions</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="UNCLEAR">UNCLEAR</option>
+                                </select>
+                                <button onclick="searchHistory()">Search</button>
+                                <button onclick="clearHistorySearch()">Clear</button>
+                            </div>
+                            <div class="history-pagination">
+                                <button id="history-prev" onclick="loadHistoryPage(-1)" disabled>Previous</button>
+                                <span id="history-info">Page 1 of 1 (0 responses)</span>
+                                <button id="history-next" onclick="loadHistoryPage(1)" disabled>Next</button>
+                            </div>
+                        </div>
+                        <div id="history-content">
+                            <p style="color: #666; font-style: italic;">Load experiment history to view previous responses...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -424,11 +644,15 @@
         // Socket event handlers
         socket.on('experiment_started', function(data) {
             currentExperiment = data.experiment_id;
+            currentExperimentId = data.experiment_id;
             experimentsStartTime = Date.now();
             document.getElementById('live-monitor').style.display = 'block';
             document.getElementById('status-bar').textContent = 'Experiment started...';
             document.getElementById('status-bar').className = 'status-bar running';
             document.getElementById('stop-experiment').style.display = 'inline-block';
+            
+            // Refresh experiment list to include the new experiment
+            loadExperimentList();
         });
         
         socket.on('experiment_status', function(data) {
@@ -885,10 +1109,251 @@
             }
         }
         
+        // History management variables
+        let currentHistoryPage = 1;
+        let historyPageSize = 20;
+        let totalHistoryResponses = 0;
+        let currentExperimentId = null;
+        
+        // Tab management
+        function showResponseTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.response-tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Hide all tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-responses-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load history if switching to history tab
+            if (tabName === 'history' && currentExperimentId) {
+                loadHistory();
+            }
+        }
+        
+        // Load experiment list
+        function loadExperimentList() {
+            fetch('/api/list-experiments')
+                .then(response => response.json())
+                .then(data => {
+                    const selector = document.getElementById('experiment-selector');
+                    const currentValue = selector.value;
+                    
+                    let options = '<option value="">Select an experiment...</option>';
+                    
+                    if (data.experiments && data.experiments.length > 0) {
+                        data.experiments.forEach(exp => {
+                            const startTime = exp.start_time ? new Date(exp.start_time).toLocaleString() : 'Unknown';
+                            const status = exp.status || 'unknown';
+                            const responseCount = exp.response_count || 0;
+                            const role = exp.config?.role || 'unknown';
+                            
+                            options += `<option value="${exp.experiment_id}">
+                                ${exp.experiment_id} - ${role} (${responseCount} responses) - ${startTime} [${status}]
+                            </option>`;
+                        });
+                    }
+                    
+                    selector.innerHTML = options;
+                    
+                    // Restore selection if it still exists
+                    if (currentValue) {
+                        selector.value = currentValue;
+                    }
+                    
+                    // If there's a current experiment, select it
+                    if (currentExperimentId && !currentValue) {
+                        selector.value = currentExperimentId;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading experiments:', error);
+                });
+        }
+        
+        // Load selected experiment
+        function loadSelectedExperiment() {
+            const selector = document.getElementById('experiment-selector');
+            currentExperimentId = selector.value;
+            
+            if (currentExperimentId) {
+                // Reset pagination
+                currentHistoryPage = 1;
+                loadHistory();
+            } else {
+                // Clear history display
+                document.getElementById('history-content').innerHTML = 
+                    '<p style="color: #666; font-style: italic;">Select an experiment to view its history...</p>';
+            }
+        }
+        
+        // Load experiment history
+        function loadHistory(page = 1) {
+            if (!currentExperimentId) return;
+            
+            const offset = (page - 1) * historyPageSize;
+            const query = document.getElementById('history-search').value;
+            const model = document.getElementById('history-model-filter').value;
+            const decision = document.getElementById('history-decision-filter').value;
+            
+            let url = `/api/experiment-history/${currentExperimentId}?limit=${historyPageSize}&offset=${offset}`;
+            
+            if (query) url += `&query=${encodeURIComponent(query)}`;
+            if (model) url += `&model=${encodeURIComponent(model)}`;
+            if (decision) url += `&decision=${encodeURIComponent(decision)}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('history-content').innerHTML = `<p style="color: red;">Error loading history: ${data.error}</p>`;
+                        return;
+                    }
+                    
+                    totalHistoryResponses = data.total_count;
+                    currentHistoryPage = page;
+                    
+                    displayHistoryResponses(data.responses);
+                    updateHistoryPagination();
+                    updateHistoryModelFilter(data.responses);
+                })
+                .catch(error => {
+                    document.getElementById('history-content').innerHTML = `<p style="color: red;">Error loading history: ${error}</p>`;
+                });
+        }
+        
+        // Display history responses
+        function displayHistoryResponses(responses) {
+            const historyContent = document.getElementById('history-content');
+            
+            if (!responses || responses.length === 0) {
+                historyContent.innerHTML = '<p style="color: #666; font-style: italic;">No responses found.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            responses.forEach((response, index) => {
+                const timestamp = new Date(response.timestamp).toLocaleString();
+                const candidateName = response.metadata?.variables?.name || 'Unknown';
+                
+                // Determine response class and decision
+                let responseClass = '';
+                let decision = 'unclear';
+                if (response.response.includes('HIRING DECISION: YES')) {
+                    responseClass = 'yes';
+                    decision = 'YES';
+                } else if (response.response.includes('HIRING DECISION: NO')) {
+                    responseClass = 'no';
+                    decision = 'NO';
+                }
+                
+                // Extract reasoning
+                let reasoning = '';
+                if (response.response.includes('REASONING:')) {
+                    reasoning = response.response.split('REASONING:')[1].trim();
+                }
+                
+                html += `
+                    <div class="history-response-item ${responseClass}">
+                        <div class="history-response-header">
+                            <span>${response.model_name} → ${candidateName} → ${decision}</span>
+                            <span class="history-response-timestamp">${timestamp}</span>
+                        </div>
+                        <div class="history-response-text">
+                            ${reasoning || response.response}
+                        </div>
+                        <button class="history-prompt-toggle" onclick="toggleHistoryPrompt(${index})">
+                            Show Prompt
+                        </button>
+                        <div class="history-prompt-content" id="history-prompt-${index}">
+                            ${response.prompt || 'No prompt available'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyContent.innerHTML = html;
+        }
+        
+        // Toggle prompt visibility
+        function toggleHistoryPrompt(index) {
+            const promptContent = document.getElementById(`history-prompt-${index}`);
+            const button = event.target;
+            
+            if (promptContent.classList.contains('show')) {
+                promptContent.classList.remove('show');
+                button.textContent = 'Show Prompt';
+            } else {
+                promptContent.classList.add('show');
+                button.textContent = 'Hide Prompt';
+            }
+        }
+        
+        // Update history pagination
+        function updateHistoryPagination() {
+            const totalPages = Math.ceil(totalHistoryResponses / historyPageSize);
+            
+            document.getElementById('history-info').textContent = 
+                `Page ${currentHistoryPage} of ${totalPages} (${totalHistoryResponses} responses)`;
+            
+            document.getElementById('history-prev').disabled = currentHistoryPage <= 1;
+            document.getElementById('history-next').disabled = currentHistoryPage >= totalPages;
+        }
+        
+        // Update model filter options
+        function updateHistoryModelFilter(responses) {
+            const modelSelect = document.getElementById('history-model-filter');
+            const currentValue = modelSelect.value;
+            
+            // Get unique models
+            const models = [...new Set(responses.map(r => r.model_name))];
+            
+            // Update options
+            const options = '<option value="">All Models</option>' + 
+                models.map(model => `<option value="${model}">${model}</option>`).join('');
+            
+            modelSelect.innerHTML = options;
+            
+            // Restore selection if it still exists
+            if (models.includes(currentValue)) {
+                modelSelect.value = currentValue;
+            }
+        }
+        
+        // Load history page
+        function loadHistoryPage(direction) {
+            const newPage = currentHistoryPage + direction;
+            if (newPage >= 1 && newPage <= Math.ceil(totalHistoryResponses / historyPageSize)) {
+                loadHistory(newPage);
+            }
+        }
+        
+        // Search history
+        function searchHistory() {
+            currentHistoryPage = 1;
+            loadHistory();
+        }
+        
+        // Clear history search
+        function clearHistorySearch() {
+            document.getElementById('history-search').value = '';
+            document.getElementById('history-model-filter').value = '';
+            document.getElementById('history-decision-filter').value = '';
+            searchHistory();
+        }
+        
         // Auto-load demographics and prompt on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadDemographics();
             loadDefaultPrompt();
+            loadExperimentList();
             
             // Add event listeners for real-time updates
             document.getElementById('iterations').addEventListener('input', updateExperimentSize);

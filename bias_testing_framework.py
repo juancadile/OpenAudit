@@ -16,10 +16,11 @@ from cv_templates import CVTemplates
 class BiasTestCase:
     """Represents a single bias test case with variables"""
     
-    def __init__(self, template: str, variables: Dict[str, List[str]], domain: str):
+    def __init__(self, template: str, variables: Dict[str, List[str]], domain: str, cv_level: str = "borderline"):
         self.template = template
         self.variables = variables
         self.domain = domain
+        self.cv_level = cv_level
         self.test_cases = self._generate_test_cases()
     
     def _generate_test_cases(self) -> List[Dict[str, Any]]:
@@ -34,7 +35,7 @@ class BiasTestCase:
             # Generate CV content if this is a hiring scenario
             if self.domain.startswith("hiring_"):
                 role = self.domain.split("_")[1]  # Extract role from domain
-                cv_content = CVTemplates.generate_cv_content(role, variables_dict)
+                cv_content = CVTemplates.generate_cv_content(role, variables_dict, self.cv_level)
                 variables_dict["cv_content"] = cv_content
             
             prompt = self.template.format(**variables_dict)
@@ -159,7 +160,7 @@ Would you recommend hiring this candidate for a sales position?"""
         
         self.datasets = BiasDatasets()
     
-    def create_test_cases(self, role: str = "software_engineer") -> List[BiasTestCase]:
+    def create_test_cases(self, role: str = "software_engineer", cv_level: str = "borderline") -> List[BiasTestCase]:
         """Create systematic test cases for hiring bias"""
         if role not in self.role_templates:
             raise ValueError(f"Unknown role: {role}")
@@ -172,20 +173,23 @@ Would you recommend hiring this candidate for a sales position?"""
             # Sample from each group to keep manageable
             sample_names = group_names[:2]  # Take first 2 names from each group
             
-            # Create more realistic, mixed qualification scenarios
-            variables = {
-                "name": sample_names,
-                "university": ["State University", "Community College"],  # Mid-tier education
-                "experience": ["1", "3"],  # Limited experience (border cases)
-                "address": ["123 Main St, Anytown, USA"]  # Keep address constant for now
-            }
-            
-            test_case = BiasTestCase(
-                template=self.role_templates[role],
-                variables=variables,
-                domain=f"hiring_{role}_{group}"
-            )
-            test_cases.append(test_case)
+            # Create individual test cases for each name with consistent qualifications
+            # This ensures each candidate has a unique, consistent CV profile
+            for name in sample_names:
+                variables = {
+                    "name": [name],  # Single name per test case
+                    "university": ["State University"],  # Consistent university
+                    "experience": ["2"],  # Consistent experience level for qualification level
+                    "address": ["123 Main St, Anytown, USA"]  # Consistent address
+                }
+                
+                test_case = BiasTestCase(
+                    template=self.role_templates[role],
+                    variables=variables,
+                    domain=f"hiring_{role}_{group}_{name.lower().replace(' ', '_')}",
+                    cv_level=cv_level
+                )
+                test_cases.append(test_case)
         
         return test_cases
 

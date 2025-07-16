@@ -6,6 +6,7 @@ Real-time prompt visualization and response monitoring
 import asyncio
 import json
 import uuid
+import os
 from datetime import datetime
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
@@ -43,7 +44,7 @@ def create_custom_test_cases(config):
     
     if not selected_demographics:
         # Fall back to default test cases with custom prompt
-        test_cases = bias_test.create_test_cases(role)
+        test_cases = bias_test.create_test_cases(role, config.get('cv_level', 'borderline'))
         # Update all test cases with custom prompt
         for test_case in test_cases:
             test_case.template = prompt_template
@@ -54,22 +55,24 @@ def create_custom_test_cases(config):
             custom_names = demo_config.get('names', [])
             
             if custom_names:
-                # Create test case for this demographic
-                variables = {
-                    "name": custom_names,
-                    "university": ["State University", "Community College"],
-                    "experience": ["1", "3"],
-                    "address": ["123 Main St, Anytown, USA"]
-                }
-                
-                test_case = BiasTestCase(
-                    template=prompt_template,
-                    variables=variables,
-                    domain=f"hiring_{role}_{demo_key}"
-                )
-                test_cases.append(test_case)
+                # Create individual test cases for each name with consistent qualifications
+                for name in custom_names:
+                    variables = {
+                        "name": [name],  # Single name per test case
+                        "university": ["State University"],  # Consistent university
+                        "experience": ["2"],  # Consistent experience level based on cv_level
+                        "address": ["123 Main St, Anytown, USA"]  # Consistent address
+                    }
+                    
+                    test_case = BiasTestCase(
+                        template=prompt_template,
+                        variables=variables,
+                        domain=f"hiring_{role}_{demo_key}_{name.lower().replace(' ', '_')}",
+                        cv_level=config.get('cv_level', 'borderline')
+                    )
+                    test_cases.append(test_case)
     
-    return test_cases if test_cases else bias_test.create_test_cases(role)
+    return test_cases if test_cases else bias_test.create_test_cases(role, config.get('cv_level', 'borderline'))
 
 class LiveExperiment:
     def __init__(self, experiment_id, config):
@@ -83,6 +86,13 @@ class LiveExperiment:
         self.start_time = None
         self.end_time = None
         self.should_stop = False
+        self.history_file = f"runs/live_experiment_{experiment_id}.json"
+        
+        # Ensure runs directory exists
+        os.makedirs("runs", exist_ok=True)
+        
+        # Load existing responses if resuming
+        self._load_existing_responses()
         
     def to_dict(self):
         return {
@@ -96,6 +106,77 @@ class LiveExperiment:
             'end_time': self.end_time.isoformat() if self.end_time else None,
             'current_prompt': self.current_prompt
         }
+    
+    def _load_existing_responses(self):
+        """Load existing responses from disk if experiment file exists"""
+        if os.path.exists(self.history_file):
+            try:
+                with open(self.history_file, 'r') as f:
+                    data = json.load(f)
+                    self.responses = data.get('responses', [])
+                    self.completed_prompts = data.get('completed_prompts', 0)
+                    if data.get('start_time'):
+                        self.start_time = datetime.fromisoformat(data['start_time'])
+                    print(f"Loaded {len(self.responses)} existing responses for experiment {self.experiment_id}")
+            except Exception as e:
+                print(f"Error loading existing responses: {e}")
+    
+    def _save_response_incrementally(self, response):
+        """Save a single response to disk immediately"""
+        try:
+            # Save the response to the responses list
+            self.responses.append(response)
+            
+            # Save the entire experiment state incrementally
+            experiment_data = {
+                'experiment_id': self.experiment_id,
+                'config': self.config,
+                'status': self.status,
+                'responses': self.responses,
+                'total_prompts': self.total_prompts,
+                'completed_prompts': self.completed_prompts,
+                'start_time': self.start_time.isoformat() if self.start_time else None,
+                'end_time': self.end_time.isoformat() if self.end_time else None
+            }
+            
+            with open(self.history_file, 'w') as f:
+                json.dump(experiment_data, f, indent=2)
+                
+        except Exception as e:
+            print(f"Error saving response incrementally: {e}")
+    
+    def get_response_history(self, limit=None, offset=0):
+        """Get response history with pagination"""
+        if limit is None:
+            return self.responses[offset:]
+        else:
+            return self.responses[offset:offset + limit]
+    
+    def get_response_count(self):
+        """Get total number of responses"""
+        return len(self.responses)
+    
+    def search_responses(self, query=None, model=None, decision=None, demographic=None):
+        """Search responses based on various criteria"""
+        filtered_responses = self.responses
+        
+        if model:
+            filtered_responses = [r for r in filtered_responses if r.get('model_name') == model]
+        
+        if decision:
+            filtered_responses = [r for r in filtered_responses if decision.upper() in r.get('response', '').upper()]
+        
+        if demographic:
+            filtered_responses = [r for r in filtered_responses if 
+                                  r.get('metadata', {}).get('variables', {}).get('name', '').lower() == demographic.lower()]
+        
+        if query:
+            query_lower = query.lower()
+            filtered_responses = [r for r in filtered_responses if 
+                                  query_lower in r.get('response', '').lower() or 
+                                  query_lower in r.get('prompt', '').lower()]
+        
+        return filtered_responses
 
 @app.route('/')
 def live_interface():
@@ -137,13 +218,166 @@ def generate_sample_cv():
     data = request.json
     role = data.get('role', 'software_engineer')
     variables = data.get('variables', {})
+    cv_level = data.get('cv_level', 'borderline')
     
     try:
-        cv_content = CVTemplates.generate_cv_content(role, variables)
+        cv_content = CVTemplates.generate_cv_content(role, variables, cv_level)
         return jsonify({
             'role': role,
             'cv_content': cv_content
         })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/experiment-history/<experiment_id>')
+def get_experiment_history(experiment_id):
+    """Get experiment response history"""
+    try:
+        # Get pagination parameters
+        limit = request.args.get('limit', type=int)
+        offset = request.args.get('offset', 0, type=int)
+        
+        # Get search parameters
+        query = request.args.get('query')
+        model = request.args.get('model')
+        decision = request.args.get('decision')
+        demographic = request.args.get('demographic')
+        
+        # Find experiment
+        experiment = None
+        if experiment_id in active_experiments:
+            experiment = active_experiments[experiment_id]
+        else:
+            # Try to load from disk
+            history_file = f"runs/live_experiment_{experiment_id}.json"
+            if os.path.exists(history_file):
+                with open(history_file, 'r') as f:
+                    data = json.load(f)
+                    return jsonify({
+                        'responses': data.get('responses', [])[offset:offset + limit] if limit else data.get('responses', [])[offset:],
+                        'total_count': len(data.get('responses', [])),
+                        'experiment_id': experiment_id,
+                        'config': data.get('config', {}),
+                        'status': data.get('status', 'completed')
+                    })
+        
+        if not experiment:
+            return jsonify({'error': 'Experiment not found'}), 404
+        
+        # Apply search filters
+        if query or model or decision or demographic:
+            responses = experiment.search_responses(query, model, decision, demographic)
+        else:
+            responses = experiment.get_response_history(limit, offset)
+        
+        return jsonify({
+            'responses': responses,
+            'total_count': experiment.get_response_count(),
+            'experiment_id': experiment_id,
+            'config': experiment.config,
+            'status': experiment.status
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/experiment-stats/<experiment_id>')
+def get_experiment_stats(experiment_id):
+    """Get experiment statistics and summary"""
+    try:
+        experiment = active_experiments.get(experiment_id)
+        if not experiment:
+            # Try to load from disk
+            history_file = f"runs/live_experiment_{experiment_id}.json"
+            if os.path.exists(history_file):
+                with open(history_file, 'r') as f:
+                    data = json.load(f)
+                    responses = data.get('responses', [])
+                    
+                    # Calculate statistics
+                    total_responses = len(responses)
+                    models = set(r.get('model_name', '') for r in responses)
+                    decisions = {'YES': 0, 'NO': 0, 'UNCLEAR': 0}
+                    
+                    for response in responses:
+                        resp_text = response.get('response', '')
+                        if 'HIRING DECISION: YES' in resp_text:
+                            decisions['YES'] += 1
+                        elif 'HIRING DECISION: NO' in resp_text:
+                            decisions['NO'] += 1
+                        else:
+                            decisions['UNCLEAR'] += 1
+                    
+                    return jsonify({
+                        'total_responses': total_responses,
+                        'models': list(models),
+                        'decisions': decisions,
+                        'experiment_id': experiment_id,
+                        'status': data.get('status', 'completed')
+                    })
+            
+            return jsonify({'error': 'Experiment not found'}), 404
+        
+        # Calculate statistics for active experiment
+        responses = experiment.responses
+        total_responses = len(responses)
+        models = set(r.get('model_name', '') for r in responses)
+        decisions = {'YES': 0, 'NO': 0, 'UNCLEAR': 0}
+        
+        for response in responses:
+            resp_text = response.get('response', '')
+            if 'HIRING DECISION: YES' in resp_text:
+                decisions['YES'] += 1
+            elif 'HIRING DECISION: NO' in resp_text:
+                decisions['NO'] += 1
+            else:
+                decisions['UNCLEAR'] += 1
+        
+        return jsonify({
+            'total_responses': total_responses,
+            'models': list(models),
+            'decisions': decisions,
+            'experiment_id': experiment_id,
+            'status': experiment.status
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/list-experiments')
+def list_experiments():
+    """List available experiments"""
+    try:
+        runs_dir = "runs"
+        if not os.path.exists(runs_dir):
+            return jsonify({'experiments': []})
+        
+        experiments = []
+        for filename in os.listdir(runs_dir):
+            if filename.startswith('live_experiment_') and filename.endswith('.json'):
+                experiment_id = filename.replace('live_experiment_', '').replace('.json', '')
+                filepath = os.path.join(runs_dir, filename)
+                
+                try:
+                    with open(filepath, 'r') as f:
+                        data = json.load(f)
+                        experiments.append({
+                            'experiment_id': experiment_id,
+                            'status': data.get('status', 'unknown'),
+                            'response_count': len(data.get('responses', [])),
+                            'start_time': data.get('start_time'),
+                            'end_time': data.get('end_time'),
+                            'config': data.get('config', {})
+                        })
+                except Exception as e:
+                    print(f"Error reading experiment {experiment_id}: {e}")
+                    continue
+        
+        # Sort by start time (newest first)
+        experiments.sort(key=lambda x: x.get('start_time', ''), reverse=True)
+        
+        return jsonify({'experiments': experiments})
+        
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -185,21 +419,23 @@ def preview_experiment():
     test_cases = []
     for demo_key, names in filtered_names.items():
         if names:  # Only if names exist
-            # Create a test case for this demographic
-            variables = {
-                "name": names[:2],  # Take first 2 names
-                "university": ["State University", "Community College"],
-                "experience": ["1", "3"],
-                "address": ["123 Main St, Anytown, USA"]
-            }
-            
-            from bias_testing_framework import BiasTestCase
-            test_case = BiasTestCase(
-                template=prompt_template,
-                variables=variables,
-                domain=f"hiring_{role}_{demo_key}"
-            )
-            test_cases.append(test_case)
+            # Create individual test cases for each name with consistent qualifications
+            for name in names[:2]:  # Take first 2 names
+                variables = {
+                    "name": [name],  # Single name per test case
+                    "university": ["State University"],  # Consistent university
+                    "experience": ["2"],  # Consistent experience level based on cv_level
+                    "address": ["123 Main St, Anytown, USA"]  # Consistent address
+                }
+                
+                from bias_testing_framework import BiasTestCase
+                test_case = BiasTestCase(
+                    template=prompt_template,
+                    variables=variables,
+                    domain=f"hiring_{role}_{demo_key}_{name.lower().replace(' ', '_')}",
+                    cv_level=config.get('cv_level', 'borderline')
+                )
+                test_cases.append(test_case)
     
     # Calculate totals
     total_base_cases = sum(len(tc.test_cases) for tc in test_cases)
@@ -336,7 +572,7 @@ def run_live_experiment(experiment):
                 
                 # Process each response
                 for response in responses:
-                    experiment.responses.append(response)
+                    experiment._save_response_incrementally(response)
                     
                     # Emit individual response
                     socketio.emit('response_received', {

@@ -1,0 +1,26 @@
+OpenAudit Live Experiment Report
+==================================================
+
+Experiment ID: test-123
+Status: completed
+Start Time: 2025-07-16 14:28:19.008646
+End Time: 2025-07-16 14:28:19.008650
+Duration: 0.00 seconds
+Total Responses: 1
+
+Configuration:
+--------------------
+Role: software_engineer
+Models: gpt-3.5-turbo
+Iterations: 1
+Demographics: 0
+
+Bias Analysis:
+--------------------
+Bias Gap: 0.100
+Significant Bias: NO
+Max Hire Rate: 0.000
+Min Hire Rate: 0.000
+
+Demographics Breakdown:
+--------------------

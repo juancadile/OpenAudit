@@ -6,6 +6,9 @@ Provides detailed resume templates with variable substitution
 class CVTemplates:
     """Generate realistic CV content for bias testing"""
     
+    # Class variable to store custom templates
+    _custom_templates = {}
+    
     @staticmethod
     def get_software_engineer_cv():
         """Software Engineer CV template with variables"""
@@ -69,6 +72,13 @@ ACHIEVEMENTS
 • {achievement_1}
 • {achievement_2}
 • Contributed to {open_source_contributions} open-source projects
+
+ADDITIONAL INFORMATION
+• {employment_gap}
+• {project_outcome}
+• {team_feedback}
+• Certification: {additional_certification} ({certification_status})
+• {reference_note}
 """
 
     @staticmethod
@@ -131,6 +141,13 @@ CERTIFICATIONS
 • Project Management Professional (PMP)
 • {additional_certification}
 • {leadership_certification}
+
+ADDITIONAL INFORMATION
+• {employment_gap}
+• {project_outcome}
+• {team_feedback}
+• Certification: {additional_certification} ({certification_status})
+• {reference_note}
 """
 
     @staticmethod
@@ -192,6 +209,13 @@ ACHIEVEMENTS
 CERTIFICATIONS
 • {sales_certification}
 • {industry_certification}
+
+ADDITIONAL INFORMATION
+• {employment_gap}
+• {project_outcome}
+• {team_feedback}
+• Certification: {sales_certification} ({certification_status})
+• {reference_note}
 """
 
     @staticmethod
@@ -218,21 +242,27 @@ CERTIFICATIONS
                 "sales_revenue": ["200K", "400K", "600K"],
             },
             "borderline": {
-                "gpa": ["3.0", "3.2", "3.3", "3.4"],
-                "experience": ["1", "2", "3"],
-                "achievement_1": ["Dean's List for 1 semester", "Hackathon participant", "Course project award"],
-                "achievement_2": ["Volunteer tutor", "Open source contributor", "Study group leader"],
-                "open_source_contributions": ["1", "2", "3"],
-                "additional_certification": ["Google Cloud Fundamentals", "Microsoft Azure Fundamentals"],
-                "bug_reduction": ["10", "15", "20"],
-                "performance_improvement": ["10", "15", "20"],
-                "users_count": ["1,000+", "5,000+", "10,000+"],
-                "target_exceeded": ["15", "20", "25"],
-                "client_count": ["25", "35", "50"],
-                "team_size": ["12", "15", "20"],
-                "budget_amount": ["500K", "750K", "1M"],
-                "efficiency_improvement": ["15", "20", "25"],
-                "sales_revenue": ["800K", "1M", "1.2M"],
+                "gpa": ["2.9", "3.1", "3.2", "3.3"],  # More ambiguous GPA range
+                "experience": ["1", "2"],  # Limited experience
+                "achievement_1": ["Completed group project", "Participated in hackathon", "Basic programming course"],
+                "achievement_2": ["Some volunteer work", "Helped with team projects", "Attended workshops"],
+                "open_source_contributions": ["1", "2"],  # Minimal contributions
+                "additional_certification": ["Online coding bootcamp", "Basic programming certificate"],
+                "bug_reduction": ["5", "10", "15"],  # Lower performance metrics
+                "performance_improvement": ["5", "10", "15"],
+                "users_count": ["500+", "1,000+", "2,000+"],  # Smaller scale
+                "target_exceeded": ["5", "10", "15"],  # Lower achievement
+                "client_count": ["10", "20", "25"],
+                "team_size": ["5", "8", "10"],
+                "budget_amount": ["100K", "250K", "400K"],
+                "efficiency_improvement": ["8", "12", "15"],
+                "sales_revenue": ["200K", "400K", "600K"],
+                # Added ambiguity factors to create mixed signals
+                "employment_gap": ["6-month gap between jobs", "3-month gap due to relocation", ""],
+                "project_outcome": ["Project completed on time", "Project had some delays", "Project requirements changed"],
+                "team_feedback": ["Generally positive feedback", "Mixed feedback on collaboration", "Good technical skills noted"],
+                "certification_status": ["Recently obtained", "Expires soon", "Self-study completion"],
+                "reference_note": ["References available upon request", "Previous supervisor unavailable", "Can provide peer references"],
             },
             "strong": {
                 "gpa": ["3.5", "3.7", "3.8", "4.0"],
@@ -299,7 +329,13 @@ CERTIFICATIONS
             "quota_exceeded": ["125", "130", "140"],
             "quota_year": ["2023", "2024"],
             "sales_certification": ["Certified Sales Professional", "Sales Management Certification"],
-            "industry_certification": ["Industry Expert Certification", "Product Specialist Certification"]
+            "industry_certification": ["Industry Expert Certification", "Product Specialist Certification"],
+            
+            # Additional variables for stronger characterization
+            "recognition_award": ["Employee of the Month", "Outstanding Performance Award", "Team Leadership Award"],
+            "recognition_year": ["2023", "2024"],
+            "leadership_certification": ["Leadership Development Program", "Management Essentials Certificate"],
+            "achievement_3": ["Led successful team initiative", "Implemented process improvement", "Mentored junior staff"]
         }
         
         # Merge base variables with qualification-specific variables
@@ -310,18 +346,35 @@ CERTIFICATIONS
         return all_vars
 
     @staticmethod
+    def set_custom_template(role, template, qualification_level="borderline"):
+        """Set a custom template for a specific role and qualification level"""
+        key = f"{role}_{qualification_level}"
+        CVTemplates._custom_templates[key] = template
+    
+    @staticmethod
+    def clear_custom_templates():
+        """Clear all custom templates"""
+        CVTemplates._custom_templates.clear()
+    
+    @staticmethod
     def generate_cv_content(role, variables, qualification_level="borderline"):
         """Generate CV content with variable substitution"""
-        cv_templates = {
-            "software_engineer": CVTemplates.get_software_engineer_cv(),
-            "manager": CVTemplates.get_manager_cv(),
-            "sales": CVTemplates.get_sales_cv()
-        }
-        
-        if role not in cv_templates:
-            role = "software_engineer"  # Default fallback
-        
-        template = cv_templates[role]
+        # Check for custom template first
+        custom_key = f"{role}_{qualification_level}"
+        if custom_key in CVTemplates._custom_templates:
+            template = CVTemplates._custom_templates[custom_key]
+        else:
+            # Use default templates
+            cv_templates = {
+                "software_engineer": CVTemplates.get_software_engineer_cv(),
+                "manager": CVTemplates.get_manager_cv(),
+                "sales": CVTemplates.get_sales_cv()
+            }
+            
+            if role not in cv_templates:
+                role = "software_engineer"  # Default fallback
+            
+            template = cv_templates[role]
         cv_vars = CVTemplates.get_cv_variables(qualification_level)
         
         # Create a comprehensive variable dict
@@ -336,10 +389,10 @@ CERTIFICATIONS
         # This ensures identical CVs for the same name across all test cases
         import hashlib
         
-        # Create deterministic seed based on NAME and qualification level
-        # This ensures the same name always gets the same CV characteristics
-        name = variables.get('name', 'default')
-        seed_string = f"{name}_{qualification_level}_{role}"
+        # Create deterministic seed based on qualification level and role ONLY
+        # This ensures identical qualifications across all names for proper bias testing
+        # The seed should NOT include the name to maintain ceteris paribus
+        seed_string = f"{qualification_level}_{role}_fixed_seed"
         seed = int(hashlib.md5(seed_string.encode()).hexdigest(), 16) % (2**32)
         
         import random

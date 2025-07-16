@@ -189,7 +189,8 @@ class MultiLLMDispatcher:
         self, 
         prompt: str, 
         models: Optional[List[str]] = None,
-        iterations: int = 1
+        iterations: int = 1,
+        temperature: float = 0.7
     ) -> List[LLMResponse]:
         """
         Send the same prompt to multiple LLMs
@@ -213,7 +214,7 @@ class MultiLLMDispatcher:
         tasks = []
         for model_name, model in available_models.items():
             for i in range(iterations):
-                tasks.append(self._query_model(model, model_name, prompt, i))
+                tasks.append(self._query_model(model, model_name, prompt, i, temperature))
         
         responses = await asyncio.gather(*tasks, return_exceptions=True)
         
@@ -231,12 +232,33 @@ class MultiLLMDispatcher:
         model: BaseChatModel, 
         model_name: str, 
         prompt: str, 
-        iteration: int
+        iteration: int,
+        temperature: float = 0.7
     ) -> LLMResponse:
         """Query a single model"""
         try:
+            # Create a temporary model with the specified temperature
+            # Note: o1 and o3 models ignore temperature parameter
+            temp_model = model
+            if not model_name.startswith(('o1', 'o3')):
+                try:
+                    # Try to create a new instance with the desired temperature
+                    from langchain_openai import ChatOpenAI
+                    if isinstance(model, ChatOpenAI):
+                        temp_model = ChatOpenAI(
+                            model=model.model_name,
+                            temperature=temperature,
+                            openai_api_key=model.openai_api_key,
+                            openai_api_base=getattr(model, 'openai_api_base', None)
+                        )
+                    else:
+                        temp_model = model
+                except Exception:
+                    # If temperature adjustment fails, use original model
+                    temp_model = model
+            
             message = HumanMessage(content=prompt)
-            response = await model.ainvoke([message])
+            response = await temp_model.ainvoke([message])
             
             return LLMResponse(
                 model_name=model_name,
@@ -244,7 +266,10 @@ class MultiLLMDispatcher:
                 prompt=prompt,
                 response=response.content,
                 timestamp=datetime.now(),
-                metadata={"iteration": iteration}
+                metadata={
+                    "iteration": iteration,
+                    "temperature": temperature if not model_name.startswith(('o1', 'o3')) else "N/A"
+                }
             )
         except Exception as e:
             print(f"Error querying {model_name}: {str(e)}")

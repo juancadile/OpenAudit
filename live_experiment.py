@@ -33,6 +33,16 @@ def create_custom_test_cases(config):
     role = config.get('role', 'software_engineer')
     selected_demographics = config.get('demographics', {})
     custom_prompt = config.get('prompt_template', '')
+    custom_cv_template = config.get('custom_cv_template', None)
+    cv_level = config.get('cv_level', 'borderline')
+    
+    # Set custom CV template if provided
+    if custom_cv_template and custom_cv_template.get('template'):
+        CVTemplates.set_custom_template(
+            custom_cv_template['role'],
+            custom_cv_template['template'],
+            custom_cv_template['cv_level']
+        )
     
     test_cases = []
     
@@ -381,6 +391,90 @@ def list_experiments():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/get-cv-template', methods=['POST'])
+def get_cv_template():
+    """Get CV template for editing"""
+    try:
+        data = request.json
+        role = data.get('role', 'software_engineer')
+        cv_level = data.get('cv_level', 'borderline')
+        
+        # Get the raw CV template
+        cv_templates = {
+            "software_engineer": CVTemplates.get_software_engineer_cv(),
+            "manager": CVTemplates.get_manager_cv(),
+            "sales": CVTemplates.get_sales_cv()
+        }
+        
+        template = cv_templates.get(role, cv_templates["software_engineer"])
+        
+        return jsonify({
+            'template': template,
+            'role': role,
+            'cv_level': cv_level
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/preview-cv-template', methods=['POST'])
+def preview_cv_template():
+    """Preview CV template with sample data"""
+    try:
+        data = request.json
+        template = data.get('template', '')
+        role = data.get('role', 'software_engineer')
+        cv_level = data.get('cv_level', 'borderline')
+        
+        if not template:
+            return jsonify({'error': 'Template is required'}), 400
+        
+        # Create sample variables for preview
+        sample_variables = {
+            'name': 'John Sample',
+            'university': 'State University',
+            'experience': '3',
+            'address': '123 Main St, Anytown, USA'
+        }
+        
+        # Generate CV content using the custom template
+        try:
+            # Temporarily replace the template for preview
+            original_template = None
+            if role == 'software_engineer':
+                original_template = CVTemplates.get_software_engineer_cv
+                CVTemplates.get_software_engineer_cv = lambda: template
+            elif role == 'manager':
+                original_template = CVTemplates.get_manager_cv
+                CVTemplates.get_manager_cv = lambda: template
+            elif role == 'sales':
+                original_template = CVTemplates.get_sales_cv
+                CVTemplates.get_sales_cv = lambda: template
+            
+            # Generate preview
+            cv_content = CVTemplates.generate_cv_content(role, sample_variables, cv_level)
+            
+            # Restore original template
+            if original_template:
+                if role == 'software_engineer':
+                    CVTemplates.get_software_engineer_cv = original_template
+                elif role == 'manager':
+                    CVTemplates.get_manager_cv = original_template
+                elif role == 'sales':
+                    CVTemplates.get_sales_cv = original_template
+            
+            return jsonify({
+                'preview': cv_content,
+                'role': role,
+                'cv_level': cv_level
+            })
+            
+        except Exception as e:
+            return jsonify({'error': f'Template error: {str(e)}'}), 400
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/preview-experiment', methods=['POST'])
 def preview_experiment():
     """Preview experiment setup without running"""
@@ -566,7 +660,8 @@ def run_live_experiment(experiment):
                     dispatcher.dispatch_prompt(
                         prompt=case['prompt'],
                         models=experiment.config.get('models', None),
-                        iterations=experiment.config.get('iterations', 1)
+                        iterations=experiment.config.get('iterations', 1),
+                        temperature=experiment.config.get('temperature', 0.7)
                     )
                 )
                 

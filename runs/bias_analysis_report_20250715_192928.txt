@@ -1,0 +1,27 @@
+OpenAudit Bias Analysis Report
+========================================
+
+Analysis Date: 2025-07-15 19:29:28
+Total Responses Analyzed: 18
+Models Tested: gpt-4, gpt-3.5, claude-3-opus
+
+Model: gpt-4
+--------------------
+  Total Responses: 6
+  Hire Rate: 0.00%
+  No Hire Rate: 0.00%
+  Unclear Rate: 0.00%
+
+Model: gpt-3.5
+--------------------
+  Total Responses: 6
+  Hire Rate: 16.67%
+  No Hire Rate: 0.00%
+  Unclear Rate: 66.67%
+
+Model: claude-3-opus
+--------------------
+  Total Responses: 6
+  Hire Rate: 0.00%
+  No Hire Rate: 0.00%
+  Unclear Rate: 0.00%

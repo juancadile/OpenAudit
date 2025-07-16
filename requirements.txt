@@ -1,0 +1,15 @@
+# Updated requirements to avoid conflicts
+langchain>=0.3.0
+langchain-openai>=0.3.0
+langchain-anthropic>=0.3.0
+langchain-google-genai>=2.0.0
+langchain-core>=0.3.0
+python-dotenv>=1.0.0
+pandas>=2.0.0
+flask>=2.0.0
+
+# Note: Some packages have version conflicts in your environment
+# Consider using a virtual environment:
+# python -m venv openaudit_env
+# source openaudit_env/bin/activate  # On Windows: openaudit_env\Scripts\activate
+# pip install -r requirements.txt

@@ -232,6 +232,92 @@ class TemplateManager:
             return True
         return False
     
+    def create_cv_template(self, name: str, role: str, level: str, description: str, template: str, variables: List[str]) -> CVTemplate:
+        """Create a new CV template"""
+        cv_template = CVTemplate(
+            name=name,
+            role=role,
+            level=level,
+            description=description,
+            template=template,
+            variables=variables,
+            created_at=datetime.now().isoformat(),
+            updated_at=datetime.now().isoformat(),
+            author="OpenAudit"
+        )
+        self.save_cv_template(cv_template)
+        return cv_template
+    
+    def update_cv_template(self, template_name: str, name: str = None, role: str = None, level: str = None, description: str = None, template: str = None, variables: List[str] = None) -> Optional[CVTemplate]:
+        """Update an existing CV template"""
+        existing_template = self.get_cv_template(template_name)
+        if not existing_template:
+            return None
+        
+        # Update fields if provided
+        if name is not None:
+            existing_template.name = name
+        if role is not None:
+            existing_template.role = role
+        if level is not None:
+            existing_template.level = level
+        if description is not None:
+            existing_template.description = description
+        if template is not None:
+            existing_template.template = template
+        if variables is not None:
+            existing_template.variables = variables
+        
+        # Delete old file if name changed
+        if name is not None and name != template_name:
+            self.delete_cv_template(template_name)
+        
+        self.save_cv_template(existing_template)
+        return existing_template
+    
+    def create_prompt_template(self, name: str, category: str, description: str, template: str, variables: List[str], bias_focus: List[str]) -> PromptTemplate:
+        """Create a new prompt template"""
+        prompt_template = PromptTemplate(
+            name=name,
+            category=category,
+            description=description,
+            template=template,
+            variables=variables,
+            bias_focus=bias_focus,
+            created_at=datetime.now().isoformat(),
+            updated_at=datetime.now().isoformat(),
+            author="OpenAudit"
+        )
+        self.save_prompt_template(prompt_template)
+        return prompt_template
+    
+    def update_prompt_template(self, template_name: str, name: str = None, category: str = None, description: str = None, template: str = None, variables: List[str] = None, bias_focus: List[str] = None) -> Optional[PromptTemplate]:
+        """Update an existing prompt template"""
+        existing_template = self.get_prompt_template(template_name)
+        if not existing_template:
+            return None
+        
+        # Update fields if provided
+        if name is not None:
+            existing_template.name = name
+        if category is not None:
+            existing_template.category = category
+        if description is not None:
+            existing_template.description = description
+        if template is not None:
+            existing_template.template = template
+        if variables is not None:
+            existing_template.variables = variables
+        if bias_focus is not None:
+            existing_template.bias_focus = bias_focus
+        
+        # Delete old file if name changed
+        if name is not None and name != template_name:
+            self.delete_prompt_template(template_name)
+        
+        self.save_prompt_template(existing_template)
+        return existing_template
+    
     # CV Generation with Templates
     def generate_cv_content(self, template_name: str, variables: Dict[str, str]) -> str:
         """Generate CV content using template and variables"""

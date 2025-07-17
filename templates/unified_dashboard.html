@@ -678,6 +678,260 @@
         .mt-1 { margin-top: 0.5rem; }
         .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
+        
+        /* Template Management Styles */
+        .templates-container {
+            max-width: 1200px;
+        }
+        
+        .template-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .template-tab-button {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .template-tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .template-tab-button:hover {
+            color: var(--text-primary);
+        }
+        
+        .template-tab-content {
+            display: none;
+        }
+        
+        .template-tab-content.active {
+            display: block;
+        }
+        
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .template-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .template-card h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .template-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .template-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .template-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .template-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .template-actions button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .template-content-preview {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .template-preview {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .btn-edit {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-edit:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+        }
+        
+        .modal-close:hover {
+            background: var(--light-bg);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
     </style>
 </head>
 <body>
@@ -695,6 +949,7 @@
             <button class="tab-button active" data-tab="dashboard">📊 Dashboard</button>
             <button class="tab-button" data-tab="historical">📈 Historical Analysis</button>
             <button class="tab-button" data-tab="live">🔬 Live Experiments</button>
+            <button class="tab-button" data-tab="templates">📝 Templates</button>
             <button class="tab-button" data-tab="research">🧪 Research Tools</button>
         </nav>
         
@@ -1040,6 +1295,145 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Templates Tab -->
+            <div class="tab-pane" id="templates">
+                <h2 class="mb-3">Template Management</h2>
+                
+                <div class="templates-container">
+                    <div class="template-tabs">
+                        <button class="template-tab-button active" data-template-tab="cv">CV Templates</button>
+                        <button class="template-tab-button" data-template-tab="prompt">Prompt Templates</button>
+                    </div>
+                    
+                    <!-- CV Templates Section -->
+                    <div class="template-tab-content active" id="cv-templates">
+                        <div class="template-header">
+                            <h3>CV Templates</h3>
+                            <button class="btn-primary" onclick="createNewCVTemplate()">
+                                ➕ New CV Template
+                            </button>
+                        </div>
+                        
+                        <div class="template-grid" id="cvTemplateGrid">
+                            <!-- CV templates will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Prompt Templates Section -->
+                    <div class="template-tab-content" id="prompt-templates">
+                        <div class="template-header">
+                            <h3>Prompt Templates</h3>
+                            <button class="btn-primary" onclick="createNewPromptTemplate()">
+                                ➕ New Prompt Template
+                            </button>
+                        </div>
+                        
+                        <div class="template-grid" id="promptTemplateGrid">
+                            <!-- Prompt templates will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CV Template Modal -->
+    <div class="modal" id="cvTemplateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="cvModalTitle">Edit CV Template</h3>
+                <button class="modal-close" onclick="closeCVModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="cvTemplateForm">
+                    <div class="form-group">
+                        <label for="cvName">Template Name</label>
+                        <input type="text" id="cvName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvRole">Role</label>
+                        <select id="cvRole" name="role" required>
+                            <option value="software_engineer">Software Engineer</option>
+                            <option value="manager">Manager</option>
+                            <option value="designer">Designer</option>
+                            <option value="data_scientist">Data Scientist</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvLevel">Level</label>
+                        <select id="cvLevel" name="level" required>
+                            <option value="weak">Weak</option>
+                            <option value="borderline">Borderline</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvDescription">Description</label>
+                        <textarea id="cvDescription" name="description" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvTemplateContent">Template Content</label>
+                        <textarea id="cvTemplateContent" name="template" rows="15" required placeholder="Use {variable_name} for variables..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvVariables">Variables (comma-separated)</label>
+                        <input type="text" id="cvVariables" name="variables" placeholder="name, email, university, experience">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeCVModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveCVTemplate()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Prompt Template Modal -->
+    <div class="modal" id="promptTemplateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="promptModalTitle">Edit Prompt Template</h3>
+                <button class="modal-close" onclick="closePromptModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="promptTemplateForm">
+                    <div class="form-group">
+                        <label for="promptName">Template Name</label>
+                        <input type="text" id="promptName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptCategory">Category</label>
+                        <select id="promptCategory" name="category" required>
+                            <option value="hiring">Hiring</option>
+                            <option value="evaluation">Evaluation</option>
+                            <option value="assessment">Assessment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptDescription">Description</label>
+                        <textarea id="promptDescription" name="description" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptTemplateContent">Template Content</label>
+                        <textarea id="promptTemplateContent" name="template" rows="15" required placeholder="Use {variable_name} for variables..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptVariables">Variables (comma-separated)</label>
+                        <input type="text" id="promptVariables" name="variables" placeholder="name, cv_content">
+                    </div>
+                    <div class="form-group">
+                        <label for="promptBiasFocus">Bias Focus (comma-separated)</label>
+                        <input type="text" id="promptBiasFocus" name="bias_focus" placeholder="demographic, name-based, university">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closePromptModal()">Cancel</button>
+                <button class="btn-primary" onclick="savePromptTemplate()">Save</button>
+            </div>
         </div>
     </div>
 
@@ -1055,6 +1449,7 @@
             initializeSocket();
             refreshDashboard();
             initializeLiveExperiments();
+            initializeTemplateManagement();
         });
         
         // Tab Management
@@ -1082,6 +1477,11 @@
                 pane.classList.remove('active');
             });
             document.getElementById(tabId).classList.add('active');
+            
+            // Load templates if switching to templates tab
+            if (tabId === 'templates') {
+                loadTemplates();
+            }
         }
         
         // Socket.IO Management
@@ -1914,6 +2314,410 @@
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) overlay.remove();
             });
+        }
+        
+        // Template Management Functions
+        let currentEditingTemplate = null;
+        let currentEditingType = null;
+        
+        function initializeTemplateManagement() {
+            // Initialize template tab switching
+            const templateTabButtons = document.querySelectorAll('.template-tab-button');
+            templateTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabType = button.dataset.templateTab;
+                    switchTemplateTab(tabType);
+                });
+            });
+            
+            // Set up template action handlers using event delegation
+            document.addEventListener('click', (event) => {
+                const action = event.target.dataset.action;
+                const templateName = event.target.dataset.templateName;
+                
+                if (action && templateName) {
+                    switch (action) {
+                        case 'edit-cv':
+                            editCVTemplate(templateName);
+                            break;
+                        case 'delete-cv':
+                            deleteCVTemplate(templateName);
+                            break;
+                        case 'edit-prompt':
+                            editPromptTemplate(templateName);
+                            break;
+                        case 'delete-prompt':
+                            deletePromptTemplate(templateName);
+                            break;
+                    }
+                }
+            });
+            
+            // Templates will be loaded when the tab is activated
+        }
+        
+        function switchTemplateTab(tabType) {
+            // Update button states
+            document.querySelectorAll('.template-tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-template-tab="${tabType}"]`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.template-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabType}-templates`).classList.add('active');
+            
+            // Load templates for this tab
+            loadTemplates();
+        }
+        
+        async function loadTemplates() {
+            try {
+                console.log('Loading templates...');
+                const [cvResponse, promptResponse] = await Promise.all([
+                    fetch('/api/cv_templates'),
+                    fetch('/api/prompt_templates')
+                ]);
+                
+                const cvTemplates = await cvResponse.json();
+                const promptTemplates = await promptResponse.json();
+                
+                console.log('CV Templates loaded:', cvTemplates.length);
+                console.log('Prompt Templates loaded:', promptTemplates.length);
+                
+                renderCVTemplates(cvTemplates);
+                renderPromptTemplates(promptTemplates);
+            } catch (error) {
+                console.error('Error loading templates:', error);
+            }
+        }
+        
+        function renderCVTemplates(templates) {
+            const grid = document.getElementById('cvTemplateGrid');
+            console.log('Rendering CV templates to grid:', grid);
+            if (!grid) {
+                console.error('cvTemplateGrid element not found');
+                return;
+            }
+            grid.innerHTML = '';
+            
+            console.log('Templates to render:', templates);
+            templates.forEach(template => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                
+                // Get template content preview
+                const templatePreview = template.template ? 
+                    (template.template.length > 300 ? 
+                        template.template.substring(0, 300) + '...' : 
+                        template.template) : 
+                    'No template content available';
+                
+                card.innerHTML = `
+                    <h4>${template.name}</h4>
+                    <div class="template-meta">
+                        <span>👤 ${template.role}</span>
+                        <span>📊 ${template.level}</span>
+                        <span>🔧 ${template.variables.length} variables</span>
+                    </div>
+                    <div class="template-description">${template.description}</div>
+                    <div class="template-content-preview">
+                        <strong>Template Preview:</strong>
+                        <pre class="template-preview">${templatePreview}</pre>
+                    </div>
+                    <div class="template-actions">
+                        <button class="btn-edit" data-template-name="${template.name}" data-action="edit-cv">
+                            ✏️ Edit
+                        </button>
+                        <button class="btn-delete" data-template-name="${template.name}" data-action="delete-cv">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function renderPromptTemplates(templates) {
+            const grid = document.getElementById('promptTemplateGrid');
+            console.log('Rendering prompt templates to grid:', grid);
+            if (!grid) {
+                console.error('promptTemplateGrid element not found');
+                return;
+            }
+            grid.innerHTML = '';
+            
+            console.log('Prompt templates to render:', templates);
+            templates.forEach(template => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                
+                // Get template content preview
+                const templatePreview = template.template ? 
+                    (template.template.length > 300 ? 
+                        template.template.substring(0, 300) + '...' : 
+                        template.template) : 
+                    'No template content available';
+                
+                card.innerHTML = `
+                    <h4>${template.name}</h4>
+                    <div class="template-meta">
+                        <span>📂 ${template.category}</span>
+                        <span>🎯 ${template.bias_focus.join(', ')}</span>
+                        <span>🔧 ${template.variables.length} variables</span>
+                    </div>
+                    <div class="template-description">${template.description}</div>
+                    <div class="template-content-preview">
+                        <strong>Template Preview:</strong>
+                        <pre class="template-preview">${templatePreview}</pre>
+                    </div>
+                    <div class="template-actions">
+                        <button class="btn-edit" data-template-name="${template.name}" data-action="edit-prompt">
+                            ✏️ Edit
+                        </button>
+                        <button class="btn-delete" data-template-name="${template.name}" data-action="delete-prompt">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        // CV Template Functions
+        function createNewCVTemplate() {
+            currentEditingTemplate = null;
+            currentEditingType = 'cv';
+            
+            document.getElementById('cvModalTitle').textContent = 'Create New CV Template';
+            document.getElementById('cvTemplateForm').reset();
+            
+            document.getElementById('cvTemplateModal').classList.add('active');
+        }
+        
+        async function editCVTemplate(templateName) {
+            try {
+                console.log('Loading CV template:', templateName);
+                const response = await fetch(`/api/cv_templates/${encodeURIComponent(templateName)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const template = await response.json();
+                console.log('Template data received:', template);
+                
+                if (template.error) {
+                    throw new Error(template.error);
+                }
+                
+                currentEditingTemplate = templateName;
+                currentEditingType = 'cv';
+                
+                document.getElementById('cvModalTitle').textContent = 'Edit CV Template';
+                document.getElementById('cvName').value = template.name || '';
+                document.getElementById('cvRole').value = template.role || '';
+                document.getElementById('cvLevel').value = template.level || '';
+                document.getElementById('cvDescription').value = template.description || '';
+                document.getElementById('cvTemplateContent').value = template.template || '';
+                document.getElementById('cvVariables').value = template.variables ? template.variables.join(', ') : '';
+                
+                console.log('Template content set:', template.template ? template.template.substring(0, 100) + '...' : 'EMPTY');
+                
+                document.getElementById('cvTemplateModal').classList.add('active');
+            } catch (error) {
+                console.error('Error loading CV template:', error);
+                alert(`Error loading template: ${error.message}`);
+            }
+        }
+        
+        async function saveCVTemplate() {
+            const form = document.getElementById('cvTemplateForm');
+            const formData = new FormData(form);
+            
+            const templateData = {
+                name: formData.get('name'),
+                role: formData.get('role'),
+                level: formData.get('level'),
+                description: formData.get('description'),
+                template: formData.get('template'),
+                variables: formData.get('variables').split(',').map(v => v.trim()).filter(v => v)
+            };
+            
+            try {
+                const url = currentEditingTemplate 
+                    ? `/api/cv_templates/${encodeURIComponent(currentEditingTemplate)}`
+                    : '/api/cv_templates';
+                const method = currentEditingTemplate ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(templateData)
+                });
+                
+                if (response.ok) {
+                    closeCVModal();
+                    loadTemplates();
+                    alert('CV template saved successfully');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error saving CV template:', error);
+                alert('Error saving template');
+            }
+        }
+        
+        async function deleteCVTemplate(templateName) {
+            if (!confirm(`Are you sure you want to delete the CV template "${templateName}"?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/cv_templates/${encodeURIComponent(templateName)}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadTemplates();
+                    alert('CV template deleted successfully');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error deleting CV template:', error);
+                alert('Error deleting template');
+            }
+        }
+        
+        function closeCVModal() {
+            document.getElementById('cvTemplateModal').classList.remove('active');
+            currentEditingTemplate = null;
+            currentEditingType = null;
+        }
+        
+        // Prompt Template Functions
+        function createNewPromptTemplate() {
+            currentEditingTemplate = null;
+            currentEditingType = 'prompt';
+            
+            document.getElementById('promptModalTitle').textContent = 'Create New Prompt Template';
+            document.getElementById('promptTemplateForm').reset();
+            
+            document.getElementById('promptTemplateModal').classList.add('active');
+        }
+        
+        async function editPromptTemplate(templateName) {
+            try {
+                console.log('Loading prompt template:', templateName);
+                const response = await fetch(`/api/prompt_templates/${encodeURIComponent(templateName)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const template = await response.json();
+                console.log('Template data received:', template);
+                
+                if (template.error) {
+                    throw new Error(template.error);
+                }
+                
+                currentEditingTemplate = templateName;
+                currentEditingType = 'prompt';
+                
+                document.getElementById('promptModalTitle').textContent = 'Edit Prompt Template';
+                document.getElementById('promptName').value = template.name || '';
+                document.getElementById('promptCategory').value = template.category || '';
+                document.getElementById('promptDescription').value = template.description || '';
+                document.getElementById('promptTemplateContent').value = template.template || '';
+                document.getElementById('promptVariables').value = template.variables ? template.variables.join(', ') : '';
+                document.getElementById('promptBiasFocus').value = template.bias_focus ? template.bias_focus.join(', ') : '';
+                
+                console.log('Template content set:', template.template ? template.template.substring(0, 100) + '...' : 'EMPTY');
+                
+                document.getElementById('promptTemplateModal').classList.add('active');
+            } catch (error) {
+                console.error('Error loading prompt template:', error);
+                alert(`Error loading template: ${error.message}`);
+            }
+        }
+        
+        async function savePromptTemplate() {
+            const form = document.getElementById('promptTemplateForm');
+            const formData = new FormData(form);
+            
+            const templateData = {
+                name: formData.get('name'),
+                category: formData.get('category'),
+                description: formData.get('description'),
+                template: formData.get('template'),
+                variables: formData.get('variables').split(',').map(v => v.trim()).filter(v => v),
+                bias_focus: formData.get('bias_focus').split(',').map(v => v.trim()).filter(v => v)
+            };
+            
+            try {
+                const url = currentEditingTemplate 
+                    ? `/api/prompt_templates/${encodeURIComponent(currentEditingTemplate)}`
+                    : '/api/prompt_templates';
+                const method = currentEditingTemplate ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(templateData)
+                });
+                
+                if (response.ok) {
+                    closePromptModal();
+                    loadTemplates();
+                    alert('Prompt template saved successfully');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error saving prompt template:', error);
+                alert('Error saving template');
+            }
+        }
+        
+        async function deletePromptTemplate(templateName) {
+            if (!confirm(`Are you sure you want to delete the prompt template "${templateName}"?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/prompt_templates/${encodeURIComponent(templateName)}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadTemplates();
+                    alert('Prompt template deleted successfully');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error deleting prompt template:', error);
+                alert('Error deleting template');
+            }
+        }
+        
+        function closePromptModal() {
+            document.getElementById('promptTemplateModal').classList.remove('active');
+            currentEditingTemplate = null;
+            currentEditingType = null;
         }
     </script>
 </body>

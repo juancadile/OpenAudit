@@ -418,6 +418,7 @@ def get_cv_templates():
             "role": t.role,
             "level": t.level,
             "description": t.description,
+            "template": t.template,
             "variables": t.variables,
             "author": t.author,
             "updated_at": t.updated_at
@@ -434,6 +435,7 @@ def get_prompt_templates():
             "name": t.name,
             "category": t.category,
             "description": t.description,
+            "template": t.template,
             "variables": t.variables,
             "bias_focus": t.bias_focus,
             "author": t.author,
@@ -555,6 +557,230 @@ def import_templates():
         return jsonify({"error": str(e)}), 500
 
 # ============================================================================
+# TEMPLATE EDITING APIs
+# ============================================================================
+
+@app.route('/api/cv_templates/<template_name>')
+def get_cv_template(template_name):
+    """Get a specific CV template for editing"""
+    try:
+        template = template_manager.get_cv_template(template_name)
+        if not template:
+            return jsonify({"error": "Template not found"}), 404
+        
+        return jsonify({
+            "name": template.name,
+            "role": template.role,
+            "level": template.level,
+            "description": template.description,
+            "template": template.template,
+            "variables": template.variables,
+            "author": template.author,
+            "created_at": template.created_at,
+            "updated_at": template.updated_at
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/cv_templates', methods=['POST'])
+def create_cv_template():
+    """Create a new CV template"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'role', 'level', 'description', 'template']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+        
+        # Create template
+        template = template_manager.create_cv_template(
+            name=data['name'],
+            role=data['role'],
+            level=data['level'],
+            description=data['description'],
+            template=data['template'],
+            variables=data.get('variables', [])
+        )
+        
+        return jsonify({
+            "message": "CV template created successfully",
+            "template": {
+                "name": template.name,
+                "role": template.role,
+                "level": template.level,
+                "description": template.description,
+                "variables": template.variables,
+                "author": template.author,
+                "updated_at": template.updated_at
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/cv_templates/<template_name>', methods=['PUT'])
+def update_cv_template(template_name):
+    """Update an existing CV template"""
+    try:
+        data = request.get_json()
+        
+        # Update template
+        template = template_manager.update_cv_template(
+            template_name,
+            name=data.get('name'),
+            role=data.get('role'),
+            level=data.get('level'),
+            description=data.get('description'),
+            template=data.get('template'),
+            variables=data.get('variables')
+        )
+        
+        if not template:
+            return jsonify({"error": "Template not found"}), 404
+        
+        return jsonify({
+            "message": "CV template updated successfully",
+            "template": {
+                "name": template.name,
+                "role": template.role,
+                "level": template.level,
+                "description": template.description,
+                "variables": template.variables,
+                "author": template.author,
+                "updated_at": template.updated_at
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/cv_templates/<template_name>', methods=['DELETE'])
+def delete_cv_template(template_name):
+    """Delete a CV template"""
+    try:
+        success = template_manager.delete_cv_template(template_name)
+        
+        if not success:
+            return jsonify({"error": "Template not found"}), 404
+        
+        return jsonify({"message": "CV template deleted successfully"})
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/prompt_templates/<template_name>')
+def get_prompt_template(template_name):
+    """Get a specific prompt template for editing"""
+    try:
+        template = template_manager.get_prompt_template(template_name)
+        if not template:
+            return jsonify({"error": "Template not found"}), 404
+        
+        return jsonify({
+            "name": template.name,
+            "category": template.category,
+            "description": template.description,
+            "template": template.template,
+            "variables": template.variables,
+            "bias_focus": template.bias_focus,
+            "author": template.author,
+            "created_at": template.created_at,
+            "updated_at": template.updated_at
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/prompt_templates', methods=['POST'])
+def create_prompt_template():
+    """Create a new prompt template"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'category', 'description', 'template']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+        
+        # Create template
+        template = template_manager.create_prompt_template(
+            name=data['name'],
+            category=data['category'],
+            description=data['description'],
+            template=data['template'],
+            variables=data.get('variables', []),
+            bias_focus=data.get('bias_focus', [])
+        )
+        
+        return jsonify({
+            "message": "Prompt template created successfully",
+            "template": {
+                "name": template.name,
+                "category": template.category,
+                "description": template.description,
+                "variables": template.variables,
+                "bias_focus": template.bias_focus,
+                "author": template.author,
+                "updated_at": template.updated_at
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/prompt_templates/<template_name>', methods=['PUT'])
+def update_prompt_template(template_name):
+    """Update an existing prompt template"""
+    try:
+        data = request.get_json()
+        
+        # Update template
+        template = template_manager.update_prompt_template(
+            template_name,
+            name=data.get('name'),
+            category=data.get('category'),
+            description=data.get('description'),
+            template=data.get('template'),
+            variables=data.get('variables'),
+            bias_focus=data.get('bias_focus')
+        )
+        
+        if not template:
+            return jsonify({"error": "Template not found"}), 404
+        
+        return jsonify({
+            "message": "Prompt template updated successfully",
+            "template": {
+                "name": template.name,
+                "category": template.category,
+                "description": template.description,
+                "variables": template.variables,
+                "bias_focus": template.bias_focus,
+                "author": template.author,
+                "updated_at": template.updated_at
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/prompt_templates/<template_name>', methods=['DELETE'])
+def delete_prompt_template(template_name):
+    """Delete a prompt template"""
+    try:
+        success = template_manager.delete_prompt_template(template_name)
+        
+        if not success:
+            return jsonify({"error": "Template not found"}), 404
+        
+        return jsonify({"message": "Prompt template deleted successfully"})
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# ============================================================================
 # SOCKETIO EVENTS - LIVE EXPERIMENTS
 # ============================================================================
 
@@ -603,6 +829,6 @@ if __name__ == '__main__':
     print("==================================================")
     
     if socketio:
-        socketio.run(app, debug=True, port=5100)
+        socketio.run(app, debug=True, port=5100, allow_unsafe_werkzeug=True)
     else:
         app.run(debug=True, port=5100) 

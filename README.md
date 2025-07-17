@@ -2,14 +2,14 @@
 
 A **production-ready** framework for detecting algorithmic bias in Large Language Models (LLMs) using established audit study methodologies. Successfully detects real bias patterns and model inconsistencies.
 
-## 🚨 Key Findings
+## Findings
 
 **OpenAudit has detected significant bias in OpenAI models:**
 - **25% hiring rate gap** between demographic groups
 - **0% model consistency** across identical prompts  
 - **Systematic discrimination** in hiring decisions
 
-## 🎯 Key Features
+## Features
 
 - **Multi-LLM Testing**: Simultaneous testing across OpenAI model family (GPT-3.5, GPT-4o, GPT-4-turbo, GPT-4o-mini, GPT-4.1 series, o1/o3 reasoning models)
 - **Demographic Bias Detection**: Systematic testing across race, gender, and other demographic factors
@@ -18,7 +18,30 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **Web Dashboard**: Interactive visualization of bias patterns and results
 - **Command Line Tools**: Quick analysis and batch processing capabilities
 
-## 🚀 Quick Start
+## Advantages
+
+### For Researchers:
+1. **All-in-one platform** - No need to switch between interfaces
+2. **Professional presentation** - Suitable for academic demos
+3. **Real-time monitoring** - Watch bias emerge in live experiments
+4. **Historical analysis** - Deep dive into past results
+5. **Export capabilities** - Academic-ready data formats
+
+### For Practitioners:
+1. **Easy deployment** - One command startup
+2. **Intuitive interface** - No technical expertise required
+3. **Comprehensive analysis** - Complete bias detection suite
+4. **Real-time alerts** - Immediate bias notifications
+5. **Scalable architecture** - Ready for production use
+
+### For Collaboration:
+1. **Sharable interface** - Easy to demonstrate findings
+2. **Standardized workflow** - Consistent research process
+3. **Documentation ready** - Professional presentation
+4. **Research validation** - Built-in comparison tools
+
+
+## Quick Start
 
 1. **Install dependencies**:
    ```bash
@@ -36,7 +59,13 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
    python3 bias_testing_framework.py
    ```
 
-4. **Launch web dashboard**:
+4. **Launch unified dashboard**:
+   ```bash
+   python3 start_unified.py         # Complete bias testing platform
+   # Visit http://localhost:5000
+   ```
+   
+   **Or launch individual interfaces**:
    ```bash
    python3 web_interface.py         # Historical results dashboard
    # Visit http://localhost:5002
@@ -45,16 +74,33 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
    # Visit http://localhost:5004
    ```
 
-## 📊 Web Interfaces
+## Web Interfaces
 
-### Historical Results Dashboard (`http://localhost:5002`)
+### Unified Dashboard (`http://localhost:5000`) - **NEW!**
+**Complete bias testing platform with modern tabbed interface:**
+
+- **Dashboard Overview**: Real-time metrics, recent activity, and quick actions
+- **Historical Analysis**: Select, analyze, and aggregate experiment runs with interactive charts
+- **Live Experiments**: Real-time bias testing with live CV generation and response monitoring
+- **Research Tools**: Advanced analysis including reasoning patterns and college affiliation testing
+
+**Key Features:**
+- **Unified Data Management**: Access all experiments from one interface
+- **Modern Design**: Clean, responsive interface optimized for research workflows
+- **Real-time Updates**: Live experiment monitoring with WebSocket connections
+- **Advanced Analytics**: Enhanced statistical analysis and bias detection
+- **Research Integration**: Built-in tools for academic validation and comparison
+
+### Individual Interfaces (Legacy)
+
+#### Historical Results Dashboard (`http://localhost:5002`)
 - **Run Selection**: Choose from historical experiment runs
 - **Aggregation**: Combine multiple runs for larger sample sizes
 - **Bias Visualization**: Interactive charts showing hiring rates by demographic
 - **Model Comparison**: Compare consistency across different LLM models
 - **Detailed Analysis**: Drill down into specific responses and reasoning
 
-### Live Experiment Monitor (`http://localhost:5004`)
+#### Live Experiment Monitor (`http://localhost:5004`)
 - **Real-time Prompt Visualization**: See exactly what prompts are being sent
 - **Full CV/Resume Display**: View complete candidate profiles during experiments
 - **Editable Prompt Templates**: Customize base prompts for different research scenarios
@@ -65,7 +111,7 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **Experiment Control**: Stop running experiments anytime with dedicated stop button
 - **Instant Bias Detection**: Live statistics and bias alerts during experiments
 
-### 🎯 Prompt Customization Features
+### Prompt Customization Features
 **The live interface now supports fully editable prompt templates for advanced research:**
 - **Custom Research Scenarios**: Edit the base prompt to test different bias detection approaches
 - **A/B Testing**: Compare results with and without bias-related language (e.g., "This is a controlled research study...")
@@ -73,7 +119,7 @@ A **production-ready** framework for detecting algorithmic bias in Large Languag
 - **Guardrail Testing**: Test how different prompt structures affect model compliance
 - **Variable Flexibility**: Use {name}, {university}, {experience}, {address}, and {cv_content} variables in custom prompts
 
-### 📄 Realistic CV/Resume Enhancement
+### Realistic CV/Resume Enhancement
 **OpenAudit now includes comprehensive CV/resume generation for realistic hiring scenarios:**
 - **Detailed Professional Profiles**: Full CVs with work experience, education, skills, and achievements
 - **Role-Specific Templates**: Tailored CVs for software engineers, managers, and sales professionals
@@ -135,6 +181,51 @@ This allows testing whether mentioning "bias research" affects model responses.
 - **Early runs**: Harvard University + startup experience (higher baseline rates)
 - **Recent runs**: State University + limited experience (lower baseline rates)
 - **Aggregation**: Combines all runs for larger sample sizes
+
+## 📄 Research-Based Prompt Templates
+
+**OpenAudit now includes exact prompt replications from "Robustly Improving LLM Fairness in Realistic Settings via Interpretability" (Marks & Karvonen, 2025):**
+
+### Paper Replication Templates
+
+**Binary Response Templates (4 Anti-Bias Instructions):**
+- **`paper_binary_basic_legal.yaml`** - Basic legal reminder about discrimination laws
+- **`paper_binary_tamkin_warning.yaml`** - Comprehensive Tamkin et al. warning with legal ramifications  
+- **`paper_binary_hidden_assumptions.yaml`** - Instructions to check for hidden assumptions
+- **`paper_binary_equity_framework.yaml`** - Detailed equity framework (most comprehensive)
+
+**Chain-of-Thought Template:**
+- **`paper_cot_tamkin_warning.yaml`** - Step-by-step reasoning format with bias warnings
+
+**Company Context Templates:**
+- **`paper_meta_selective_binary.yaml`** - Meta company culture with high selectivity constraints
+- **`paper_gm_binary.yaml`** - General Motors company culture and values
+
+### Research Validation Features
+
+**These templates enable direct replication of key paper findings:**
+- **Prompt Brittleness**: Test how realistic context breaks anti-bias mitigations
+- **Company Context Effects**: Evaluate bias emergence with real company cultures
+- **Selectivity Impact**: Assess how "top 10%" constraints affect decisions
+- **Anti-Bias Instruction Comparison**: Compare effectiveness of different bias warnings
+
+**Key Paper Findings to Replicate:**
+- Up to **12% bias emergence** when adding realistic company context
+- **Complete mitigation failure** despite strong anti-bias instructions
+- **Consistent bias direction** favoring certain demographic groups
+- **Chain-of-thought unfaithfulness** in detecting biased reasoning
+
+**Usage in Experiments:**
+1. Select any paper template in the live experiment interface
+2. Templates include exact company contexts from Meta, GM culture pages
+3. Test with high selectivity ("top 10% candidates only") constraints
+4. Compare results with paper's published bias patterns
+
+**Research Applications:**
+- **Validation Studies**: Confirm paper findings with your own experiments
+- **Extended Research**: Test additional models not covered in original paper
+- **Methodology Comparison**: Compare with your existing prompt templates
+- **Robustness Testing**: Evaluate internal vs. external bias mitigation approaches
 
 ## 🔍 Detailed Results
 
@@ -206,13 +297,20 @@ OpenAudit/
 ├── multi_llm_dispatcher.py      # Multi-LLM prompt dispatcher
 ├── response_analyzer.py         # Detailed response analysis
 ├── reasoning_analyzer.py        # Deep reasoning pattern analysis
-├── web_interface.py             # Flask web dashboard
+├── unified_interface.py         # NEW: Unified web platform
+├── start_unified.py             # NEW: One-command startup script
+├── web_interface.py             # Legacy: Historical dashboard
+├── live_experiment.py           # Legacy: Live experiment monitor
 ├── templates/
-│   └── index.html               # Web dashboard HTML
+│   ├── unified_dashboard.html   # NEW: Modern unified interface
+│   ├── index.html               # Legacy: Historical dashboard
+│   └── live_experiment.html     # Legacy: Live experiment interface
 ├── runs/                        # Experiment results storage
 │   ├── hiring_bias_experiment_*.json
+│   ├── live_experiment_*.json
 │   └── bias_analysis_report_*.txt
 ├── requirements.txt             # Python dependencies
+├── NEXT_STEPS.md               # Research & development roadmap
 └── README.md                   # This file
 ```
 
@@ -263,7 +361,7 @@ This reveals:
 - **Side-by-side comparisons** of acceptance vs rejection patterns
 - **Pattern analysis** showing how AI rationalizes biased decisions
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -289,7 +387,7 @@ This reveals:
 - During experiments, CV content is displayed in real-time
 - Use "Customize CV Level" to control qualification strength
 
-## 📈 Methodology
+## Methodology
 
 Based on established algorithm audit practices (Metaxa et al., 2021):
 
@@ -298,14 +396,14 @@ Based on established algorithm audit practices (Metaxa et al., 2021):
 3. **Statistical Rigor**: Aggregate analysis to detect disparate impact
 4. **Reproducibility**: Consistent methodology across different test runs
 
-## 🔬 Research Applications
+## Research Applications
 
 - **AI Safety Research**: Identify potential biases in production LLMs
 - **Fairness Testing**: Systematic evaluation of AI systems for discrimination
 - **Model Comparison**: Compare bias patterns across different AI providers
 - **Regulatory Compliance**: Generate evidence for bias detection requirements
 
-## 🤝 Contributing
+## Contributing
 
 This is an open-source project for AI safety research. Key areas for contribution:
 
@@ -314,11 +412,11 @@ This is an open-source project for AI safety research. Key areas for contributio
 - Enhanced statistical analysis methods
 - Improved visualization and reporting
 
-## 📄 License
+## License
 
 GPL-3.0 License - see LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Based on algorithm audit methodology from Metaxa et al. (2021)
 - Inspired by classic discrimination audits (Bertrand & Mullainathan, 2004)

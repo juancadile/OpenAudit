@@ -8,7 +8,7 @@ import json
 import glob
 from datetime import datetime
 from flask import Flask, render_template, jsonify, request
-from response_analyzer import analyze_responses_by_demographics
+from core.response_analyzer import analyze_responses_by_demographics
 from collections import defaultdict
 
 app = Flask(__name__)

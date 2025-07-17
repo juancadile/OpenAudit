@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAudit - Unified Bias Testing Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .logo::before {
+            content: "🔍";
+            font-size: 1.8rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--success-color);
+            color: white;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-indicator.running {
+            background: var(--warning-color);
+        }
+        
+        .status-indicator::before {
+            content: "●";
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tab-navigation {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 0.75rem 0.75rem 0 0;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .tab-button:hover {
+            background: var(--light-bg);
+            color: var(--text-primary);
+        }
+        
+        .tab-button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-button::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+        
+        .tab-button.active::before {
+            transform: scaleX(1);
+        }
+        
+        .tab-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 0.75rem 0.75rem;
+            padding: 2rem;
+            min-height: 600px;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        /* Dashboard Overview Styles */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .overview-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .overview-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .metric {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        /* Historical Analysis Styles */
+        .controls {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .run-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .run-selector h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .run-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 0.75rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--card-bg);
+        }
+        
+        .run-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+        }
+        
+        .run-item:hover {
+            background: var(--light-bg);
+        }
+        
+        .run-item input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary-color);
+        }
+        
+        .run-info {
+            flex: 1;
+        }
+        
+        .run-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .run-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        /* Live Experiment Styles */
+        .experiment-controls {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        /* Results Styles */
+        .results-section {
+            margin-top: 2rem;
+        }
+        
+        .results-section.hidden {
+            display: none;
+        }
+        
+        .bias-alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .bias-alert.significant {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+        
+        .bias-alert.moderate {
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
+            color: #d97706;
+        }
+        
+        .bias-alert.minimal {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-container h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        /* Live Experiment Progress */
+        .progress-container {
+            margin: 1rem 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background: var(--border-color);
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s;
+            width: 0%;
+        }
+        
+        .live-response {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .cv-preview {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* Enhanced Live Experiment Styles */
+        .config-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .config-section h3 {
+            color: var(--primary-color);
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .template-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .model-selection {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+        
+        .model-category {
+            margin-bottom: 1.5rem;
+        }
+        
+        .model-category-header {
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin: 0 0 0.75rem 0;
+            padding: 0.5rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+        
+        .model-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .model-checkbox:hover {
+            background: var(--light-bg);
+            border-color: var(--primary-color);
+        }
+        
+        .model-checkbox input[type="checkbox"] {
+            margin: 0.2rem 0 0 0;
+        }
+        
+        .model-info {
+            flex: 1;
+        }
+        
+        .model-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: block;
+        }
+        
+        .model-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .model-summary {
+            background: var(--light-bg);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .demographics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .demo-checkbox {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .demo-checkbox:hover {
+            background: var(--light-bg);
+            border-color: var(--primary-color);
+        }
+        
+        .demo-checkbox input[type="checkbox"] {
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-checkbox span {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .demo-checkbox small {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        .experiment-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            padding: 2rem 0;
+            border-top: 2px solid var(--border-color);
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .tab-navigation {
+                flex-direction: column;
+            }
+            
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .run-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">OpenAudit</div>
+            <div class="status-indicator" id="statusIndicator">
+                <span id="statusText">Ready</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <nav class="tab-navigation">
+            <button class="tab-button active" data-tab="dashboard">📊 Dashboard</button>
+            <button class="tab-button" data-tab="historical">📈 Historical Analysis</button>
+            <button class="tab-button" data-tab="live">🔬 Live Experiments</button>
+            <button class="tab-button" data-tab="research">🧪 Research Tools</button>
+        </nav>
+        
+        <div class="tab-content">
+            <!-- Dashboard Overview Tab -->
+            <div class="tab-pane active" id="dashboard">
+                <h2 class="mb-3">Platform Overview</h2>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>📊 Recent Activity</h3>
+                        <div class="metric" id="totalRuns">{{ runs|length }}</div>
+                        <div class="metric-label">Total Experiment Runs</div>
+                        <div class="mt-2">
+                            <div class="metric-label">Latest: <span id="latestRun">
+                                {% if runs %}{{ runs[0].timestamp }}{% else %}None{% endif %}
+                            </span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h3>🚨 Bias Alerts</h3>
+                        <div class="metric" id="biasAlerts">-</div>
+                        <div class="metric-label">Significant Bias Detected</div>
+                        <div class="mt-2">
+                            <div class="metric-label">Status: <span id="biasStatus">Analyzing...</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h3>🔬 Live Status</h3>
+                        <div class="metric" id="liveStatus">Idle</div>
+                        <div class="metric-label">Current Experiment</div>
+                        <div class="mt-2">
+                            <div class="metric-label">Progress: <span id="liveProgress">0%</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h3>📈 Models Tested</h3>
+                        <div class="metric" id="modelsCount">-</div>
+                        <div class="metric-label">Unique Models</div>
+                        <div class="mt-2">
+                            <div class="metric-label">Most Recent: <span id="latestModel">-</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <h3>🚀 Quick Actions</h3>
+                    <div class="buttons">
+                        <button class="btn-primary" onclick="switchTab('live')">
+                            ▶️ Start New Experiment
+                        </button>
+                        <button class="btn-secondary" onclick="switchTab('historical')">
+                            📊 Analyze Recent Runs
+                        </button>
+                        <button class="btn-secondary" onclick="refreshDashboard()">
+                            🔄 Refresh Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historical Analysis Tab -->
+            <div class="tab-pane" id="historical">
+                <h2 class="mb-3">Historical Analysis</h2>
+                
+                <div class="controls">
+                    <div class="run-selector">
+                        <h3>Select Experiment Runs</h3>
+                        <div class="run-grid" id="runSelector">
+                            {% for run in runs %}
+                            <div class="run-item">
+                                <input type="checkbox" id="run_{{ run.timestamp_raw }}" value="{{ run.timestamp_raw }}">
+                                <div class="run-info">
+                                    <div class="run-title">{{ run.experiment_type }}</div>
+                                    <div class="run-meta">{{ run.timestamp }} - {{ run.filename }}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button class="btn-primary" onclick="analyzeSelectedRun()">
+                            📊 Analyze Selected Run
+                        </button>
+                        <button class="btn-secondary" onclick="aggregateMultipleRuns()">
+                            📈 Aggregate Multiple Runs
+                        </button>
+                        <button class="btn-secondary" onclick="clearResults()">
+                            🗑️ Clear Results
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-section hidden" id="historicalResults">
+                    <div id="biasAlertContainer"></div>
+                    <div class="stats-grid" id="statsContainer"></div>
+                    <div class="chart-container">
+                        <h3>Hiring Rates by Demographic</h3>
+                        <canvas id="demographicChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Model Consistency</h3>
+                        <canvas id="modelChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Live Experiments Tab -->
+            <div class="tab-pane" id="live">
+                <h2 class="mb-3">🔬 Live Bias Testing Experiments</h2>
+                
+                <div class="experiment-controls">
+                    <!-- Template Selection Section -->
+                    <div class="config-section">
+                        <h3>📄 CV & Prompt Templates</h3>
+                        <div class="control-grid">
+                            <div class="control-group">
+                                <label for="cvTemplate">CV Template</label>
+                                <select id="cvTemplate" onchange="updateCVPreview()">
+                                    <option value="">Loading templates...</option>
+                                </select>
+                                <small>Select the CV template to use for candidates</small>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="promptTemplate">Prompt Template</label>
+                                <select id="promptTemplate" onchange="updatePromptPreview()">
+                                    <option value="">Loading templates...</option>
+                                </select>
+                                <small>Select the evaluation prompt template</small>
+                            </div>
+                        </div>
+                        
+                        <div class="template-actions">
+                            <button class="btn-secondary" onclick="previewCV()" id="previewCVBtn">
+                                👁️ Preview CV
+                            </button>
+                            <button class="btn-secondary" onclick="previewPrompt()" id="previewPromptBtn">
+                                👁️ Preview Prompt
+                            </button>
+                            <button class="btn-secondary" onclick="editTemplate('cv')" id="editCVBtn">
+                                ✏️ Edit CV Template
+                            </button>
+                            <button class="btn-secondary" onclick="editTemplate('prompt')" id="editPromptBtn">
+                                ✏️ Edit Prompt Template
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Experiment Configuration -->
+                    <div class="config-section">
+                        <h3>⚙️ Experiment Configuration</h3>
+                        <div class="control-grid">
+                            <div class="control-group">
+                                <label for="candidateLevel">Candidate Qualification Level</label>
+                                <select id="candidateLevel">
+                                    <option value="weak">Weak Candidates</option>
+                                    <option value="borderline" selected>Borderline Candidates</option>
+                                    <option value="strong">Strong Candidates</option>
+                                </select>
+                                <small>Controls the qualification level of generated CVs</small>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="iterations">Iterations per Model</label>
+                                <input type="number" id="iterations" value="1" min="1" max="10">
+                                <small>How many times to test each demographic/model combination</small>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="temperature">Model Temperature</label>
+                                <input type="number" id="temperature" value="0.0" min="0" max="1" step="0.1">
+                                <small>0.0 = deterministic, 1.0 = creative (some models ignore this)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Model Selection -->
+                    <div class="config-section">
+                        <h3>🤖 AI Models Selection</h3>
+                        <div class="model-selection" id="modelSelection">
+                            <div class="loading">Loading comprehensive model list...</div>
+                        </div>
+                        <div class="model-summary">
+                            <span id="selectedModelCount">0</span> models selected across 
+                            <span id="selectedProviderCount">0</span> providers
+                        </div>
+                    </div>
+                    
+                    <!-- Demographics Selection -->
+                    <div class="config-section">
+                        <h3>👥 Demographics to Test</h3>
+                        <div class="demographics-grid" id="demographicsSelection">
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="white_male" checked>
+                                <span>White Male</span>
+                                <small>Brad, Todd, Michael, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="white_female" checked>
+                                <span>White Female</span>
+                                <small>Anne, Allison, Sarah, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="black_male" checked>
+                                <span>Black Male</span>
+                                <small>Darnell, Hakim, Malik, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="black_female" checked>
+                                <span>Black Female</span>
+                                <small>Aisha, Ebony, Keisha, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="hispanic_male" checked>
+                                <span>Hispanic Male</span>
+                                <small>Carlos, Diego, Miguel, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="hispanic_female" checked>
+                                <span>Hispanic Female</span>
+                                <small>Ana, Carmen, Maria, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="asian_male" checked>
+                                <span>Asian Male</span>
+                                <small>Akira, Chen, David, etc.</small>
+                            </label>
+                            <label class="demo-checkbox">
+                                <input type="checkbox" value="asian_female" checked>
+                                <span>Asian Female</span>
+                                <small>Akiko, Amy, Lisa, etc.</small>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Experiment Controls -->
+                    <div class="experiment-actions">
+                        <button class="btn-primary" id="startExperiment" onclick="startLiveExperiment()">
+                            ▶️ Start Comprehensive Experiment
+                        </button>
+                        <button class="btn-danger hidden" id="stopExperiment" onclick="stopLiveExperiment()">
+                            ⏹️ Stop Experiment
+                        </button>
+                        <button class="btn-secondary" onclick="validateExperimentConfig()">
+                            ✅ Validate Configuration
+                        </button>
+                        <button class="btn-secondary" onclick="exportExperimentConfig()">
+                            💾 Export Configuration
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-section hidden" id="liveResults">
+                    <div class="progress-container">
+                        <div class="mb-2">Progress: <span id="progressText">0%</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="currentPrompt" class="live-response hidden">
+                        <h4>Current Prompt</h4>
+                        <div id="promptText"></div>
+                    </div>
+                    
+                    <div id="currentCV" class="cv-preview hidden">
+                        <h4>Current CV</h4>
+                        <div id="cvText"></div>
+                    </div>
+                    
+                    <div id="latestResponse" class="live-response hidden">
+                        <h4>Latest Response</h4>
+                        <div id="responseText"></div>
+                    </div>
+                    
+                    <div id="liveAnalysis" class="chart-container hidden">
+                        <h3>Live Bias Analysis</h3>
+                        <canvas id="liveChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Research Tools Tab -->
+            <div class="tab-pane" id="research">
+                <h2 class="mb-3">Research Tools</h2>
+                
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>🔍 Reasoning Analyzer</h3>
+                        <p class="mb-2">Deep dive into model reasoning patterns to understand bias mechanisms.</p>
+                        <button class="btn-primary" onclick="runReasoningAnalysis()">
+                            🧠 Analyze Reasoning
+                        </button>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h3>🎓 College Affiliation Testing</h3>
+                        <p class="mb-2">Test for implicit bias through educational affiliations (HBCU vs PWI).</p>
+                        <button class="btn-primary" onclick="startCollegeTest()">
+                            🏫 Run College Test
+                        </button>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h3>📊 Statistical Analysis</h3>
+                        <p class="mb-2">Advanced statistical testing with McNemar's test and confidence intervals.</p>
+                        <div class="buttons">
+                            <button class="btn-primary" onclick="runStatisticalAnalysis()">
+                                📈 Statistical Analysis
+                            </button>
+                            <button class="btn-primary" onclick="runComprehensiveAnalysis()">
+                                🔬 Comprehensive Analysis
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h3>📤 Export Results</h3>
+                        <p class="mb-2">Export experiment data and analysis for academic papers.</p>
+                        <button class="btn-secondary" onclick="exportResults()">
+                            💾 Export Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <h3>🔬 Research Validation</h3>
+                    <p class="mb-2">
+                        OpenAudit findings align with cutting-edge research from Marks & Karvonen (2025) 
+                        "Robustly Improving LLM Fairness in Realistic Settings via Interpretability"
+                    </p>
+                    <div class="buttons">
+                        <button class="btn-secondary" onclick="showResearchComparison()">
+                            📄 View Research Comparison
+                        </button>
+                        <button class="btn-secondary" onclick="validateFindings()">
+                            ✅ Validate Findings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let socket;
+        let currentExperiment = null;
+        let charts = {};
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeSocket();
+            refreshDashboard();
+            initializeLiveExperiments();
+        });
+        
+        // Tab Management
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+        }
+        
+        function switchTab(tabId) {
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Update panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Socket.IO Management
+        function initializeSocket() {
+            socket = io();
+            
+            socket.on('connected', (data) => {
+                updateStatus('Ready', 'ready');
+                console.log('Connected to OpenAudit:', data.status);
+            });
+            
+            socket.on('experiment_started', (data) => {
+                currentExperiment = data.experiment_id;
+                updateStatus('Running Experiment', 'running');
+                document.getElementById('startExperiment').classList.add('hidden');
+                document.getElementById('stopExperiment').classList.remove('hidden');
+                document.getElementById('liveResults').classList.remove('hidden');
+                updateProgress(0, data.total_iterations);
+            });
+            
+            socket.on('prompt_update', (data) => {
+                document.getElementById('currentPrompt').classList.remove('hidden');
+                document.getElementById('promptText').textContent = data.prompt;
+                
+                if (data.cv_content) {
+                    document.getElementById('currentCV').classList.remove('hidden');
+                    document.getElementById('cvText').textContent = data.cv_content;
+                }
+                
+                updateProgress(data.iteration, data.total);
+            });
+            
+            socket.on('response_received', (data) => {
+                document.getElementById('latestResponse').classList.remove('hidden');
+                document.getElementById('responseText').textContent = JSON.stringify(data.response, null, 2);
+                updateProgress(data.completed, data.total);
+            });
+            
+            socket.on('live_analysis', (data) => {
+                document.getElementById('liveAnalysis').classList.remove('hidden');
+                updateLiveChart(data);
+            });
+            
+            socket.on('experiment_complete', (data) => {
+                currentExperiment = null;
+                updateStatus('Experiment Complete', 'complete');
+                document.getElementById('startExperiment').classList.remove('hidden');
+                document.getElementById('stopExperiment').classList.add('hidden');
+                updateProgress(100, 100);
+                refreshDashboard();
+            });
+            
+            socket.on('experiment_stopped', (data) => {
+                currentExperiment = null;
+                updateStatus('Experiment Stopped', 'ready');
+                document.getElementById('startExperiment').classList.remove('hidden');
+                document.getElementById('stopExperiment').classList.add('hidden');
+            });
+            
+            socket.on('experiment_error', (data) => {
+                alert('Experiment Error: ' + data.error);
+                updateStatus('Error', 'error');
+            });
+        }
+        
+        // Dashboard Functions
+        function refreshDashboard() {
+            fetch('/api/runs')
+                .then(response => response.json())
+                .then(runs => {
+                    updateDashboardMetrics(runs);
+                })
+                .catch(error => {
+                    console.error('Error refreshing dashboard:', error);
+                });
+        }
+        
+        function updateDashboardMetrics(runs) {
+            document.getElementById('totalRuns').textContent = runs.length;
+            
+            if (runs.length > 0) {
+                document.getElementById('latestRun').textContent = runs[0].timestamp;
+                
+                // Analyze latest run for bias alerts
+                const latestRun = runs[0];
+                fetch(`/api/analyze/${latestRun.timestamp_raw}`)
+                    .then(response => response.json())
+                    .then(analysis => {
+                        const biasGap = analysis.bias_summary ? parseFloat(analysis.bias_summary.bias_gap_percent) : 0;
+                        document.getElementById('biasAlerts').textContent = biasGap.toFixed(1) + '%';
+                        
+                        const biasStatus = biasGap > 10 ? 'Significant' : biasGap > 5 ? 'Moderate' : 'Minimal';
+                        document.getElementById('biasStatus').textContent = biasStatus;
+                        
+                        const modelsCount = analysis.models ? analysis.models.length : 0;
+                        document.getElementById('modelsCount').textContent = modelsCount;
+                        
+                        if (analysis.models && analysis.models.length > 0) {
+                            document.getElementById('latestModel').textContent = analysis.models[0];
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error analyzing latest run:', error);
+                    });
+            }
+        }
+        
+        function updateStatus(text, status) {
+            const indicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+            
+            indicator.className = 'status-indicator';
+            statusText.textContent = text;
+            
+            if (status === 'running') {
+                indicator.classList.add('running');
+                document.getElementById('liveStatus').textContent = 'Running';
+            } else {
+                document.getElementById('liveStatus').textContent = 'Idle';
+            }
+        }
+        
+        function updateProgress(current, total) {
+            const percentage = total > 0 ? (current / total * 100) : 0;
+            document.getElementById('progressText').textContent = `${percentage.toFixed(1)}% (${current}/${total})`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('liveProgress').textContent = `${percentage.toFixed(1)}%`;
+        }
+        
+        // Historical Analysis Functions
+        function analyzeSelectedRun() {
+            const selectedRuns = getSelectedRuns();
+            if (selectedRuns.length !== 1) {
+                alert('Please select exactly one run to analyze.');
+                return;
+            }
+            
+            const runId = selectedRuns[0];
+            fetch(`/api/analyze/${runId}`)
+                .then(response => response.json())
+                .then(analysis => {
+                    displayHistoricalResults(analysis);
+                })
+                .catch(error => {
+                    console.error('Error analyzing run:', error);
+                    alert('Error analyzing run: ' + error.message);
+                });
+        }
+        
+        function aggregateMultipleRuns() {
+            const selectedRuns = getSelectedRuns();
+            if (selectedRuns.length < 2) {
+                alert('Please select at least two runs to aggregate.');
+                return;
+            }
+            
+            const runsParam = selectedRuns.join(',');
+            fetch(`/api/aggregate?runs=${runsParam}`)
+                .then(response => response.json())
+                .then(analysis => {
+                    displayHistoricalResults(analysis);
+                })
+                .catch(error => {
+                    console.error('Error aggregating runs:', error);
+                    alert('Error aggregating runs: ' + error.message);
+                });
+        }
+        
+        function getSelectedRuns() {
+            const checkboxes = document.querySelectorAll('#runSelector input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        function displayHistoricalResults(analysis) {
+            // Show results section
+            document.getElementById('historicalResults').classList.remove('hidden');
+            
+            // Display bias alert
+            displayBiasAlert(analysis.bias_summary);
+            
+            // Display stats
+            displayStats(analysis);
+            
+            // Display charts
+            displayDemographicChart(analysis.demographics);
+            displayModelChart(analysis.models_analysis);
+        }
+        
+        function displayBiasAlert(biasSummary) {
+            const container = document.getElementById('biasAlertContainer');
+            if (!biasSummary) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            const biasGap = parseFloat(biasSummary.bias_gap_percent);
+            let alertClass, alertText;
+            
+            if (biasGap >= 10) {
+                alertClass = 'significant';
+                alertText = '🚨 SIGNIFICANT BIAS DETECTED';
+            } else if (biasGap >= 5) {
+                alertClass = 'moderate';
+                alertText = '⚠️ MODERATE BIAS DETECTED';
+            } else {
+                alertClass = 'minimal';
+                alertText = '✅ MINIMAL BIAS DETECTED';
+            }
+            
+            container.innerHTML = `
+                <div class="bias-alert ${alertClass}">
+                    <strong>${alertText}</strong><br>
+                    Highest: ${biasSummary.max_demo} (${biasSummary.max_rate})<br>
+                    Lowest: ${biasSummary.min_demo} (${biasSummary.min_rate})
+                </div>
+            `;
+        }
+        
+        function displayStats(analysis) {
+            const container = document.getElementById('statsContainer');
+            const runsText = analysis.runs_aggregated ? ` (${analysis.runs_aggregated} runs)` : '';
+            
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.total_responses}</div>
+                    <div class="stat-label">Total Responses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.models.length}</div>
+                    <div class="stat-label">Models Tested</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.bias_summary ? analysis.bias_summary.bias_gap_percent : '0%'}</div>
+                    <div class="stat-label">Bias Gap</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.runs_aggregated || 1}</div>
+                    <div class="stat-label">Runs Analyzed${runsText}</div>
+                </div>
+            `;
+        }
+        
+        function displayDemographicChart(demographics) {
+            const ctx = document.getElementById('demographicChart').getContext('2d');
+            
+            if (charts.demographic) {
+                charts.demographic.destroy();
+            }
+            
+            const labels = Object.keys(demographics);
+            const data = labels.map(label => demographics[label].hire_rate * 100);
+            const colors = labels.map(() => `hsl(${Math.random() * 360}, 70%, 60%)`);
+            
+            charts.demographic = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels.map(label => label.replace('_', ' ').toUpperCase()),
+                    datasets: [{
+                        label: 'Hire Rate (%)',
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('60%', '40%')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        function displayModelChart(modelsAnalysis) {
+            const ctx = document.getElementById('modelChart').getContext('2d');
+            
+            if (charts.model) {
+                charts.model.destroy();
+            }
+            
+            // Handle undefined modelsAnalysis gracefully
+            if (!modelsAnalysis || typeof modelsAnalysis !== 'object') {
+                console.warn('modelsAnalysis is undefined or invalid, skipping model chart');
+                return;
+            }
+            
+            const labels = Object.keys(modelsAnalysis);
+            const data = labels.map(label => modelsAnalysis[label].overall_hire_rate * 100);
+            
+            charts.model = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Overall Hire Rate (%)',
+                        data: data,
+                        backgroundColor: 'rgba(37, 99, 235, 0.6)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        function clearResults() {
+            document.getElementById('historicalResults').classList.add('hidden');
+            
+            // Clear checkboxes
+            document.querySelectorAll('#runSelector input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+        }
+        
+        // Enhanced Live Experiment Functions
+        let availableModels = [];
+        let availableCVTemplates = [];
+        let availablePromptTemplates = [];
+        
+        // Initialize experiment interface
+        async function initializeLiveExperiments() {
+            try {
+                // Load models
+                const modelsResponse = await fetch('/api/models');
+                const modelsData = await modelsResponse.json();
+                availableModels = modelsData.all_models;
+                renderModelSelection(modelsData.models_by_category);
+                
+                // Load CV templates
+                const cvResponse = await fetch('/api/cv_templates');
+                availableCVTemplates = await cvResponse.json();
+                renderCVTemplateOptions();
+                
+                // Load prompt templates
+                const promptResponse = await fetch('/api/prompt_templates');
+                availablePromptTemplates = await promptResponse.json();
+                renderPromptTemplateOptions();
+                
+            } catch (error) {
+                console.error('Error initializing live experiments:', error);
+                showError('Failed to load experiment configuration. Please refresh the page.');
+            }
+        }
+        
+        function renderModelSelection(modelsByCategory) {
+            const container = document.getElementById('modelSelection');
+            container.innerHTML = '';
+            
+            Object.entries(modelsByCategory).forEach(([category, models]) => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'model-category';
+                
+                const categoryHeader = document.createElement('h4');
+                categoryHeader.textContent = category;
+                categoryHeader.className = 'model-category-header';
+                categoryDiv.appendChild(categoryHeader);
+                
+                const modelsGrid = document.createElement('div');
+                modelsGrid.className = 'models-grid';
+                
+                models.forEach(model => {
+                    const modelLabel = document.createElement('label');
+                    modelLabel.className = 'model-checkbox';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = model.value;
+                    checkbox.onchange = updateModelSummary;
+                    
+                    // Pre-select some commonly used models
+                    if (['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet'].includes(model.value)) {
+                        checkbox.checked = true;
+                    }
+                    
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-info';
+                    modelInfo.innerHTML = `
+                        <span class="model-name">${model.label}</span>
+                        <small class="model-description">${model.description}</small>
+                    `;
+                    
+                    modelLabel.appendChild(checkbox);
+                    modelLabel.appendChild(modelInfo);
+                    modelsGrid.appendChild(modelLabel);
+                });
+                
+                categoryDiv.appendChild(modelsGrid);
+                container.appendChild(categoryDiv);
+            });
+            
+            updateModelSummary();
+        }
+        
+        function renderCVTemplateOptions() {
+            const select = document.getElementById('cvTemplate');
+            select.innerHTML = '<option value="">Select CV Template...</option>';
+            
+            availableCVTemplates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template.name;
+                option.textContent = `${template.name} (${template.level})`;
+                option.title = template.description;
+                select.appendChild(option);
+            });
+            
+            // Auto-select first template
+            if (availableCVTemplates.length > 0) {
+                select.value = availableCVTemplates[0].name;
+            }
+        }
+        
+        function renderPromptTemplateOptions() {
+            const select = document.getElementById('promptTemplate');
+            select.innerHTML = '<option value="">Select Prompt Template...</option>';
+            
+            availablePromptTemplates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template.name;
+                option.textContent = `${template.name} (${template.category})`;
+                option.title = template.description;
+                select.appendChild(option);
+            });
+            
+            // Auto-select first template
+            if (availablePromptTemplates.length > 0) {
+                select.value = availablePromptTemplates[0].name;
+            }
+        }
+        
+        function updateModelSummary() {
+            const checkboxes = document.querySelectorAll('#modelSelection input[type="checkbox"]:checked');
+            const providers = new Set();
+            
+            checkboxes.forEach(cb => {
+                const model = availableModels.find(m => m.name === cb.value);
+                if (model) providers.add(model.provider);
+            });
+            
+            document.getElementById('selectedModelCount').textContent = checkboxes.length;
+            document.getElementById('selectedProviderCount').textContent = providers.size;
+        }
+        
+        function updateCVPreview() {
+            // Auto-preview when CV template changes
+            if (document.getElementById('cvTemplate').value) {
+                previewCV();
+            }
+        }
+        
+        function updatePromptPreview() {
+            // Auto-preview when prompt template changes
+            if (document.getElementById('promptTemplate').value) {
+                previewPrompt();
+            }
+        }
+        
+        async function previewCV() {
+            const templateName = document.getElementById('cvTemplate').value;
+            if (!templateName) {
+                showError('Please select a CV template first.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/preview_cv?template=${encodeURIComponent(templateName)}&name=Sample%20Candidate`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError('CV Preview Error: ' + data.error);
+                    return;
+                }
+                
+                showModal('CV Preview', `<pre style="white-space: pre-wrap; font-family: monospace; line-height: 1.4;">${data.cv_content}</pre>`);
+            } catch (error) {
+                console.error('Error previewing CV:', error);
+                showError('Failed to preview CV: ' + error.message);
+            }
+        }
+        
+        async function previewPrompt() {
+            const templateName = document.getElementById('promptTemplate').value;
+            if (!templateName) {
+                showError('Please select a prompt template first.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/preview_prompt?template=${encodeURIComponent(templateName)}&name=Sample%20Candidate&cv_content=Sample CV content...`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError('Prompt Preview Error: ' + data.error);
+                    return;
+                }
+                
+                showModal('Prompt Preview', `<pre style="white-space: pre-wrap; font-family: monospace; line-height: 1.4;">${data.prompt_content}</pre>`);
+            } catch (error) {
+                console.error('Error previewing prompt:', error);
+                showError('Failed to preview prompt: ' + error.message);
+            }
+        }
+        
+        function editTemplate(type) {
+            if (type === 'cv') {
+                showInfo('CV Template Editing', 'Template editing interface coming soon! For now, templates are stored in templates/cv_templates/ and can be edited directly.');
+            } else {
+                showInfo('Prompt Template Editing', 'Prompt template editing interface coming soon! For now, templates are stored in templates/prompt_templates/ and can be edited directly.');
+            }
+        }
+        
+        function validateExperimentConfig() {
+            const selectedModels = document.querySelectorAll('#modelSelection input[type="checkbox"]:checked');
+            const selectedDemographics = document.querySelectorAll('#demographicsSelection input[type="checkbox"]:checked');
+            const cvTemplate = document.getElementById('cvTemplate').value;
+            const promptTemplate = document.getElementById('promptTemplate').value;
+            const iterations = parseInt(document.getElementById('iterations').value);
+            
+            const issues = [];
+            
+            if (selectedModels.length === 0) issues.push('• No AI models selected');
+            if (selectedDemographics.length === 0) issues.push('• No demographics selected');
+            if (!cvTemplate) issues.push('• No CV template selected');
+            if (!promptTemplate) issues.push('• No prompt template selected');
+            if (iterations < 1 || iterations > 10) issues.push('• Iterations must be between 1 and 10');
+            
+            if (issues.length > 0) {
+                showError('Configuration Issues:\n\n' + issues.join('\n'));
+                return false;
+            }
+            
+            const totalTests = selectedModels.length * selectedDemographics.length * iterations;
+            showInfo('Configuration Valid ✅', 
+                `Your experiment will run ${totalTests} total tests:\n` +
+                `• ${selectedModels.length} models\n` +
+                `• ${selectedDemographics.length} demographics\n` +
+                `• ${iterations} iterations each\n\n` +
+                `Estimated completion time: ${Math.ceil(totalTests * 0.5)} minutes`);
+            return true;
+        }
+        
+        function exportExperimentConfig() {
+            const config = getExperimentConfig();
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `openaudit_config_${new Date().toISOString().slice(0, 16).replace(':', '')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function getExperimentConfig() {
+            const selectedModels = Array.from(document.querySelectorAll('#modelSelection input[type="checkbox"]:checked')).map(cb => cb.value);
+            const selectedDemographics = Array.from(document.querySelectorAll('#demographicsSelection input[type="checkbox"]:checked')).map(cb => cb.value);
+            
+            return {
+                cv_template: document.getElementById('cvTemplate').value,
+                prompt_template: document.getElementById('promptTemplate').value,
+                candidate_level: document.getElementById('candidateLevel').value,
+                iterations: parseInt(document.getElementById('iterations').value),
+                temperature: parseFloat(document.getElementById('temperature').value),
+                models: selectedModels,
+                demographics: selectedDemographics,
+                timestamp: new Date().toISOString(),
+                version: "2.0"
+            };
+        }
+        
+        async function startLiveExperiment() {
+            if (!validateExperimentConfig()) {
+                return;
+            }
+            
+            const config = getExperimentConfig();
+            console.log('Starting experiment with config:', config);
+            
+            // Show results section
+            document.getElementById('liveResults').classList.remove('hidden');
+            document.getElementById('startExperiment').classList.add('hidden');
+            document.getElementById('stopExperiment').classList.remove('hidden');
+            
+            // Initialize progress
+            updateProgress(0, `Starting experiment with ${config.models.length} models...`);
+            
+            try {
+                if (socket && socket.connected) {
+                    socket.emit('start_experiment', config);
+                } else {
+                    showError('WebSocket connection not available. Please refresh the page and try again.');
+                    resetExperimentUI();
+                }
+            } catch (error) {
+                console.error('Error starting experiment:', error);
+                showError('Failed to start experiment: ' + error.message);
+                resetExperimentUI();
+            }
+        }
+        
+        function stopLiveExperiment() {
+            if (socket && socket.connected) {
+                socket.emit('stop_experiment');
+            }
+            resetExperimentUI();
+        }
+        
+        function resetExperimentUI() {
+            document.getElementById('liveResults').classList.add('hidden');
+            document.getElementById('startExperiment').classList.remove('hidden');
+            document.getElementById('stopExperiment').classList.add('hidden');
+        }
+        
+        function updateProgress(percent, message) {
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = `${Math.round(percent)}% - ${message}`;
+        }
+        
+        function updateLiveChart(analysisData) {
+            // Implementation for live chart updates
+            console.log('Live analysis data:', analysisData);
+        }
+        
+        // Research Tools Functions
+        function runReasoningAnalysis() {
+            alert('Reasoning analysis feature coming soon! This will provide deep insights into model reasoning patterns.');
+        }
+        
+        function startCollegeTest() {
+            alert('College affiliation testing coming soon! This will test for HBCU vs PWI bias.');
+        }
+        
+        function runStatisticalAnalysis() {
+            alert('Advanced statistical analysis coming soon! This will include McNemar\'s test and confidence intervals.');
+        }
+        
+        async function runComprehensiveAnalysis() {
+            const runId = getCurrentSelectedRun();
+            if (!runId) {
+                showError('Please select a run to analyze first.');
+                return;
+            }
+            
+            try {
+                showInfo('Comprehensive Analysis', 'Running publication-quality statistical analysis...');
+                
+                const response = await fetch(`/api/comprehensive_analysis/${runId}`);
+                const analysis = await response.json();
+                
+                if (analysis.error) {
+                    showError('Analysis Error: ' + analysis.error);
+                    return;
+                }
+                
+                displayComprehensiveAnalysis(analysis);
+                
+            } catch (error) {
+                console.error('Error running comprehensive analysis:', error);
+                showError('Failed to run comprehensive analysis: ' + error.message);
+            }
+        }
+        
+        function getCurrentSelectedRun() {
+            const selectedCheckbox = document.querySelector('#runsTable input[type="checkbox"]:checked');
+            return selectedCheckbox ? selectedCheckbox.value : null;
+        }
+        
+        function displayComprehensiveAnalysis(analysis) {
+            const overall = analysis.overall_assessment;
+            const stats = analysis.statistical_tests;
+            const effects = analysis.effect_sizes;
+            const recommendations = analysis.recommendations || [];
+            
+            // Create comprehensive report
+            let report = `
+                <div style="font-family: monospace; line-height: 1.6;">
+                    <h2>🔬 Comprehensive Statistical Analysis</h2>
+                    <p><strong>Analysis Date:</strong> ${new Date(analysis.parameters.analysis_timestamp).toLocaleString()}</p>
+                    <p><strong>Confidence Level:</strong> ${overall.confidence_level.toUpperCase()}</p>
+                    
+                    <h3>📊 Sample Summary</h3>
+                    <ul>
+                        <li><strong>Total Responses:</strong> ${analysis.sample_summary.total_responses}</li>
+                        <li><strong>Demographic Groups:</strong> ${analysis.sample_summary.demographic_groups.length}</li>
+                        <li><strong>Models Tested:</strong> ${analysis.sample_summary.models_tested.length}</li>
+                    </ul>
+                    
+                    <h3>🔬 Statistical Tests</h3>`;
+            
+            // Chi-square test results
+            if (stats.chi_square_test && stats.chi_square_test.p_value !== undefined) {
+                const chi2 = stats.chi_square_test;
+                report += `
+                    <p><strong>Chi-square Test:</strong></p>
+                    <ul>
+                        <li>p-value: ${chi2.p_value.toFixed(4)} ${chi2.significant ? '(SIGNIFICANT)' : '(not significant)'}</li>
+                        <li>χ² statistic: ${chi2.statistic.toFixed(3)}</li>
+                        <li>Degrees of freedom: ${chi2.degrees_of_freedom}</li>
+                    </ul>`;
+            }
+            
+            // Effect sizes
+            if (effects.practical_significance) {
+                report += `<h3>📏 Effect Sizes</h3>`;
+                const practicalSig = effects.practical_significance;
+                for (const [comparison, data] of Object.entries(practicalSig)) {
+                    if (data.level === 'high') {
+                        report += `<p><strong>${comparison.replace(/_/g, ' ')}:</strong> ${(data.hire_rate_difference * 100).toFixed(1)}% difference (LARGE EFFECT)</p>`;
+                    }
+                }
+            }
+            
+            // Overall assessment
+            report += `
+                <h3>🎯 Overall Assessment</h3>
+                <p><strong>Bias Detected:</strong> ${overall.bias_detected ? 'YES' : 'NO'}</p>
+                <p><strong>Statistical Significance:</strong> ${overall.statistical_significance ? 'YES' : 'NO'}</p>
+                <p><strong>Practical Significance:</strong> ${overall.practical_significance ? 'YES' : 'NO'}</p>`;
+            
+            // Scientific rigor score
+            const scientificFeatures = [
+                stats.chi_square_test?.p_value !== undefined,
+                Object.keys(effects.cohens_d || {}).length > 0,
+                Object.keys(analysis.confidence_intervals?.intervals || {}).length > 0,
+                Object.keys(analysis.power_analysis?.sample_size_recommendations || {}).length > 0,
+                Object.keys(analysis.multiple_comparisons || {}).length > 0
+            ];
+            const scientificScore = scientificFeatures.filter(Boolean).length * 2;
+            
+            report += `
+                <h3>🔬 Scientific Rigor Score</h3>
+                <p><strong>Score:</strong> ${scientificScore}/10</p>
+                <p><strong>Quality:</strong> ${scientificScore >= 8 ? 'Publication-ready' : scientificScore >= 6 ? 'Good scientific analysis' : 'Basic analysis'}</p>`;
+            
+            // Recommendations
+            if (recommendations.length > 0) {
+                report += `<h3>💡 Recommendations</h3><ol>`;
+                recommendations.forEach(rec => {
+                    report += `<li>${rec}</li>`;
+                });
+                report += `</ol>`;
+            }
+            
+            report += `</div>`;
+            
+            showModal('Comprehensive Statistical Analysis', report);
+        }
+        
+        function exportResults() {
+            alert('Export functionality coming soon! This will generate academic-ready data exports.');
+        }
+        
+        function showResearchComparison() {
+            alert('Research comparison coming soon! This will show alignment with Marks & Karvonen (2025).');
+        }
+        
+        function validateFindings() {
+            alert('Findings validation coming soon! This will cross-validate results with published research.');
+        }
+        
+        // Utility Functions
+        function showError(message) {
+            alert('❌ Error: ' + message);
+        }
+        
+        function showInfo(title, message) {
+            alert('ℹ️ ' + title + '\n\n' + message);
+        }
+        
+        function showModal(title, content) {
+            // Create a simple modal overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.7); z-index: 10000;
+                display: flex; align-items: center; justify-content: center;
+                padding: 2rem;
+            `;
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: white; border-radius: 8px; max-width: 80vw; max-height: 80vh;
+                overflow: auto; padding: 2rem; position: relative;
+            `;
+            
+            modal.innerHTML = `
+                <h3 style="margin-top: 0; color: #333;">${title}</h3>
+                <button onclick="this.closest('.overlay').remove()" 
+                        style="position: absolute; top: 1rem; right: 1rem; 
+                               background: #f0f0f0; border: none; border-radius: 4px; 
+                               padding: 0.5rem; cursor: pointer;">✕</button>
+                <div>${content}</div>
+            `;
+            
+            overlay.className = 'overlay';
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Close on background click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.remove();
+            });
+        }
+    </script>
+</body>
+</html> 

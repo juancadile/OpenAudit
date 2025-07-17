@@ -7,7 +7,7 @@ import os
 import json
 import glob
 from datetime import datetime
-from response_analyzer import analyze_responses_by_demographics
+from core.response_analyzer import analyze_responses_by_demographics
 
 def get_runs():
     """Get all experiment runs"""

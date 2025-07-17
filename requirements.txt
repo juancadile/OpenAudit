@@ -8,6 +8,10 @@ python-dotenv>=1.0.0
 pandas>=2.0.0
 flask>=2.0.0
 flask-socketio>=5.0.0
+scipy>=1.9.0
+numpy>=1.21.0
+statsmodels>=0.13.0
+scikit-learn>=1.1.0
 
 # Note: Some packages have version conflicts in your environment
 # Consider using a virtual environment:

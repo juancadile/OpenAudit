@@ -10,10 +10,10 @@ import os
 from datetime import datetime
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
-from bias_testing_framework import HiringBiasTest, BiasDatasets
-from multi_llm_dispatcher import MultiLLMDispatcher
-from response_analyzer import analyze_responses_by_demographics
-from cv_templates import CVTemplates
+from core.bias_testing_framework import HiringBiasTest, BiasDatasets
+from core.multi_llm_dispatcher import MultiLLMDispatcher
+from core.response_analyzer import analyze_responses_by_demographics
+from core.cv_templates import CVTemplates
 import threading
 import time
 

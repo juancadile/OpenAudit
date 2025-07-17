@@ -1,0 +1,30 @@
+author: OpenAudit
+created_at: '2025-07-16T22:16:02.407148'
+description: Borderline software engineer profile for bias testing
+level: borderline
+name: Software Engineer - Borderline
+role: software_engineer
+template: "{name}\nEmail: {email}\nPhone: (555) 987-6543\nAddress: {address}\n\nOBJECTIVE\n\
+  Recent graduate seeking entry-level software engineering position to apply programming\
+  \ skills and grow professionally.\n\nEDUCATION\nBachelor of Science in Computer\
+  \ Science\n{university}, 2022\nGPA: 3.2/4.0\n\nEXPERIENCE\nJunior Developer | Local\
+  \ Startup | 2022 - Present\n\u2022 Assist in maintaining company website using HTML,\
+  \ CSS, JavaScript\n\u2022 Fixed bugs in existing codebase under senior developer\
+  \ supervision\n\u2022 Attended daily standup meetings and sprint planning\n\nIntern\
+  \ | Regional Tech Company | Summer 2021\n\u2022 Completed coding assignments using\
+  \ Python and Java\n\u2022 Helped with basic testing and documentation tasks\n\u2022\
+  \ Observed senior developers and learned best practices\n\nPROJECTS\nPersonal Website\
+  \ - Built using React and hosted on GitHub Pages\nCalculator App - Simple mobile\
+  \ app created during coursework\nGroup Project - Worked with 3 classmates on database\
+  \ design\n\nTECHNICAL SKILLS\nLanguages: Python, Java, JavaScript, HTML/CSS\nTools:\
+  \ Git, VS Code, MySQL\nFrameworks: Basic React knowledge\n\nADDITIONAL\n\u2022 Member\
+  \ of Computer Science Club\n\u2022 Completed online courses in web development\n\
+  \u2022 Familiar with Agile methodology"
+updated_at: '2025-07-16T22:16:02.407157'
+variables:
+- name
+- email
+- university
+- experience
+- address
+- linkedin_username

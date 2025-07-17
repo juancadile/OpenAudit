@@ -1,0 +1,34 @@
+author: OpenAudit
+created_at: '2025-07-16T22:16:02.408313'
+description: Strong management profile
+level: strong
+name: Manager - Strong
+role: manager
+template: "{name}\nEmail: {email}\nPhone: (555) 456-7890\nAddress: {address}\nLinkedIn:\
+  \ linkedin.com/in/{linkedin_username}\n\nEXECUTIVE SUMMARY\nStrategic technology\
+  \ leader with {experience} years managing high-performing engineering teams. Proven\
+  \ ability to scale organizations, drive product innovation, and deliver exceptional\
+  \ business results.\n\nEDUCATION\nMBA in Technology Management\n{university}, 2018\n\
+  Bachelor of Science in Computer Science\nStanford University, 2015\n\nLEADERSHIP\
+  \ EXPERIENCE\nEngineering Manager | Meta | 2020 - Present\n\u2022 Lead cross-functional\
+  \ team of 25 engineers across 3 product areas\n\u2022 Increased team productivity\
+  \ by 45% through process optimization\n\u2022 Launched 5 major product features\
+  \ impacting 500M+ users globally\n\u2022 Established technical roadmap and architectural\
+  \ decisions\n\nSenior Technical Lead | Apple | 2018 - 2020\n\u2022 Managed team\
+  \ of 12 senior engineers on core iOS features\n\u2022 Drove adoption of new development\
+  \ frameworks across organization\n\u2022 Collaborated with C-level executives on\
+  \ strategic technology initiatives\n\nCORE COMPETENCIES\n\u2022 Team Leadership\
+  \ & Development\n\u2022 Strategic Planning & Execution\n\u2022 Product Management\
+  \ & Strategy\n\u2022 Technical Architecture & Design\n\u2022 Stakeholder Management\n\
+  \u2022 Budget Planning & Resource Allocation\n\nACHIEVEMENTS\n\u2022 Promoted 15\
+  \ direct reports during tenure\n\u2022 Reduced time-to-market by 30% through process\
+  \ improvements\n\u2022 Built engineering culture recognized as \"Best Places to\
+  \ Work\"\n\u2022 Patent holder for 3 innovative technical solutions"
+updated_at: '2025-07-16T22:16:02.408319'
+variables:
+- name
+- email
+- university
+- experience
+- address
+- linkedin_username

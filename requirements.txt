@@ -1,20 +1,20 @@
-# Updated requirements to avoid conflicts
-langchain>=0.3.0
-langchain-openai>=0.3.0
-langchain-anthropic>=0.3.0
-langchain-google-genai>=2.0.0
-langchain-core>=0.3.0
-python-dotenv>=1.0.0
-pandas>=2.0.0
-flask>=2.0.0
-flask-socketio>=5.0.0
-scipy>=1.9.0
-numpy>=1.21.0
-statsmodels>=0.13.0
-scikit-learn>=1.1.0
+# Production dependencies with pinned major versions
+langchain>=0.3.0,<0.4.0
+langchain-openai>=0.3.0,<0.4.0
+langchain-anthropic>=0.3.0,<0.4.0
+langchain-google-genai>=2.0.0,<3.0.0
+langchain-core>=0.3.0,<0.4.0
+python-dotenv>=1.0.0,<2.0.0
+pandas>=2.0.0,<3.0.0
+flask>=2.0.0,<3.0.0
+flask-socketio>=5.0.0,<6.0.0
+scipy>=1.9.0,<2.0.0
+numpy>=1.21.0,<2.0.0
+statsmodels>=0.13.0,<1.0.0
+scikit-learn>=1.1.0,<2.0.0
 
-# Note: Some packages have version conflicts in your environment
-# Consider using a virtual environment:
-# python -m venv openaudit_env
-# source openaudit_env/bin/activate  # On Windows: openaudit_env\Scripts\activate
-# pip install -r requirements.txt
+# Installation instructions:
+# 1. Create virtual environment: python -m venv openaudit_env
+# 2. Activate: source openaudit_env/bin/activate (Linux/Mac) or openaudit_env\Scripts\activate (Windows)
+# 3. Install: pip install -r requirements.txt
+# 4. For development: pip install -r requirements-dev.txt

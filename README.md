@@ -222,5 +222,3 @@ OpenAudit provides a **solid foundation** for AI bias research. See [next-featur
 **Get started today** - the core functionality is ready for production use in academic research and industry bias testing.
 
 ---
-
-*Built for researchers who need reliable bias detection tools, not academic experiments.*

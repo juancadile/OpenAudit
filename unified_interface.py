@@ -1263,8 +1263,6 @@ if socketio:
     @socketio.on("start_experiment")
     def handle_start_experiment(data):
         """Start a new live experiment"""
-        global current_experiment
-
         if current_experiment:
             emit("experiment_error", {"error": "An experiment is already running"})
             return

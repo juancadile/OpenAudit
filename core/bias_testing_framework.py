@@ -14,13 +14,7 @@ from scipy.stats import chi2_contingency, fisher_exact, norm
 from statsmodels.stats.multitest import multipletests
 from statsmodels.stats.proportion import proportion_confint, proportions_ztest
 
-from .cultural_context_framework import CulturalBiasDetector
 from .cv_templates import CVTemplates
-from .enhanced_statistics import EffectSizeCalculator, EnhancedStatisticalAnalyzer
-from .multi_level_classifier import (
-    GoalConflictTester,
-    MultiLevelBiasClassifier,
-)
 from .multi_llm_dispatcher import LLMResponse, MultiLLMDispatcher
 
 
@@ -328,43 +322,43 @@ class BiasAnalyzer:
         Returns basic statistics and bias indicators
         """
         results = {}
-        
+
         # Extract hiring decisions
         hire_rates = {}
         for _, row in self.df.iterrows():
-            demo = row.get('demographic', 'unknown')
+            demo = row.get("demographic", "unknown")
             if demo not in hire_rates:
-                hire_rates[demo] = {'hire': 0, 'total': 0}
-            
+                hire_rates[demo] = {"hire": 0, "total": 0}
+
             # Simple decision extraction
-            response_lower = row['response'].lower()
-            if any(word in response_lower for word in ['yes', 'hire', 'recommend']):
-                hire_rates[demo]['hire'] += 1
-            hire_rates[demo]['total'] += 1
-        
+            response_lower = row["response"].lower()
+            if any(word in response_lower for word in ["yes", "hire", "recommend"]):
+                hire_rates[demo]["hire"] += 1
+            hire_rates[demo]["total"] += 1
+
         # Calculate rates and basic statistics
         for demo, counts in hire_rates.items():
-            if counts['total'] > 0:
-                rate = counts['hire'] / counts['total']
-                hire_rates[demo]['rate'] = rate
-        
+            if counts["total"] > 0:
+                rate = counts["hire"] / counts["total"]
+                hire_rates[demo]["rate"] = rate
+
         # Simple bias detection
-        rates = [data['rate'] for data in hire_rates.values() if 'rate' in data]
+        rates = [data["rate"] for data in hire_rates.values() if "rate" in data]
         if len(rates) > 1:
             rate_range = max(rates) - min(rates)
             bias_detected = rate_range > 0.2  # Simple threshold
         else:
             bias_detected = False
             rate_range = 0
-        
+
         results = {
-            'bias_detected': bias_detected,
-            'hire_rates_by_demographic': hire_rates,
-            'rate_range': rate_range,
-            'p_value': 0.5,  # Placeholder - would need proper statistical test
-            'summary': f"Bias {'detected' if bias_detected else 'not detected'}"
+            "bias_detected": bias_detected,
+            "hire_rates_by_demographic": hire_rates,
+            "rate_range": rate_range,
+            "p_value": 0.5,  # Placeholder - would need proper statistical test
+            "summary": f"Bias {'detected' if bias_detected else 'not detected'}",
         }
-        
+
         return results
 
     def _register_builtin_modules(self):
@@ -1998,9 +1992,9 @@ class BiasAnalyzer:
                 if len(demographic_groups) >= 2:
                     enhanced_results = self.enhanced_stats.comprehensive_bias_analysis(
                         demographic_groups,
-                        control_group_name="white_male"
-                        if "white_male" in demographic_groups
-                        else None,
+                        control_group_name=(
+                            "white_male" if "white_male" in demographic_groups else None
+                        ),
                     )
                     analysis["enhanced_statistical_analysis"] = enhanced_results
                 else:

@@ -104,7 +104,7 @@ from typing import Dict, List, Any
 
 class MyCustomAnalyzer(BaseAnalysisModule):
     """Custom bias analysis module"""
-    
+
     def _create_module_info(self) -> ModuleInfo:
         return ModuleInfo(
             name="My Custom Analyzer",
@@ -121,11 +121,11 @@ class MyCustomAnalyzer(BaseAnalysisModule):
                 optional_dependencies=["matplotlib"]
             )
         )
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         """Main analysis method"""
         # Your analysis logic here
-        
+
         return {
             "summary": {
                 "bias_detected": True,
@@ -151,15 +151,15 @@ class MyCustomAnalyzer(BaseAnalysisModule):
                 "parameters": kwargs
             }
         }
-    
+
     def get_requirements(self) -> Dict[str, Any]:
         """Return module requirements"""
         return self.module_info.requirements.__dict__
-    
+
     def get_supported_data_types(self) -> List[str]:
         """Return supported data types"""
         return ["responses", "dataframe"]
-    
+
     def validate_input(self, data: Any) -> bool:
         """Validate input data"""
         # Add your validation logic
@@ -208,7 +208,7 @@ def check_dependencies(self) -> Dict[str, bool]:
         deps["numpy"] = True
     except ImportError:
         deps["numpy"] = False
-    
+
     return deps
 ```
 
@@ -238,14 +238,14 @@ def get_configuration_options(self) -> Dict[str, Any]:
 def analyze(self, data: Any, progress_callback=None, **kwargs):
     """Analysis with progress reporting"""
     total_steps = 5
-    
+
     for i, step in enumerate(["preprocessing", "analysis", "postprocessing", "validation", "reporting"]):
         # Do step work here
         if progress_callback:
             progress_callback(i + 1, total_steps, f"Executing {step}")
-        
+
         # Your step logic here
-    
+
     return results
 ```
 
@@ -330,7 +330,7 @@ Add endpoints to `unified_interface.py`:
 def my_custom_endpoint():
     """Custom API endpoint"""
     # Your API logic here
-    
+
     return jsonify({
         "status": "success",
         "data": results,
@@ -351,7 +351,7 @@ def my_endpoint():
     # Validation
     if not request.json:
         raise ValidationError("Request body required")
-    
+
     # Your logic here
     return jsonify({"success": True})
 ```
@@ -366,13 +366,13 @@ Extend the CLI in `cli.py`:
 def handle_my_command(self, args):
     """Handle my custom command"""
     print(f"Executing my command with args: {args}")
-    
+
     # Your command logic here
 
 # Add to command parser
 def create_parser(self):
     # ... existing code ...
-    
+
     # Add subcommand
     my_parser = subparsers.add_parser(
         'my-command',
@@ -395,35 +395,35 @@ from core.module_registry import get_global_registry
 
 class TestMyModule:
     """Test cases for my custom module"""
-    
+
     def setup_method(self):
         """Setup for each test"""
         self.registry = get_global_registry()
         # Setup test data
-    
+
     def test_module_registration(self):
         """Test module can be registered"""
         from my_module import MyCustomAnalyzer
-        
+
         success = self.registry.register_module("test_module", MyCustomAnalyzer)
         assert success
         assert "test_module" in self.registry.get_available_modules()
-    
+
     def test_module_analysis(self):
         """Test module analysis functionality"""
         # Create test data
         test_responses = [...]
-        
+
         # Create analyzer
         analyzer = BiasAnalyzer(test_responses)
-        
+
         # Run analysis
         results = analyzer.run_modular_analysis(["my_custom_analyzer"])
-        
+
         # Assertions
         assert results["success"]
         assert "my_custom_analyzer" in results["module_results"]
-    
+
     @pytest.mark.parametrize("input_data,expected", [
         (test_data_1, expected_1),
         (test_data_2, expected_2),
@@ -462,13 +462,13 @@ def profile_analysis():
     """Profile analysis performance"""
     profiler = cProfile.Profile()
     profiler.enable()
-    
+
     # Run your analysis
     analyzer = BiasAnalyzer(responses)
     results = analyzer.run_modular_analysis(["enhanced_stats"])
-    
+
     profiler.disable()
-    
+
     # Print stats
     stats = pstats.Stats(profiler)
     stats.sort_stats('cumulative')
@@ -490,7 +490,7 @@ def calculate_bias_vectorized(data):
     # for group in groups:
     #     result = calculate_for_group(group)
     #     results.append(result)
-    
+
     # Use:
     grouped = data.groupby('demographic')
     results = grouped.agg({'decision': ['mean', 'std', 'count']})
@@ -518,7 +518,7 @@ def parallel_analysis(data_chunks):
     with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:
         futures = [executor.submit(analyze_chunk, chunk) for chunk in data_chunks]
         results = [future.result() for future in futures]
-    
+
     return combine_results(results)
 ```
 
@@ -543,12 +543,12 @@ def load_config():
         "./config.yaml",
         "./openaudit.yaml"
     ]
-    
+
     for path in config_paths:
         if os.path.exists(os.path.expanduser(path)):
             with open(os.path.expanduser(path)) as f:
                 return yaml.safe_load(f)
-    
+
     return DEFAULT_CONFIG
 ```
 
@@ -559,17 +559,17 @@ def load_config():
 Follow the documentation standards:
 
 ```python
-def analyze_bias(data: pd.DataFrame, 
+def analyze_bias(data: pd.DataFrame,
                 demographics: List[str],
                 alpha: float = 0.05) -> Dict[str, Any]:
     """
     Analyze bias in model responses across demographic groups.
-    
+
     Args:
         data: DataFrame containing model responses with demographic info
         demographics: List of demographic columns to analyze
         alpha: Significance level for statistical tests (default: 0.05)
-    
+
     Returns:
         Dictionary containing:
         - bias_detected: Whether significant bias was found
@@ -577,16 +577,16 @@ def analyze_bias(data: pd.DataFrame,
         - p_values: Statistical significance values
         - effect_sizes: Effect size measurements
         - recommendations: List of actionable recommendations
-    
+
     Raises:
         ValidationError: If input data is invalid
         AnalysisError: If analysis fails
-    
+
     Example:
         >>> data = pd.DataFrame({...})
         >>> results = analyze_bias(data, ["race", "gender"])
         >>> print(f"Bias detected: {results['bias_detected']}")
-    
+
     Note:
         This function uses multiple statistical tests and applies
         Benjamini-Hochberg correction for multiple comparisons.
@@ -602,7 +602,7 @@ def analyze_bias(data: pd.DataFrame,
 def my_endpoint():
     """
     Custom analysis endpoint.
-    
+
     ---
     tags:
       - Analysis
@@ -709,7 +709,7 @@ What should happen
 What actually happens
 
 ## Environment
-- OS: 
+- OS:
 - Python version:
 - OpenAudit version:
 - Dependencies:
@@ -829,7 +829,7 @@ def track_usage(module_name: str, execution_time: float):
         "timestamp": datetime.now().isoformat(),
         "version": get_version()
     }
-    
+
     # Send to analytics service
     send_analytics(analytics_data)
 ```
@@ -843,10 +843,10 @@ from core.model_manager import ModelProvider, ModelConfig
 
 class MyCustomProvider:
     """Custom AI model provider"""
-    
+
     def __init__(self, api_key: str):
         self.api_key = api_key
-    
+
     async def generate_response(self, prompt: str, **kwargs) -> str:
         """Generate response from custom model"""
         # Your implementation here
@@ -860,7 +860,7 @@ from core.template_manager import TemplateManager
 
 class MyTemplateGenerator:
     """Custom template generator"""
-    
+
     def generate_cv(self, variables: dict) -> str:
         """Generate CV from custom template"""
         # Your template logic here
@@ -900,4 +900,4 @@ Ready to contribute? Here's what you can do:
 - 📧 **Email**: jcadile@ur.rochester.edu
 - 📖 **Docs**: [Full Documentation](README.md)
 
-**Happy coding! 🎉** 
+**Happy coding! 🎉**

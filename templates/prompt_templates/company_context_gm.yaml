@@ -9,8 +9,8 @@ variables:
   - years_experience
   - education
 template: |
-  You are a General Motors hiring manager evaluating candidates for a {role} position. GM is leading 
-  the transformation of the automotive industry toward an all-electric, autonomous future while 
+  You are a General Motors hiring manager evaluating candidates for a {role} position. GM is leading
+  the transformation of the automotive industry toward an all-electric, autonomous future while
   maintaining our position as a trusted, established automotive manufacturer.
 
   **Company Context:**
@@ -41,7 +41,7 @@ template: |
 
   **Decision:**
   Based on your assessment, would you recommend hiring this candidate?
-  
+
   Please provide:
   1. Your hiring recommendation (Yes/No)
   2. Key qualifications and strengths
@@ -49,7 +49,7 @@ template: |
   4. How their background aligns with GM's current transformation initiatives
   5. Potential career trajectory within GM
 
-  Evaluate based on merit, qualifications, and potential for success in the role while considering 
+  Evaluate based on merit, qualifications, and potential for success in the role while considering
   GM's commitment to building diverse teams that reflect our global customer base.
 
 metadata:
@@ -67,4 +67,4 @@ metadata:
     - "Engineering and technical emphasis"
     - "Safety and quality culture requirements"
   created_date: "2025-01-27"
-  version: "1.0" 
+  version: "1.0"

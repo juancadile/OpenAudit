@@ -52,7 +52,7 @@ OpenAudit has detected significant bias patterns in production LLMs:
 ```
 📊 Hiring Evaluation Results (8 real responses):
    Asian female     | Mean: 4.50 | Scores: [5, 4]
-   Black male       | Mean: 4.00 | Scores: [4, 4]  
+   Black male       | Mean: 4.00 | Scores: [4, 4]
    White male       | Mean: 4.50 | Scores: [4, 5]
    Hispanic female  | Mean: 4.00 | Scores: [4, 4]
 
@@ -68,10 +68,10 @@ OpenAudit has detected significant bias patterns in production LLMs:
 
 ## 📊 **Supported Models (26+)**
 
-**OpenAI**: GPT-3.5, GPT-4 series, o1/o3 reasoning models  
-**Anthropic**: Claude 3.5 Sonnet, Opus, Haiku  
-**Google**: Gemini 1.5 Pro/Flash, Gemini Pro/Vision  
-**xAI**: Grok Beta, Grok Vision  
+**OpenAI**: GPT-3.5, GPT-4 series, o1/o3 reasoning models
+**Anthropic**: Claude 3.5 Sonnet, Opus, Haiku
+**Google**: Gemini 1.5 Pro/Flash, Gemini Pro/Vision
+**xAI**: Grok Beta, Grok Vision
 **Custom**: Llama 3.1 70B, Deepseek Coder
 
 ## 🛠️ **Core Usage**
@@ -123,7 +123,7 @@ pytest tests/ -v  # 61 tests passing
 **Test Coverage:**
 - ✅ Multi-LLM integration
 - ✅ CV generation and validation
-- ✅ Bias detection algorithms  
+- ✅ Bias detection algorithms
 - ✅ Error handling and edge cases
 - ✅ End-to-end workflow validation
 
@@ -151,7 +151,7 @@ OpenAudit/
 **Environment Variables (.env):**
 ```bash
 OPENAI_API_KEY=your-key
-ANTHROPIC_API_KEY=your-key  
+ANTHROPIC_API_KEY=your-key
 GOOGLE_API_KEY=your-key
 ```
 
@@ -161,7 +161,7 @@ GOOGLE_API_KEY=your-key
 
 **Academic Use Cases:**
 - Hiring bias studies in AI systems
-- Cross-model bias comparison research  
+- Cross-model bias comparison research
 - Temporal bias analysis (model behavior over time)
 - AI fairness policy research
 - Algorithmic audit methodologies
@@ -182,7 +182,7 @@ GOOGLE_API_KEY=your-key
 
 **Validation Against:**
 - Algorithm Audit Methodology (Metaxa et al., 2021)
-- Discrimination Testing (Bertrand & Mullainathan, 2004)  
+- Discrimination Testing (Bertrand & Mullainathan, 2004)
 - Modern Fairness Research best practices
 
 ## 🤝 **Contributing**

@@ -157,9 +157,11 @@ class TestAnalysisModule(BaseAnalysisModule):
             "confidence_score": 0.85 if not self.should_fail else 0.1,
             "recommendations": [
                 f"Test recommendation from {self.module_name}",
-                "Continue monitoring with test modules"
-                if not self.bias_detected
-                else "Address detected bias",
+                (
+                    "Continue monitoring with test modules"
+                    if not self.bias_detected
+                    else "Address detected bias"
+                ),
             ],
             "metadata": {
                 "module": self.module_name,

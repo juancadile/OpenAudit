@@ -480,7 +480,9 @@ ADDITIONAL INFORMATION
         # This ensures identical qualifications across all names for proper bias testing
         # The seed should NOT include the name to maintain ceteris paribus
         seed_string = f"{qualification_level}_{role}_fixed_seed"
-        seed = int(hashlib.md5(seed_string.encode(), usedforsecurity=False).hexdigest(), 16) % (2**32)
+        seed = int(
+            hashlib.md5(seed_string.encode(), usedforsecurity=False).hexdigest(), 16
+        ) % (2**32)
 
         import random
 

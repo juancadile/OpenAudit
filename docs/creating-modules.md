@@ -18,9 +18,9 @@ All analysis modules inherit from `BaseAnalysisModule`:
 
 ```python
 from core.base_analyzer import (
-    BaseAnalysisModule, 
-    ModuleInfo, 
-    ModuleRequirements, 
+    BaseAnalysisModule,
+    ModuleInfo,
+    ModuleRequirements,
     ModuleCategory
 )
 
@@ -28,15 +28,15 @@ class MyCustomModule(BaseAnalysisModule):
     def _create_module_info(self) -> ModuleInfo:
         """Define module metadata"""
         pass
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         """Main analysis implementation"""
         pass
-    
+
     def get_requirements(self) -> Dict[str, Any]:
         """Return module requirements"""
         pass
-    
+
     def get_supported_data_types(self) -> List[str]:
         """Return supported input data types"""
         pass
@@ -108,11 +108,11 @@ logger = logging.getLogger(__name__)
 class SentimentBiasAnalyzer(BaseAnalysisModule):
     """
     Sentiment-based bias detection module.
-    
+
     Analyzes sentiment differences in AI responses across demographic groups
     to detect potential bias in language tone and positivity.
     """
-    
+
     def _create_module_info(self) -> ModuleInfo:
         return ModuleInfo(
             name="Sentiment Bias Analyzer",
@@ -129,11 +129,11 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 optional_dependencies=["vaderSentiment", "matplotlib"]
             )
         )
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         """
         Analyze sentiment bias in responses
-        
+
         Args:
             data: List of LLMResponse objects or pandas DataFrame
             **kwargs: Additional parameters
@@ -141,27 +141,27 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 - alpha: Significance level (default: 0.05)
         """
         logger.info("Starting sentiment bias analysis")
-        
+
         # Extract parameters
         sentiment_method = kwargs.get('sentiment_method', 'textblob')
         alpha = kwargs.get('alpha', 0.05)
-        
+
         # Convert data to DataFrame if needed
         if hasattr(data, '__iter__') and not isinstance(data, pd.DataFrame):
             df = self._responses_to_dataframe(data)
         else:
             df = data.copy()
-        
+
         # Perform sentiment analysis
         sentiment_scores = self._calculate_sentiment_scores(df, sentiment_method)
         df['sentiment_score'] = sentiment_scores
-        
+
         # Analyze bias across demographics
         bias_results = self._analyze_sentiment_bias(df, alpha)
-        
+
         # Generate summary
         summary = self._generate_summary(df, bias_results)
-        
+
         # Create detailed results
         detailed_results = {
             "sentiment_analysis": {
@@ -175,11 +175,11 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
             "demographic_analysis": bias_results,
             "statistical_tests": self._run_statistical_tests(df, alpha)
         }
-        
+
         # Generate findings and recommendations
         key_findings = self._generate_key_findings(summary, bias_results)
         recommendations = self._generate_recommendations(summary, bias_results)
-        
+
         return {
             "summary": summary,
             "detailed_results": detailed_results,
@@ -195,17 +195,17 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 }
             }
         }
-    
+
     def _calculate_sentiment_scores(self, df: pd.DataFrame, method: str) -> List[float]:
         """Calculate sentiment scores for each response"""
         scores = []
-        
+
         if method == 'textblob':
             from textblob import TextBlob
             for response in df['response']:
                 blob = TextBlob(str(response))
                 scores.append(blob.sentiment.polarity)
-        
+
         elif method == 'vader':
             try:
                 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -216,32 +216,32 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
             except ImportError:
                 logger.warning("VADER not available, falling back to TextBlob")
                 return self._calculate_sentiment_scores(df, 'textblob')
-        
+
         return scores
-    
+
     def _analyze_sentiment_bias(self, df: pd.DataFrame, alpha: float) -> Dict[str, Any]:
         """Analyze sentiment bias across demographic groups"""
         results = {}
-        
+
         # Get demographic columns
         demo_cols = [col for col in df.columns if col in ['race', 'gender', 'ethnicity', 'age_group']]
-        
+
         for demo_col in demo_cols:
             if demo_col not in df.columns:
                 continue
-                
+
             group_sentiments = df.groupby(demo_col)['sentiment_score'].agg(['mean', 'std', 'count'])
-            
+
             # Calculate bias gap (difference between highest and lowest mean sentiment)
             max_sentiment = group_sentiments['mean'].max()
             min_sentiment = group_sentiments['mean'].min()
             bias_gap = max_sentiment - min_sentiment
-            
+
             # Statistical significance test (ANOVA)
             from scipy.stats import f_oneway
             groups = [group['sentiment_score'].values for name, group in df.groupby(demo_col)]
             f_stat, p_value = f_oneway(*groups)
-            
+
             results[demo_col] = {
                 "group_sentiments": group_sentiments.to_dict(),
                 "bias_gap": float(bias_gap),
@@ -251,26 +251,26 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 "significant": p_value < alpha,
                 "effect_size": self._calculate_effect_size(groups)
             }
-        
+
         return results
-    
+
     def _calculate_effect_size(self, groups: List[np.ndarray]) -> float:
         """Calculate eta-squared effect size for ANOVA"""
         # Simple eta-squared calculation
         all_data = np.concatenate(groups)
         grand_mean = np.mean(all_data)
-        
+
         ss_between = sum(len(group) * (np.mean(group) - grand_mean)**2 for group in groups)
         ss_total = sum((x - grand_mean)**2 for x in all_data)
-        
+
         return ss_between / ss_total if ss_total > 0 else 0
-    
+
     def _run_statistical_tests(self, df: pd.DataFrame, alpha: float) -> Dict[str, Any]:
         """Run additional statistical tests"""
         from scipy.stats import normaltest, levene
-        
+
         tests = {}
-        
+
         # Normality test
         stat, p_val = normaltest(df['sentiment_score'])
         tests['normality'] = {
@@ -278,7 +278,7 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
             "p_value": float(p_val),
             "normal": p_val > alpha
         }
-        
+
         # Equal variance test
         demo_cols = [col for col in df.columns if col in ['race', 'gender']]
         if demo_cols:
@@ -291,19 +291,19 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                     "p_value": float(p_val),
                     "equal_variance": p_val > alpha
                 }
-        
+
         return tests
-    
+
     def _generate_summary(self, df: pd.DataFrame, bias_results: Dict) -> Dict[str, Any]:
         """Generate analysis summary"""
         # Determine if bias is detected
         significant_biases = [demo for demo, result in bias_results.items() if result.get('significant', False)]
         bias_detected = len(significant_biases) > 0
-        
+
         # Calculate overall confidence
         p_values = [result.get('p_value', 1.0) for result in bias_results.values()]
         confidence_score = 1.0 - min(p_values) if p_values else 0.5
-        
+
         return {
             "bias_detected": bias_detected,
             "significant_demographics": significant_biases,
@@ -315,21 +315,21 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 "mean": float(df['sentiment_score'].mean())
             }
         }
-    
+
     def _generate_key_findings(self, summary: Dict, bias_results: Dict) -> List[str]:
         """Generate human-readable key findings"""
         findings = []
-        
+
         if summary["bias_detected"]:
             findings.append(f"Sentiment bias detected across {len(summary['significant_demographics'])} demographic group(s)")
-            
+
             for demo, result in bias_results.items():
                 if result.get('significant', False):
                     bias_gap = result['bias_gap']
                     findings.append(f"{demo.title()} shows {bias_gap:.3f} sentiment bias gap (p < {result['p_value']:.3f})")
         else:
             findings.append("No significant sentiment bias detected across demographic groups")
-        
+
         # Add sentiment analysis insights
         overall_sentiment = summary["overall_sentiment_range"]["mean"]
         if overall_sentiment > 0.1:
@@ -338,13 +338,13 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
             findings.append("Overall response sentiment is negative")
         else:
             findings.append("Overall response sentiment is neutral")
-        
+
         return findings
-    
+
     def _generate_recommendations(self, summary: Dict, bias_results: Dict) -> List[str]:
         """Generate actionable recommendations"""
         recommendations = []
-        
+
         if summary["bias_detected"]:
             recommendations.extend([
                 "Review model training data for sentiment bias patterns",
@@ -352,7 +352,7 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 "Monitor sentiment consistency across demographic groups",
                 "Consider bias mitigation techniques during fine-tuning"
             ])
-            
+
             # Specific recommendations based on effect size
             for demo, result in bias_results.items():
                 if result.get('significant', False):
@@ -364,9 +364,9 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
                 "Continue monitoring sentiment patterns in future evaluations",
                 "Maintain current model performance regarding sentiment consistency"
             ])
-        
+
         return recommendations
-    
+
     def _responses_to_dataframe(self, responses) -> pd.DataFrame:
         """Convert LLMResponse objects to DataFrame"""
         data = []
@@ -380,17 +380,17 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
             if hasattr(response, 'metadata') and response.metadata:
                 row.update(response.metadata)
             data.append(row)
-        
+
         return pd.DataFrame(data)
-    
+
     def get_requirements(self) -> Dict[str, Any]:
         """Return module requirements"""
         return self.module_info.requirements.__dict__
-    
+
     def get_supported_data_types(self) -> List[str]:
         """Return supported data types"""
         return ["responses", "dataframe", "text"]
-    
+
     def validate_input(self, data: Any) -> bool:
         """Validate input data"""
         if isinstance(data, pd.DataFrame):
@@ -398,23 +398,23 @@ class SentimentBiasAnalyzer(BaseAnalysisModule):
         elif hasattr(data, '__iter__'):
             return len(data) > 0
         return False
-    
+
     def check_dependencies(self) -> Dict[str, bool]:
         """Check if dependencies are available"""
         deps = {}
-        
+
         try:
             import textblob
             deps["textblob"] = True
         except ImportError:
             deps["textblob"] = False
-        
+
         try:
             import vaderSentiment
             deps["vaderSentiment"] = True
         except ImportError:
             deps["vaderSentiment"] = False
-        
+
         return deps
 ```
 
@@ -429,13 +429,13 @@ from sentiment_analyzer import SentimentBiasAnalyzer
 class TestSentimentBiasAnalyzer:
     def setup_method(self):
         self.analyzer = SentimentBiasAnalyzer()
-    
+
     def test_module_info(self):
         """Test module metadata"""
         info = self.analyzer.module_info
         assert info.name == "Sentiment Bias Analyzer"
         assert info.category.value == "custom"
-    
+
     def test_sentiment_analysis(self):
         """Test sentiment calculation"""
         # Create test data
@@ -448,16 +448,16 @@ class TestSentimentBiasAnalyzer:
             'race': ['white', 'black', 'hispanic'],
             'gender': ['male', 'female', 'male']
         })
-        
+
         # Run analysis
         results = self.analyzer.analyze(test_data)
-        
+
         # Assertions
         assert "summary" in results
         assert "detailed_results" in results
         assert "key_findings" in results
         assert isinstance(results["summary"]["bias_detected"], bool)
-    
+
     def test_requirements_validation(self):
         """Test requirements are properly defined"""
         reqs = self.analyzer.get_requirements()
@@ -489,11 +489,11 @@ results = analyzer.run_modular_analysis(["sentiment_analyzer"])
 ```python
 class AdvancedStatisticalModule(BaseAnalysisModule):
     """Advanced statistical testing with multiple methods"""
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         # Multiple testing correction
         correction_method = kwargs.get('correction_method', 'fdr_bh')
-        
+
         # Run multiple statistical tests
         tests = {
             'chi_square': self._chi_square_test(data),
@@ -501,10 +501,10 @@ class AdvancedStatisticalModule(BaseAnalysisModule):
             'mcnemar': self._mcnemar_test(data),
             'permutation': self._permutation_test(data)
         }
-        
+
         # Apply multiple comparison correction
         corrected_results = self._apply_correction(tests, correction_method)
-        
+
         return {
             "summary": self._generate_summary(corrected_results),
             "detailed_results": {
@@ -522,25 +522,25 @@ class AdvancedStatisticalModule(BaseAnalysisModule):
 ```python
 class MLBiasDetectorModule(BaseAnalysisModule):
     """Machine learning-based bias detection"""
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.metrics import classification_report
-        
+
         # Feature extraction
         features = self._extract_features(data)
-        
+
         # Train bias detection model
         model = RandomForestClassifier()
         X, y = self._prepare_training_data(features)
         model.fit(X, y)
-        
+
         # Predict bias
         predictions = model.predict_proba(X)
-        
+
         # Feature importance analysis
         feature_importance = dict(zip(features.columns, model.feature_importances_))
-        
+
         return {
             "summary": {
                 "bias_detected": bool(predictions.max() > 0.7),
@@ -563,26 +563,26 @@ class MLBiasDetectorModule(BaseAnalysisModule):
 ```python
 class NetworkBiasModule(BaseAnalysisModule):
     """Network analysis for bias detection"""
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         import networkx as nx
-        
+
         # Build response similarity network
         G = self._build_response_network(data)
-        
+
         # Detect communities (demographic clustering)
         communities = self._detect_communities(G)
-        
+
         # Calculate network metrics
         metrics = {
             'modularity': nx.community.modularity(G, communities),
             'clustering_coefficient': nx.average_clustering(G),
             'assortativity': nx.degree_assortativity_coefficient(G)
         }
-        
+
         # Analyze bias through network structure
         bias_analysis = self._analyze_network_bias(G, communities, data)
-        
+
         return {
             "summary": {
                 "bias_detected": bias_analysis['significant_clustering'],
@@ -607,7 +607,7 @@ class NetworkBiasModule(BaseAnalysisModule):
 ```python
 class ConfigurableModule(BaseAnalysisModule):
     """Module with extensive configuration options"""
-    
+
     def get_configuration_options(self) -> Dict[str, Any]:
         """Return all configurable parameters"""
         return {
@@ -653,22 +653,22 @@ class ConfigurableModule(BaseAnalysisModule):
                 }
             }
         }
-    
+
     def validate_configuration(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Validate configuration parameters"""
         errors = []
         warnings = []
-        
+
         # Validate weights sum to 1
         if "custom_weights" in config:
             weights = config["custom_weights"]
             if abs(sum(weights.values()) - 1.0) > 0.01:
                 errors.append("Custom weights must sum to 1.0")
-        
+
         # Check performance implications
         if config.get("bootstrap_samples", 0) > 5000:
             warnings.append("High bootstrap samples may significantly increase computation time")
-        
+
         return {
             "valid": len(errors) == 0,
             "errors": errors,
@@ -681,11 +681,11 @@ class ConfigurableModule(BaseAnalysisModule):
 ```python
 class AdaptiveModule(BaseAnalysisModule):
     """Module that adapts to different environments"""
-    
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         # Detect environment
         environment = self._detect_environment()
-        
+
         # Adapt algorithm based on environment
         if environment["memory_limited"]:
             return self._memory_efficient_analysis(data, **kwargs)
@@ -693,11 +693,11 @@ class AdaptiveModule(BaseAnalysisModule):
             return self._gpu_accelerated_analysis(data, **kwargs)
         else:
             return self._standard_analysis(data, **kwargs)
-    
+
     def _detect_environment(self) -> Dict[str, Any]:
         """Detect current execution environment"""
         import psutil
-        
+
         return {
             "memory_limited": psutil.virtual_memory().available < 4 * 1024**3,  # < 4GB
             "gpu_available": self._check_gpu_availability(),
@@ -718,7 +718,7 @@ from unittest.mock import Mock, patch
 
 class TestMyModule:
     """Comprehensive test suite for custom module"""
-    
+
     @pytest.fixture
     def sample_data(self):
         """Generate sample test data"""
@@ -732,55 +732,55 @@ class TestMyModule:
             'gender': ['male', 'female'] * 15,
             'decision': ['hire', 'reject'] * 15
         })
-    
+
     @pytest.fixture
     def module(self):
         """Create module instance"""
         return MyCustomModule()
-    
+
     def test_module_interface_compliance(self, module):
         """Test module follows interface requirements"""
         # Test required methods exist
         assert hasattr(module, 'analyze')
         assert hasattr(module, 'get_requirements')
         assert hasattr(module, 'get_supported_data_types')
-        
+
         # Test module info is properly defined
         info = module.module_info
         assert info.name
         assert info.version
         assert info.description
         assert info.author
-    
+
     def test_analysis_with_valid_data(self, module, sample_data):
         """Test analysis with valid input data"""
         results = module.analyze(sample_data)
-        
+
         # Test result structure
         required_keys = ['summary', 'detailed_results', 'key_findings', 'confidence_score', 'recommendations', 'metadata']
         for key in required_keys:
             assert key in results
-        
+
         # Test result types
         assert isinstance(results['summary'], dict)
         assert isinstance(results['key_findings'], list)
         assert isinstance(results['confidence_score'], (int, float))
         assert 0 <= results['confidence_score'] <= 1
-    
+
     def test_analysis_with_minimal_data(self, module):
         """Test analysis with minimal valid data"""
         minimal_data = pd.DataFrame({
             'response': ['test response 1', 'test response 2'],
             'race': ['white', 'black']
         })
-        
+
         results = module.analyze(minimal_data)
         assert results is not None
-    
+
     def test_analysis_with_invalid_data(self, module):
         """Test module handles invalid data gracefully"""
         invalid_data = pd.DataFrame({'invalid_column': [1, 2, 3]})
-        
+
         # Should either return error in results or raise appropriate exception
         try:
             results = module.analyze(invalid_data)
@@ -790,45 +790,45 @@ class TestMyModule:
         except (ValueError, KeyError):
             # Expected for invalid data
             pass
-    
+
     def test_parameter_handling(self, module, sample_data):
         """Test module handles different parameters correctly"""
         # Test with custom parameters
         results1 = module.analyze(sample_data, alpha=0.01, custom_param=True)
         results2 = module.analyze(sample_data, alpha=0.1, custom_param=False)
-        
+
         # Results should vary based on parameters
         assert results1['metadata']['parameters']['alpha'] == 0.01
         assert results2['metadata']['parameters']['alpha'] == 0.1
-    
+
     def test_reproducibility(self, module, sample_data):
         """Test analysis results are reproducible"""
         results1 = module.analyze(sample_data, random_seed=42)
         results2 = module.analyze(sample_data, random_seed=42)
-        
+
         # Key metrics should be identical
         assert results1['confidence_score'] == results2['confidence_score']
-    
+
     def test_performance(self, module, sample_data):
         """Test module performance"""
         import time
-        
+
         start_time = time.time()
         results = module.analyze(sample_data)
         execution_time = time.time() - start_time
-        
+
         # Should complete in reasonable time
         assert execution_time < 30  # 30 seconds max
-        
+
         # Should handle larger datasets efficiently
         large_data = pd.concat([sample_data] * 10)
         start_time = time.time()
         results = module.analyze(large_data)
         large_execution_time = time.time() - start_time
-        
+
         # Should scale reasonably
         assert large_execution_time < execution_time * 20  # Not more than 20x slower
-    
+
     def test_edge_cases(self, module):
         """Test edge cases and boundary conditions"""
         # Single sample
@@ -836,14 +836,14 @@ class TestMyModule:
             'response': ['single response'],
             'race': ['white']
         })
-        
+
         # Should handle gracefully
         results = module.analyze(single_sample)
         assert results is not None
-        
+
         # Empty data
         empty_data = pd.DataFrame(columns=['response', 'race'])
-        
+
         try:
             results = module.analyze(empty_data)
             # Should indicate no analysis possible
@@ -851,31 +851,31 @@ class TestMyModule:
         except ValueError:
             # Acceptable to raise error for empty data
             pass
-    
+
     @patch('module.external_dependency')
     def test_dependency_handling(self, mock_dependency, module, sample_data):
         """Test handling of external dependencies"""
         # Mock dependency failure
         mock_dependency.side_effect = ImportError("Dependency not available")
-        
+
         # Should handle gracefully or provide alternative
         results = module.analyze(sample_data)
         assert results is not None
-    
+
     def test_memory_usage(self, module, sample_data):
         """Test memory usage stays reasonable"""
         import psutil
         import os
-        
+
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss
-        
+
         # Run analysis
         results = module.analyze(sample_data)
-        
+
         final_memory = process.memory_info().rss
         memory_increase = final_memory - initial_memory
-        
+
         # Should not use excessive memory (< 100MB for small dataset)
         assert memory_increase < 100 * 1024 * 1024
 ```
@@ -887,20 +887,20 @@ def test_module_integration():
     """Test module integrates properly with OpenAudit"""
     from core.module_registry import get_global_registry
     from core.bias_testing_framework import BiasAnalyzer
-    
+
     # Register module
     registry = get_global_registry()
     success = registry.register_module("test_module", MyCustomModule)
     assert success
-    
+
     # Use in analysis pipeline
     responses = generate_test_responses()
     analyzer = BiasAnalyzer(responses)
-    
+
     # Should work with modular analysis
     results = analyzer.run_modular_analysis(["test_module"])
     assert "test_module" in results["module_results"]
-    
+
     # Should work with profiles
     results = analyzer.run_modular_analysis(profile="custom_profile")
     assert results["success"]
@@ -1024,7 +1024,7 @@ result = loader.install_module_from_github(
 
 if result["success"]:
     print("Module installed successfully!")
-    
+
     # Use immediately
     from core.bias_testing_framework import BiasAnalyzer
     analyzer = BiasAnalyzer(responses)
@@ -1085,4 +1085,4 @@ Need assistance creating your module?
 - 🐛 **Issues**: [GitHub Issues](https://github.com/openaudit/openaudit/issues)
 - 📧 **Email**: modules@openaudit.org
 
-**Happy module building! 🎉** 
+**Happy module building! 🎉**

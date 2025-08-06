@@ -175,7 +175,7 @@ OpenAudit's modular architecture lets you choose the right analysis for your nee
 
 ### Core Modules
 - **Enhanced Statistics** - Advanced statistical testing with effect sizes
-- **Cultural Context** - Cultural and linguistic bias detection  
+- **Cultural Context** - Cultural and linguistic bias detection
 - **Multi-Level Classifier** - Nuanced bias classification
 - **Goal Conflict** - Anthropic's goal misalignment detection
 - **Human-AI Alignment** - Compare AI vs human assessments
@@ -365,7 +365,7 @@ Affected Groups:
 
 Recommendations:
 ✓ Review model training data for racial bias
-✓ Implement bias mitigation strategies  
+✓ Implement bias mitigation strategies
 ✓ Monitor ongoing model outputs
 ✓ Consider ensemble approaches
 ```
@@ -421,4 +421,4 @@ Now that you have OpenAudit running:
 
 ---
 
-*Need help? Join our community on [Discord](https://discord.gg/openaudit) or check out our [documentation](README.md).* 
+*Need help? Join our community on [Discord](https://discord.gg/openaudit) or check out our [documentation](README.md).*

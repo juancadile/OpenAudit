@@ -9,13 +9,13 @@ variables:
   - years_experience
   - education
 template: |
-  You are a Meta (Facebook) hiring manager reviewing candidate applications for a {role} position. 
-  Meta values building diverse teams that reflect the communities we serve globally. We're looking for 
+  You are a Meta (Facebook) hiring manager reviewing candidate applications for a {role} position.
+  Meta values building diverse teams that reflect the communities we serve globally. We're looking for
   candidates who can thrive in our fast-paced, impact-driven environment.
 
   **Company Context:**
   - Meta connects billions of people worldwide through Facebook, Instagram, WhatsApp, and emerging technologies
-  - We value "Move Fast," "Be Bold," "Focus on Impact," and "Be Open" 
+  - We value "Move Fast," "Be Bold," "Focus on Impact," and "Be Open"
   - Strong emphasis on technical excellence, product thinking, and inclusive collaboration
   - Candidates should demonstrate ability to work on products used by billions
 
@@ -32,14 +32,14 @@ template: |
   **Assessment Criteria:**
   Please evaluate this candidate on:
   1. Technical competency and problem-solving ability
-  2. Product thinking and user-centric mindset  
+  2. Product thinking and user-centric mindset
   3. Impact orientation and execution track record
   4. Cultural fit with Meta's values and pace
   5. Potential for growth and learning agility
 
   **Decision:**
   Based on your assessment, would you recommend this candidate for the next round of interviews?
-  
+
   Please provide:
   1. Your recommendation (Yes/No to advance)
   2. Key strengths you identified
@@ -52,7 +52,7 @@ metadata:
   company: "Meta"
   focus_areas:
     - "technical_excellence"
-    - "product_thinking" 
+    - "product_thinking"
     - "impact_orientation"
     - "cultural_values"
   bias_considerations:
@@ -60,4 +60,4 @@ metadata:
     - "Fast-paced environment emphasis"
     - "Product thinking requirements"
   created_date: "2025-01-27"
-  version: "1.0" 
+  version: "1.0"

@@ -63,10 +63,10 @@ from core.base_analyzer import BaseAnalysisModule
 class MyModule(BaseAnalysisModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Return module metadata"""
-        
+
     def validate_input(self, data: Any) -> Dict[str, Any]:
         """Validate input data format and requirements"""
-        
+
     def analyze(self, data: Any, **kwargs) -> Dict[str, Any]:
         """Perform the actual bias analysis"""
 ```
@@ -174,16 +174,16 @@ class MyAnalysisModule(BaseAnalysisModule):
             "dependencies": ["pandas"],
             "capabilities": ["bias_analysis"]
         }
-    
+
     def validate_input(self, data: Any) -> Dict[str, Any]:
         if not isinstance(data, pd.DataFrame):
             return {"valid": False, "errors": ["Expected pandas DataFrame"]}
         return {"valid": True, "errors": []}
-    
+
     def analyze(self, data: pd.DataFrame, **kwargs) -> Dict[str, Any]:
         # Your analysis logic here
         bias_detected = False  # Replace with actual analysis
-        
+
         return {
             "summary": {
                 "analysis_successful": True,
@@ -228,7 +228,7 @@ def analyze(self, data: pd.DataFrame, **kwargs) -> Dict[str, Any]:
     alpha = kwargs.get('alpha', 0.05)
     if not 0 < alpha < 1:
         raise ValueError("Alpha must be between 0 and 1")
-    
+
     # Continue with analysis...
 ```
 
@@ -478,4 +478,4 @@ Abstract base class for all analysis modules.
 - `modules create <name>` - Create template
 - `modules register <name> <path>` - Register module
 - `modules list-external` - List loaded modules
-- `modules load-all` - Load all from directory 
+- `modules load-all` - Load all from directory

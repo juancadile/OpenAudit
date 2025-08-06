@@ -94,4 +94,4 @@ Found an error or want to improve the docs? See our [Documentation Contributing 
 
 ---
 
-**Version**: 1.0.0 | **Last Updated**: January 2025 | **License**: MIT 
+**Version**: 1.0.0 | **Last Updated**: January 2025 | **License**: MIT

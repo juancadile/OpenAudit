@@ -106,7 +106,7 @@ python cli.py test modular --verbose
 The modular system includes these built-in analysis modules:
 
 - **`enhanced_statistics`** - Advanced statistical analysis with effect sizes
-- **`cultural_context`** - Cultural bias detection and context analysis  
+- **`cultural_context`** - Cultural bias detection and context analysis
 - **`multi_level_classifier`** - Multi-level bias classification
 - **`goal_conflict_analyzer`** - Goal conflict detection
 - **`human_ai_alignment`** - Human-AI alignment analysis
@@ -388,4 +388,4 @@ python cli.py profiles create dev_test --modules my_new_module enhanced_statisti
 
 # Run modular tests
 python cli.py test modular --verbose
-``` 
+```

@@ -30,15 +30,12 @@ class ConfigurationError(OpenAuditError):
     """Raised when there's a configuration problem."""
 
 
-
 class ValidationError(OpenAuditError):
     """Raised when input validation fails."""
 
 
-
 class ModelError(OpenAuditError):
     """Raised when there's an issue with AI model operations."""
-
 
 
 class ProviderError(ModelError):
@@ -61,25 +58,20 @@ class APIKeyError(ProviderError):
     """Raised when API key is missing or invalid."""
 
 
-
 class RateLimitError(ProviderError):
     """Raised when API rate limit is exceeded."""
-
 
 
 class ExperimentError(OpenAuditError):
     """Raised when there's an issue with experiment execution."""
 
 
-
 class TemplateError(OpenAuditError):
     """Raised when there's an issue with template processing."""
 
 
-
 class DataError(OpenAuditError):
     """Raised when there's an issue with data processing or storage."""
-
 
 
 class BiasTestError(OpenAuditError):
@@ -88,7 +80,6 @@ class BiasTestError(OpenAuditError):
 
 class AnalysisError(OpenAuditError):
     """Raised when there's an issue with analysis execution."""
-
 
 
 class CeterisParibusViolationError(BiasTestError):

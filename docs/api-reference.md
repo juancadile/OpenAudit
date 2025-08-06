@@ -6,7 +6,7 @@ Complete reference for the OpenAudit REST API. Build integrations, automate audi
 
 The OpenAudit API provides RESTful endpoints for:
 - 🧪 **Running bias audits**
-- 📊 **Analyzing results** 
+- 📊 **Analyzing results**
 - 🧩 **Managing analysis modules**
 - 📝 **Template management**
 - 🔄 **Experiment tracking**
@@ -900,7 +900,7 @@ def make_request_with_retry(url, max_retries=3):
             time.sleep(retry_after)
             continue
         return response
-    
+
     raise Exception("Max retries exceeded")
 ```
 
@@ -910,18 +910,18 @@ def get_all_runs():
     all_runs = []
     offset = 0
     limit = 50
-    
+
     while True:
         response = requests.get(f'/api/runs?limit={limit}&offset={offset}')
         data = response.json()['data']
-        
+
         all_runs.extend(data['runs'])
-        
+
         if not data['pagination']['has_more']:
             break
-            
+
         offset += limit
-    
+
     return all_runs
 ```
 
@@ -934,20 +934,20 @@ class AuditMonitor {
         this.reconnectAttempts = 0;
         this.maxReconnectAttempts = 5;
     }
-    
+
     connect() {
         this.ws = new WebSocket(`ws://localhost:5000/ws/audit/${this.auditId}`);
-        
+
         this.ws.onopen = () => {
             console.log('Connected to audit monitor');
             this.reconnectAttempts = 0;
         };
-        
+
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             this.handleMessage(data);
         };
-        
+
         this.ws.onclose = () => {
             if (this.reconnectAttempts < this.maxReconnectAttempts) {
                 setTimeout(() => {
@@ -957,7 +957,7 @@ class AuditMonitor {
             }
         };
     }
-    
+
     handleMessage(data) {
         switch (data.type) {
             case 'progress':
@@ -1029,4 +1029,4 @@ Need help with the API?
 - 💬 **Discord**: [Join our community](https://discord.gg/openaudit)
 - 📧 **Email**: api@openaudit.org
 
-**Happy integrating! 🚀** 
+**Happy integrating! 🚀**

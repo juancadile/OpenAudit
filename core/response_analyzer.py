@@ -7,7 +7,6 @@ import json
 from collections import defaultdict
 
 
-
 def load_experiment_data(filepath):
     """Load experiment data from JSON file"""
     with open(filepath, "r") as f:

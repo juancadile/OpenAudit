@@ -8,7 +8,7 @@ This document outlines planned enhancements for OpenAudit. The core functionalit
 
 **Planned Features:**
 - **Standardized Analysis Modules**: Common interface for custom bias detection methods
-- **External Module Support**: Security-validated plugin system for community contributions  
+- **External Module Support**: Security-validated plugin system for community contributions
 - **Analysis Profiles**: Pre-configured workflows (research_grade, cultural, alignment_focused)
 - **Module Registry**: Automatic discovery and validation of analysis components
 
@@ -37,7 +37,7 @@ results = analyzer.run_profile_analysis("research_grade")
 
 **Status**: 🔴 Stubbed interfaces only
 
-### Cultural Context Analysis  
+### Cultural Context Analysis
 **Vision**: Cross-cultural and linguistic bias detection
 - Cultural sensitivity analysis
 - Linguistic register bias detection
@@ -105,7 +105,7 @@ results = ParallelExecutor().execute_modules_parallel(modules, data)
 
 **Planned Features:**
 - **Shared Module Registry**: Community-contributed analysis methods
-- **Reproducible Experiments**: Version-controlled analysis pipelines  
+- **Reproducible Experiments**: Version-controlled analysis pipelines
 - **Data Sharing**: Standardized bias dataset formats
 - **Citation Integration**: Automatic academic attribution
 
@@ -146,7 +146,7 @@ results = ParallelExecutor().execute_modules_parallel(modules, data)
 
 ### Phase 3: Selective Implementation (Future)
 - ⏳ Implement highest-priority features first
-- ⏳ Build modular architecture incrementally  
+- ⏳ Build modular architecture incrementally
 - ⏳ Maintain backward compatibility
 - ⏳ Add features that users actually request
 
@@ -160,7 +160,7 @@ results = ParallelExecutor().execute_modules_parallel(modules, data)
 **We welcome contributions, but with priorities:**
 
 1. **Use the current system** - Help us understand what's missing
-2. **Report real needs** - Tell us what bias research requires  
+2. **Report real needs** - Tell us what bias research requires
 3. **Contribute incrementally** - Add one working feature at a time
 4. **Maintain quality** - All new features need tests and documentation
 
@@ -180,7 +180,7 @@ results = ParallelExecutor().execute_modules_parallel(modules, data)
 
 **Current philosophy:**
 - **Ship working software first**
-- **Add complexity only when needed** 
+- **Add complexity only when needed**
 - **Let user needs drive development**
 - **Maintain high code quality standards**
 
@@ -188,7 +188,7 @@ results = ParallelExecutor().execute_modules_parallel(modules, data)
 
 ## 🎯 **Get Involved**
 
-The best way to influence OpenAudit's future is to **use it for real research** and report what you need. 
+The best way to influence OpenAudit's future is to **use it for real research** and report what you need.
 
 **Contact**: Open issues on GitHub describing your bias research needs and we'll prioritize development accordingly.
 

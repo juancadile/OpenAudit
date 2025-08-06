@@ -9,19 +9,20 @@ __author__ = "OpenAudit Team"
 __email__ = "team@openaudit.org"
 __license__ = "MIT"
 
+from .core.analysis_profiles import get_global_profile_manager
+
 # Import main components for easy access
 from .core.bias_testing_framework import BiasAnalyzer, HiringBiasTest
 from .core.model_manager import ModelManager
 from .core.modular_bias_analyzer import ModularBiasAnalyzer
 from .core.module_registry import get_global_registry
-from .core.analysis_profiles import get_global_profile_manager
 
 # Make key classes available at package level
 __all__ = [
     "BiasAnalyzer",
     "HiringBiasTest",
-    "ModelManager", 
+    "ModelManager",
     "ModularBiasAnalyzer",
     "get_global_registry",
-    "get_global_profile_manager"
-] 
+    "get_global_profile_manager",
+]

@@ -2,9 +2,16 @@
 Pytest configuration and fixtures for OpenAudit tests
 """
 
+import sys
+from pathlib import Path
 from typing import Any, Dict
 
 import pytest
+
+# Add project root to Python path for imports
+project_root = Path(__file__).parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 from core.analysis_profiles import ProfileManager, clear_global_profile_manager
 from core.base_analyzer import BaseAnalysisModule

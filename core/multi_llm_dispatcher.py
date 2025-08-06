@@ -21,6 +21,8 @@ load_dotenv()
 
 @dataclass
 class LLMResponse:
+    """Response data from an LLM API call."""
+
     model_name: str
     provider: str
     prompt: str

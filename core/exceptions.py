@@ -3,14 +3,17 @@ OpenAudit Custom Exceptions
 Comprehensive error handling for bias testing platform
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 class OpenAuditError(Exception):
     """Base exception for all OpenAudit errors."""
 
     def __init__(
-        self, message: str, error_code: str = None, details: Dict[str, Any] = None
+        self,
+        message: str,
+        error_code: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
     ):
         self.message = message
         self.error_code = error_code or self.__class__.__name__
@@ -45,8 +48,8 @@ class ProviderError(ModelError):
         self,
         message: str,
         provider: str,
-        error_code: str = None,
-        details: Dict[str, Any] = None,
+        error_code: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
     ):
         self.provider = provider
         details = details or {}
@@ -90,7 +93,7 @@ class CeterisParibusViolationError(BiasTestError):
         message: str,
         expected_variables: Dict[str, Any],
         actual_variables: Dict[str, Any],
-        error_code: str = None,
+        error_code: Optional[str] = None,
     ):
         self.expected_variables = expected_variables
         self.actual_variables = actual_variables
@@ -124,8 +127,8 @@ class FileProcessingError(DataError):
         self,
         message: str,
         file_path: str,
-        error_code: str = None,
-        details: Dict[str, Any] = None,
+        error_code: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
     ):
         self.file_path = file_path
         details = details or {}
@@ -157,7 +160,7 @@ class TemplateNotFoundError(TemplateError):
 class ModelNotAvailableError(ModelError):
     """Raised when a requested model is not available."""
 
-    def __init__(self, model_name: str, provider: str = None):
+    def __init__(self, model_name: str, provider: Optional[str] = None):
         self.model_name = model_name
         self.provider = provider
 
@@ -196,7 +199,10 @@ class InvalidFormatError(ValidationError):
     """Raised when data format is invalid."""
 
     def __init__(
-        self, expected_format: str, actual_format: str = None, field_name: str = None
+        self,
+        expected_format: str,
+        actual_format: Optional[str] = None,
+        field_name: Optional[str] = None,
     ):
         self.expected_format = expected_format
         self.actual_format = actual_format

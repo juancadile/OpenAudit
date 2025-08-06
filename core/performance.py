@@ -10,7 +10,7 @@ import hashlib
 import json
 import logging
 import multiprocessing as mp
-import pickle
+import pickle  # nosec B403 - Used only for internal caching of trusted data
 import threading
 import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
@@ -68,7 +68,7 @@ class AnalysisCache:
         """Generate a unique cache key"""
         # Create deterministic hash from parameters
         param_str = json.dumps(parameters, sort_keys=True)
-        param_hash = hashlib.md5(param_str.encode()).hexdigest()
+        param_hash = hashlib.md5(param_str.encode(), usedforsecurity=False).hexdigest()
 
         return f"{module_name}_{data_hash}_{param_hash}"
 
@@ -83,7 +83,7 @@ class AnalysisCache:
         else:
             data_str = str(data)
 
-        return hashlib.md5(data_str.encode()).hexdigest()
+        return hashlib.md5(data_str.encode(), usedforsecurity=False).hexdigest()
 
     def get(
         self, module_name: str, data: Any, parameters: Dict[str, Any]
@@ -111,7 +111,9 @@ class AnalysisCache:
             if cache_file.exists():
                 try:
                     with open(cache_file, "rb") as f:
-                        cached_item = pickle.load(f)
+                        # NOTE: pickle.load is safe here as we only load files we created
+                        # This cache system only deserializes our own trusted data
+                        cached_item = pickle.load(f)  # nosec B301
 
                     # Check TTL
                     if time.time() - cached_item["timestamp"] < self.ttl_seconds:

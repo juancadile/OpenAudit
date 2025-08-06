@@ -8,7 +8,7 @@ plug-and-play modular architecture.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 class ModuleCategory(Enum):
@@ -29,9 +29,9 @@ class ModuleRequirements:
 
     min_samples: int = 1
     min_groups: int = 1
-    data_types: List[str] = None
-    dependencies: List[str] = None
-    optional_dependencies: List[str] = None
+    data_types: Optional[List[str]] = None
+    dependencies: Optional[List[str]] = None
+    optional_dependencies: Optional[List[str]] = None
 
     def __post_init__(self):
         if self.data_types is None:

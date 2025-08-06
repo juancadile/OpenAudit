@@ -28,6 +28,7 @@ exclude =
     dist,
     .eggs,
     git-ignore,
+    templates/archive,
 per-file-ignores =
     __init__.py:F401
     # Allow longer lines in templates and config files

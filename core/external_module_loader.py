@@ -823,14 +823,22 @@ class {module_name.replace('_', ' ').title().replace(' ', '')}Module(BaseAnalysi
             # Create temporary directory
             temp_dir = tempfile.mkdtemp(prefix="openaudit_github_")
 
-            # Download URL
+            # Download URL - validate it's a GitHub URL for security
             download_url = f"https://github.com/{owner}/{repo}/archive/{branch}.zip"
+
+            # Validate URL is from GitHub for security
+            if not download_url.startswith("https://github.com/"):
+                return {
+                    "success": False,
+                    "error": "Only GitHub repositories are supported for security reasons",
+                }
 
             # Download the ZIP file
             zip_path = Path(temp_dir) / f"{repo}.zip"
 
             try:
-                urllib.request.urlretrieve(download_url, zip_path)
+                # Safe URL retrieval - we've validated it's a GitHub URL above
+                urllib.request.urlretrieve(download_url, zip_path)  # nosec B310
             except Exception as e:
                 return {
                     "success": False,

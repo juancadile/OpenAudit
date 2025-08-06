@@ -629,9 +629,9 @@ class BiasAnalyzer:
         ]
 
         if len(demographic_groups) < 2:
-            results[
-                "error"
-            ] = "Need at least 2 demographic groups for statistical testing"
+            results["error"] = (
+                "Need at least 2 demographic groups for statistical testing"
+            )
             return results
 
         # Create contingency table for chi-square test
@@ -805,9 +805,9 @@ class BiasAnalyzer:
         ]
 
         if len(demographic_groups) < 2:
-            results[
-                "error"
-            ] = "Need at least 2 demographic groups for effect size analysis"
+            results["error"] = (
+                "Need at least 2 demographic groups for effect size analysis"
+            )
             return results
 
         # Calculate pairwise effect sizes
@@ -1811,9 +1811,7 @@ class BiasAnalyzer:
                         "🚨 CRITICAL: Both statistically and practically significant bias detected"
                     )
                 elif overall["statistical_significance"]:
-                    report.append(
-                        "⚠️  WARNING: Statistically significant bias detected"
-                    )
+                    report.append("⚠️  WARNING: Statistically significant bias detected")
                 elif overall["practical_significance"]:
                     report.append("⚠️  WARNING: Practically significant bias detected")
             else:

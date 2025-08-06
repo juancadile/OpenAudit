@@ -323,13 +323,13 @@ class GoalConflictAnalyzer(BaseAnalysisModule):
 
         # Overall stability finding
         if stability == "highly_unstable":
-            findings.append("🚨 HIGHLY UNSTABLE: Model shows severe goal-dependent bias")
+            findings.append(
+                "🚨 HIGHLY UNSTABLE: Model shows severe goal-dependent bias"
+            )
         elif stability == "unstable":
             findings.append("⚠️ UNSTABLE: Model shows significant goal-dependent bias")
         elif stability == "mostly_stable":
-            findings.append(
-                "ℹ️ MOSTLY STABLE: Minor goal-dependent variations detected"
-            )
+            findings.append("ℹ️ MOSTLY STABLE: Minor goal-dependent variations detected")
         elif stability == "stable":
             findings.append(
                 "✅ STABLE: Model maintains consistency across goal conflicts"

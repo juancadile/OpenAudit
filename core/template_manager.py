@@ -507,12 +507,12 @@ class TemplateManager:
             if len(name_parts) >= 2:
                 derived["first_name"] = name_parts[0]
                 derived["last_name"] = name_parts[-1]
-                derived[
-                    "linkedin_username"
-                ] = f"{name_parts[0].lower()}{name_parts[-1].lower()}"
-                derived[
-                    "email"
-                ] = f"{name_parts[0].lower()}.{name_parts[-1].lower()}@email.com"
+                derived["linkedin_username"] = (
+                    f"{name_parts[0].lower()}{name_parts[-1].lower()}"
+                )
+                derived["email"] = (
+                    f"{name_parts[0].lower()}.{name_parts[-1].lower()}@email.com"
+                )
 
         return derived
 

@@ -251,7 +251,9 @@ if len(group_stats) >= 2:
         else:
             print(f"\n✅ NO SIGNIFICANT BIAS DETECTED")
             print(f"   🎯 Score differences appear within normal random variation")
-            print(f"   📊 GPT-3.5 and GPT-4o showed relatively fair evaluation patterns")
+            print(
+                f"   📊 GPT-3.5 and GPT-4o showed relatively fair evaluation patterns"
+            )
 
     except Exception as e:
         print(f"   ❌ Statistical analysis failed: {e}")

@@ -5,17 +5,19 @@ Following Google engineering principles: modularity, abstraction, extensibility
 """
 
 import json
-import os
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import yaml
 
-from .exceptions import TemplateError, TemplateNotFoundError, ValidationError, FileProcessingError
+from .exceptions import (
+    FileProcessingError,
+    ValidationError,
+)
 from .logging_config import get_logger
-from .validators import validate_file_path, sanitize_filename
+from .validators import sanitize_filename
 
 logger = get_logger(__name__)
 
@@ -200,37 +202,47 @@ class TemplateManager:
         """Get all available CV templates"""
         logger.debug(f"Loading CV templates from {self.cv_templates_dir}")
         templates = []
-        
+
         if not self.cv_templates_dir.exists():
-            logger.warning(f"CV templates directory does not exist: {self.cv_templates_dir}")
+            logger.warning(
+                f"CV templates directory does not exist: {self.cv_templates_dir}"
+            )
             return templates
-        
+
         for file_path in self.cv_templates_dir.glob("*.yaml"):
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     data = yaml.safe_load(f)
-                
+
                 if not isinstance(data, dict):
-                    logger.error(f"Invalid CV template format in {file_path}: expected dict, got {type(data)}")
+                    logger.error(
+                        f"Invalid CV template format in {file_path}: expected dict, got {type(data)}"
+                    )
                     continue
-                
+
                 # Validate required fields
                 required_fields = ["name", "role", "level", "template", "variables"]
-                missing_fields = [field for field in required_fields if field not in data]
+                missing_fields = [
+                    field for field in required_fields if field not in data
+                ]
                 if missing_fields:
-                    logger.error(f"CV template {file_path} missing required fields: {missing_fields}")
+                    logger.error(
+                        f"CV template {file_path} missing required fields: {missing_fields}"
+                    )
                     continue
-                
+
                 templates.append(CVTemplate(**data))
-                logger.debug(f"Successfully loaded CV template: {data.get('name', 'unnamed')}")
-                
+                logger.debug(
+                    f"Successfully loaded CV template: {data.get('name', 'unnamed')}"
+                )
+
             except yaml.YAMLError as e:
                 logger.error(f"YAML parsing error in CV template {file_path}: {e}")
             except TypeError as e:
                 logger.error(f"Data validation error in CV template {file_path}: {e}")
             except Exception as e:
                 logger.error(f"Unexpected error loading CV template {file_path}: {e}")
-        
+
         logger.info(f"Loaded {len(templates)} CV templates")
         return templates
 
@@ -239,30 +251,30 @@ class TemplateManager:
         if not name or not name.strip():
             logger.warning("Empty template name provided")
             return None
-        
+
         logger.debug(f"Looking for CV template: {name}")
         templates = self.get_cv_templates()
         template = next((t for t in templates if t.name == name), None)
-        
+
         if template:
             logger.debug(f"Found CV template: {name}")
         else:
             logger.warning(f"CV template not found: {name}")
-        
+
         return template
 
     def save_cv_template(self, template: CVTemplate) -> str:
         """Save CV template to file"""
         if not template or not template.name:
             raise ValidationError("Template and template name are required")
-        
+
         logger.info(f"Saving CV template: {template.name}")
-        
+
         # Ensure templates directory exists
         self.cv_templates_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Sanitize filename
-        sanitized_name = sanitize_filename(template.name.lower().replace(' ', '_'))
+        sanitized_name = sanitize_filename(template.name.lower().replace(" ", "_"))
         filename = f"{sanitized_name}.yaml"
         file_path = self.cv_templates_dir / filename
 
@@ -271,16 +283,17 @@ class TemplateManager:
 
         try:
             with open(file_path, "w", encoding="utf-8") as f:
-                yaml.dump(asdict(template), f, default_flow_style=False, allow_unicode=True)
-            
+                yaml.dump(
+                    asdict(template), f, default_flow_style=False, allow_unicode=True
+                )
+
             logger.info(f"Successfully saved CV template to: {file_path}")
             return str(file_path)
-            
+
         except Exception as e:
             logger.error(f"Failed to save CV template {template.name}: {e}")
             raise FileProcessingError(
-                f"Failed to save CV template: {e}",
-                file_path=str(file_path)
+                f"Failed to save CV template: {e}", file_path=str(file_path)
             )
 
     def delete_cv_template(self, name: str) -> bool:
@@ -497,12 +510,12 @@ class TemplateManager:
             if len(name_parts) >= 2:
                 derived["first_name"] = name_parts[0]
                 derived["last_name"] = name_parts[-1]
-                derived["linkedin_username"] = (
-                    f"{name_parts[0].lower()}{name_parts[-1].lower()}"
-                )
-                derived["email"] = (
-                    f"{name_parts[0].lower()}.{name_parts[-1].lower()}@email.com"
-                )
+                derived[
+                    "linkedin_username"
+                ] = f"{name_parts[0].lower()}{name_parts[-1].lower()}"
+                derived[
+                    "email"
+                ] = f"{name_parts[0].lower()}.{name_parts[-1].lower()}@email.com"
 
         return derived
 
@@ -577,7 +590,7 @@ Senior Software Engineer | Google | 2021 - Present
 • Optimized system performance resulting in 40% reduction in latency
 • Mentored team of 5 junior engineers and established best practices
 
-Software Engineer | Microsoft | 2019 - 2021  
+Software Engineer | Microsoft | 2019 - 2021
 • Developed cloud-native applications using Azure and .NET Core
 • Implemented CI/CD pipelines reducing deployment time by 60%
 • Collaborated with product managers to deliver features ahead of schedule

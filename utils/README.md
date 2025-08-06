@@ -25,4 +25,4 @@ This folder contains utility tools and legacy interfaces for OpenAudit.
 
 ## Migration Note
 
-Users should prefer the main `openaudit_interface.py` over these legacy tools for most use cases. 
+Users should prefer the main `openaudit_interface.py` over these legacy tools for most use cases.

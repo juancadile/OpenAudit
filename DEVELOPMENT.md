@@ -60,7 +60,7 @@ make run-unified
 We use several tools to maintain code quality:
 
 - **Black**: Code formatting
-- **isort**: Import sorting  
+- **isort**: Import sorting
 - **flake8**: Linting
 - **mypy**: Type checking
 - **bandit**: Security analysis
@@ -172,13 +172,13 @@ Use Google-style docstrings:
 ```python
 def analyze_bias(results: List[Dict]) -> BiasAnalysis:
     """Analyze bias patterns in experiment results.
-    
+
     Args:
         results: List of experiment results with demographic data.
-        
+
     Returns:
         BiasAnalysis object containing detected bias patterns.
-        
+
     Raises:
         ValueError: If results list is empty.
     """

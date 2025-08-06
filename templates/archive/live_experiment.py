@@ -37,7 +37,7 @@ def create_custom_test_cases(config):
     selected_demographics = config.get("demographics", {})
     custom_prompt = config.get("prompt_template", "")
     custom_cv_template = config.get("custom_cv_template", None)
-    cv_level = config.get("cv_level", "borderline")
+    config.get("cv_level", "borderline")
 
     # Set custom CV template if provided
     if custom_cv_template and custom_cv_template.get("template"):

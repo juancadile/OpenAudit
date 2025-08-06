@@ -1,6 +1,6 @@
 [run]
 source = core, utils
-omit = 
+omit =
     */tests/*
     */test_*
     openaudit_env/*

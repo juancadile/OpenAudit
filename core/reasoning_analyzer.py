@@ -275,7 +275,7 @@ def main():
 
         # Find harmed groups (below average)
         if hire_rates:
-            avg_rate = sum(hire_rates.values()) / len(hire_rates)
+            sum(hire_rates.values()) / len(hire_rates)
             max_rate = max(hire_rates.values())
 
             harmed_groups = [

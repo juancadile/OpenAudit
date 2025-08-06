@@ -9,7 +9,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Create logs directory if it doesn't exist
 LOGS_DIR = Path(__file__).parent.parent / "logs"
@@ -25,14 +25,14 @@ def get_logging_config(
 ) -> Dict[str, Any]:
     """
     Get logging configuration dictionary.
-    
+
     Args:
         log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         log_to_file: Whether to log to file
         log_to_console: Whether to log to console
         max_bytes: Maximum file size before rotation
         backup_count: Number of backup files to keep
-        
+
     Returns:
         Logging configuration dictionary
     """
@@ -142,13 +142,13 @@ def setup_logging(
 ) -> logging.Logger:
     """
     Setup centralized logging for OpenAudit.
-    
+
     Args:
         log_level: Override log level from environment
         log_to_file: Whether to log to files
         log_to_console: Whether to log to console
         force_setup: Force reconfiguration even if already setup
-        
+
     Returns:
         Configured logger instance
     """
@@ -190,10 +190,10 @@ def setup_logging(
 def get_logger(name: str) -> logging.Logger:
     """
     Get a logger instance with the given name.
-    
+
     Args:
         name: Logger name (typically __name__)
-        
+
     Returns:
         Logger instance
     """
@@ -207,12 +207,12 @@ def get_logger(name: str) -> logging.Logger:
 def get_experiment_logger() -> logging.Logger:
     """
     Get a logger specifically for experiment data.
-    
+
     Returns:
         Experiment logger instance
     """
     logger = logging.getLogger("openaudit.experiments")
-    
+
     # Add experiment-specific handler if not already present
     if not any(h.get_name() == "experiment_file" for h in logger.handlers):
         config = get_logging_config()
@@ -225,7 +225,7 @@ def get_experiment_logger() -> logging.Logger:
                 encoding=handler_config["encoding"],
             )
             handler.setLevel(getattr(logging, handler_config["level"]))
-            
+
             # Set JSON formatter
             formatter = logging.Formatter(
                 config["formatters"]["json"]["format"],
@@ -233,9 +233,9 @@ def get_experiment_logger() -> logging.Logger:
             )
             handler.setFormatter(formatter)
             handler.set_name("experiment_file")
-            
+
             logger.addHandler(handler)
-    
+
     return logger
 
 
@@ -249,7 +249,7 @@ def log_experiment_event(
 ) -> None:
     """
     Log an experiment event with structured data.
-    
+
     Args:
         event_type: Type of event (start, response, error, complete)
         experiment_id: Unique experiment identifier
@@ -259,12 +259,12 @@ def log_experiment_event(
         **kwargs: Additional structured data
     """
     logger = get_experiment_logger()
-    
+
     event_data = {
         "event_type": event_type,
         "timestamp": datetime.now().isoformat(),
     }
-    
+
     if experiment_id:
         event_data["experiment_id"] = experiment_id
     if model_name:
@@ -273,10 +273,10 @@ def log_experiment_event(
         event_data["demographic"] = demographic
     if decision:
         event_data["decision"] = decision
-    
+
     # Add any additional data
     event_data.update(kwargs)
-    
+
     # Log as JSON-formatted message
     logger.info(f"EXPERIMENT_EVENT: {event_data}")
 

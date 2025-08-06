@@ -20,20 +20,20 @@
             --text-secondary: #64748b;
             --text-muted: #94a3b8;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.6;
         }
-        
+
         .header {
             background: white;
             border-bottom: 1px solid var(--border-color);
@@ -42,7 +42,7 @@
             top: 0;
             z-index: 100;
         }
-        
+
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -51,13 +51,13 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary-color);
         }
-        
+
         .status-indicator {
             display: flex;
             align-items: center;
@@ -66,20 +66,20 @@
             background: var(--light-bg);
             border-radius: 0.5rem;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
-        
+
         .tab-navigation {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
         }
-        
+
         .tab-button {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -91,36 +91,36 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
-        
+
         .tab-button:hover {
             color: var(--primary-color);
             background: var(--light-bg);
         }
-        
+
         .tab-button.active {
             color: var(--primary-color);
             border-bottom-color: var(--primary-color);
         }
-        
+
         .tab-content {
             min-height: 600px;
         }
-        
+
         .tab-pane {
             display: none;
         }
-        
+
         .tab-pane.active {
             display: block;
         }
-        
+
         .overview-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .overview-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -128,29 +128,29 @@
             padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
+
         .overview-card h3 {
             color: var(--text-primary);
             margin-bottom: 1rem;
             font-size: 1.125rem;
         }
-        
+
         .metric {
             font-size: 2rem;
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .metric-label {
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-        
+
         .controls {
             margin-bottom: 2rem;
         }
-        
+
         .run-selector {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -158,18 +158,18 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .run-selector h3 {
             margin-bottom: 1rem;
             color: var(--text-primary);
         }
-        
+
         .run-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
-        
+
         .run-item {
             background: var(--light-bg);
             border: 1px solid var(--border-color);
@@ -178,38 +178,38 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        
+
         .run-item:hover {
             background: var(--card-bg);
             border-color: var(--primary-color);
         }
-        
+
         .run-item.selected {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
         }
-        
+
         .run-item input[type="checkbox"] {
             margin-right: 0.5rem;
         }
-        
+
         .run-meta {
             font-size: 0.875rem;
             color: var(--text-secondary);
             margin-top: 0.5rem;
         }
-        
+
         .run-item.selected .run-meta {
             color: rgba(255,255,255,0.8);
         }
-        
+
         .buttons {
             display: flex;
             gap: 0.75rem;
             flex-wrap: wrap;
         }
-        
+
         button {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -222,66 +222,66 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-primary {
             background: var(--primary-color);
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #1d4ed8;
             transform: translateY(-1px);
         }
-        
+
         .btn-secondary {
             background: var(--secondary-color);
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background: #475569;
         }
-        
+
         .results-section {
             margin-top: 2rem;
         }
-        
+
         .results-section.hidden {
             display: none;
         }
-        
+
         .bias-alert {
             padding: 1rem 1.5rem;
             border-radius: 0.75rem;
             margin-bottom: 1.5rem;
             font-weight: 500;
         }
-        
+
         .bias-alert.significant {
             background: #fef2f2;
             border: 1px solid #fecaca;
             color: #dc2626;
         }
-        
+
         .bias-alert.moderate {
             background: #fffbeb;
             border: 1px solid #fed7aa;
             color: #d97706;
         }
-        
+
         .bias-alert.minimal {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
             color: #16a34a;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        
+
         .stat-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -289,19 +289,19 @@
             padding: 1.5rem;
             text-align: center;
         }
-        
+
         .stat-value {
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-label {
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-        
+
         .chart-container {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -309,51 +309,51 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .chart-container h3 {
             margin-bottom: 1rem;
             color: var(--text-primary);
         }
-        
+
         .hidden {
             display: none !important;
         }
-        
+
         .loading {
             opacity: 0.6;
             pointer-events: none;
         }
-        
+
         .text-center {
             text-align: center;
         }
-        
+
         .mb-1 { margin-bottom: 0.5rem; }
         .mb-2 { margin-bottom: 1rem; }
         .mb-3 { margin-bottom: 1.5rem; }
         .mt-1 { margin-top: 0.5rem; }
         .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
-        
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
-            
+
             .header-content {
                 padding: 0 1rem;
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             .tab-navigation {
                 flex-direction: column;
             }
-            
+
             .run-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .buttons {
                 flex-direction: column;
             }
@@ -369,13 +369,13 @@
             </div>
         </div>
     </header>
-    
+
     <div class="container">
         <nav class="tab-navigation">
             <button class="tab-button active" data-tab="dashboard">📊 Dashboard</button>
             <button class="tab-button" data-tab="historical">📈 Historical Analysis</button>
         </nav>
-        
+
         <div class="tab-content">
             <!-- Dashboard Overview Tab -->
             <div class="tab-pane active" id="dashboard">
@@ -386,12 +386,12 @@
                         <div class="metric">{{ runs|length }}</div>
                         <div class="metric-label">Total Experiment Runs</div>
                         <div class="mt-2">
-                            <div class="metric-label">Latest: 
+                            <div class="metric-label">Latest:
                                 {% if runs %}{{ runs[0].timestamp }}{% else %}None{% endif %}
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>🧪 Analysis Ready</h3>
                         <div class="metric">✓</div>
@@ -400,7 +400,7 @@
                             <div class="metric-label">Multi-run aggregation available</div>
                         </div>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>📈 Features Available</h3>
                         <div class="metric">100%</div>
@@ -410,7 +410,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="overview-card">
                     <h3>🚀 Quick Actions</h3>
                     <div class="buttons">
@@ -423,11 +423,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Historical Analysis Tab -->
             <div class="tab-pane" id="historical">
                 <h2 class="mb-3">Historical Analysis</h2>
-                
+
                 <div class="controls">
                     <div class="run-selector">
                         <h3>Select Experiment Runs</h3>
@@ -446,7 +446,7 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
+
                     <div class="buttons">
                         <button class="btn-primary" onclick="analyzeSelectedRun()">
                             📊 Analyze Selected Run
@@ -459,7 +459,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="results-section hidden" id="historicalResults">
                     <div id="biasAlertContainer"></div>
                     <div class="stats-grid" id="statsContainer"></div>
@@ -479,14 +479,14 @@
     <script>
         // NO SOCKET.IO - PURE STATIC INTERFACE
         let charts = {};
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             initializeTabs();
         });
-        
+
         function initializeTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
-            
+
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const tabId = button.dataset.tab;
@@ -494,29 +494,29 @@
                 });
             });
         }
-        
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-            
+
             document.querySelectorAll('.tab-pane').forEach(pane => {
                 pane.classList.remove('active');
             });
             document.getElementById(tabId).classList.add('active');
         }
-        
+
         function analyzeSelectedRun() {
             const selectedRuns = getSelectedRuns();
             if (selectedRuns.length !== 1) {
                 alert('Please select exactly one run to analyze.');
                 return;
             }
-            
+
             const runId = selectedRuns[0];
             console.log('Analyzing run:', runId);
-            
+
             fetch(`/api/analyze/${runId}`)
                 .then(response => {
                     if (!response.ok) {
@@ -533,17 +533,17 @@
                     alert('Error analyzing run: ' + error.message);
                 });
         }
-        
+
         function aggregateMultipleRuns() {
             const selectedRuns = getSelectedRuns();
             if (selectedRuns.length < 2) {
                 alert('Please select at least two runs to aggregate.');
                 return;
             }
-            
+
             const runsParam = selectedRuns.join(',');
             console.log('Aggregating runs:', runsParam);
-            
+
             fetch(`/api/aggregate?runs=${runsParam}`)
                 .then(response => {
                     if (!response.ok) {
@@ -560,12 +560,12 @@
                     alert('Error aggregating runs: ' + error.message);
                 });
         }
-        
+
         function getSelectedRuns() {
             const checkboxes = document.querySelectorAll('#runSelector input[type="checkbox"]:checked');
             return Array.from(checkboxes).map(cb => cb.value);
         }
-        
+
         function displayHistoricalResults(analysis) {
             document.getElementById('historicalResults').classList.remove('hidden');
             displayBiasAlert(analysis.bias_summary);
@@ -573,17 +573,17 @@
             displayDemographicChart(analysis.demographics);
             displayModelChart(analysis.models_analysis);
         }
-        
+
         function displayBiasAlert(biasSummary) {
             const container = document.getElementById('biasAlertContainer');
             if (!biasSummary) {
                 container.innerHTML = '';
                 return;
             }
-            
+
             const biasGap = parseFloat(biasSummary.bias_gap_percent);
             let alertClass, alertText;
-            
+
             if (biasGap >= 10) {
                 alertClass = 'significant';
                 alertText = '🚨 SIGNIFICANT BIAS DETECTED';
@@ -594,7 +594,7 @@
                 alertClass = 'minimal';
                 alertText = '✅ MINIMAL BIAS DETECTED';
             }
-            
+
             container.innerHTML = `
                 <div class="bias-alert ${alertClass}">
                     <strong>${alertText}</strong><br>
@@ -603,11 +603,11 @@
                 </div>
             `;
         }
-        
+
         function displayStats(analysis) {
             const container = document.getElementById('statsContainer');
             const runsText = analysis.runs_aggregated ? ` (${analysis.runs_aggregated} runs)` : '';
-            
+
             container.innerHTML = `
                 <div class="stat-card">
                     <div class="stat-value">${analysis.total_responses}</div>
@@ -627,18 +627,18 @@
                 </div>
             `;
         }
-        
+
         function displayDemographicChart(demographics) {
             const ctx = document.getElementById('demographicChart').getContext('2d');
-            
+
             if (charts.demographic) {
                 charts.demographic.destroy();
             }
-            
+
             const labels = Object.keys(demographics);
             const data = labels.map(label => demographics[label].hire_rate * 100);
             const colors = labels.map(() => `hsl(${Math.random() * 360}, 70%, 60%)`);
-            
+
             charts.demographic = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -672,23 +672,23 @@
                 }
             });
         }
-        
+
         function displayModelChart(modelsAnalysis) {
             const ctx = document.getElementById('modelChart').getContext('2d');
-            
+
             if (charts.model) {
                 charts.model.destroy();
             }
-            
+
             // Handle undefined modelsAnalysis gracefully
             if (!modelsAnalysis || typeof modelsAnalysis !== 'object') {
                 console.warn('modelsAnalysis is undefined or invalid, skipping model chart');
                 return;
             }
-            
+
             const labels = Object.keys(modelsAnalysis);
             const data = labels.map(label => modelsAnalysis[label].overall_hire_rate * 100);
-            
+
             charts.model = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -722,7 +722,7 @@
                 }
             });
         }
-        
+
         function clearResults() {
             document.getElementById('historicalResults').classList.add('hidden');
             document.querySelectorAll('#runSelector input[type="checkbox"]').forEach(cb => {
@@ -731,4 +731,4 @@
         }
     </script>
 </body>
-</html> 
+</html>

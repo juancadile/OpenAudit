@@ -167,7 +167,7 @@
 <body>
     <div class="container">
         <h1>🔍 OpenAudit - LLM Bias Testing Dashboard</h1>
-        
+
         <div class="controls">
             <h3>Select Experiment Runs</h3>
             <div class="run-selector">
@@ -187,23 +187,23 @@
                     </div>
                 {% endif %}
             </div>
-            
+
             <div class="buttons">
                 <button class="btn-primary" onclick="analyzeSingleRun()">Analyze Selected Run</button>
                 <button class="btn-secondary" onclick="aggregateRuns()">Aggregate Multiple Runs</button>
                 <button class="btn-secondary" onclick="clearResults()">Clear Results</button>
             </div>
         </div>
-        
+
         <div id="loading" class="loading" style="display: none;">
             Loading analysis...
         </div>
-        
+
         <div id="error" class="error" style="display: none;"></div>
-        
+
         <div id="results" class="results">
             <div id="bias-alert"></div>
-            
+
             <div class="summary-cards">
                 <div class="card">
                     <h3>Total Responses</h3>
@@ -222,7 +222,7 @@
                     <div class="value" id="runs-analyzed">1</div>
                 </div>
             </div>
-            
+
             <div class="charts">
                 <div class="chart-container">
                     <h3>Hiring Rates by Demographic</h3>
@@ -233,7 +233,7 @@
                     <canvas id="modelChart"></canvas>
                 </div>
             </div>
-            
+
             <div class="demographic-grid" id="demographic-details"></div>
         </div>
     </div>
@@ -241,30 +241,30 @@
     <script>
         let demographicChart = null;
         let modelChart = null;
-        
+
         function showLoading() {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('results').style.display = 'none';
             document.getElementById('error').style.display = 'none';
         }
-        
+
         function showError(message) {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'block';
             document.getElementById('error').textContent = message;
         }
-        
+
         function showResults(data) {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'none';
             document.getElementById('results').style.display = 'block';
-            
+
             // Update summary cards
             document.getElementById('total-responses').textContent = data.total_responses;
             document.getElementById('models-count').textContent = data.models.length;
             document.getElementById('bias-gap').textContent = data.bias_summary.bias_gap_percent;
             document.getElementById('runs-analyzed').textContent = data.runs_aggregated || 1;
-            
+
             // Update bias alert
             const biasAlert = document.getElementById('bias-alert');
             if (data.bias_summary.significant_bias) {
@@ -276,25 +276,25 @@
                 biasAlert.className = 'bias-alert minimal';
                 biasAlert.innerHTML = `✅ Minimal bias detected (${data.bias_summary.bias_gap_percent} gap)`;
             }
-            
+
             // Update charts
             updateDemographicChart(data.demographics);
             updateModelChart(data.models_analysis);
-            
+
             // Update demographic details
             updateDemographicDetails(data.demographics);
         }
-        
+
         function updateDemographicChart(demographics) {
             const ctx = document.getElementById('demographicChart').getContext('2d');
-            
+
             if (demographicChart) {
                 demographicChart.destroy();
             }
-            
+
             const labels = Object.keys(demographics).map(key => key.replace('_', ' ').toUpperCase());
             const data = Object.values(demographics).map(demo => demo.hire_rate * 100);
-            
+
             demographicChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -318,17 +318,17 @@
                 }
             });
         }
-        
+
         function updateModelChart(models) {
             const ctx = document.getElementById('modelChart').getContext('2d');
-            
+
             if (modelChart) {
                 modelChart.destroy();
             }
-            
+
             const labels = Object.keys(models);
             const data = Object.values(models).map(model => model.overall_hire_rate * 100);
-            
+
             modelChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -356,11 +356,11 @@
                 }
             });
         }
-        
+
         function updateDemographicDetails(demographics) {
             const container = document.getElementById('demographic-details');
             container.innerHTML = '';
-            
+
             Object.entries(demographics).forEach(([demo, data]) => {
                 const card = document.createElement('div');
                 card.className = 'demographic-card';
@@ -372,17 +372,17 @@
                 container.appendChild(card);
             });
         }
-        
+
         function analyzeSingleRun() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
             if (checkboxes.length !== 1) {
                 alert('Please select exactly one run to analyze.');
                 return;
             }
-            
+
             const runId = checkboxes[0].value;
             showLoading();
-            
+
             fetch(`/api/analyze/${runId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -396,17 +396,17 @@
                     showError('Error analyzing run: ' + error.message);
                 });
         }
-        
+
         function aggregateRuns() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
             if (checkboxes.length < 2) {
                 alert('Please select at least two runs to aggregate.');
                 return;
             }
-            
+
             const runIds = Array.from(checkboxes).map(cb => cb.value);
             showLoading();
-            
+
             fetch(`/api/aggregate?runs=${runIds.join(',')}`)
                 .then(response => response.json())
                 .then(data => {
@@ -420,12 +420,12 @@
                     showError('Error aggregating runs: ' + error.message);
                 });
         }
-        
+
         function clearResults() {
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             document.getElementById('results').style.display = 'none';
             document.getElementById('error').style.display = 'none';
-            
+
             if (demographicChart) {
                 demographicChart.destroy();
                 demographicChart = null;

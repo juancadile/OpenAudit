@@ -9,7 +9,7 @@ import os
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from langchain_core.language_models import BaseChatModel
 
@@ -30,7 +30,9 @@ try:
     logger.info("Anthropic provider available")
 except ImportError:
     ANTHROPIC_AVAILABLE = False
-    logger.warning("Anthropic not available - install langchain-anthropic for Claude support")
+    logger.warning(
+        "Anthropic not available - install langchain-anthropic for Claude support"
+    )
 
 try:
     from langchain_google_genai import ChatGoogleGenerativeAI
@@ -39,7 +41,9 @@ try:
     logger.info("Google Gemini provider available")
 except ImportError:
     GOOGLE_AVAILABLE = False
-    logger.warning("Google Gemini not available - install langchain-google-genai for support")
+    logger.warning(
+        "Google Gemini not available - install langchain-google-genai for support"
+    )
 
 
 class ModelProvider(Enum):

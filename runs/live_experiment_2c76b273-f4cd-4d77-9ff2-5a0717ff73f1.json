@@ -70,6 +70,6 @@
     "temperature": 1,
     "custom_cv_template": null
   },
-  "status": "running",
-  "responses": [
-    
+  "status": "interrupted",
+  "responses": []
+}

@@ -1,0 +1,13 @@
+{
+  "name": "sample_detector",
+  "version": "1.0.0",
+  "description": "Sample bias detection module for demonstration",
+  "author": "OpenAudit Demo",
+  "module_class": "SampleDetectorModule",
+  "file_path": "sample_detector.py",
+  "dependencies": [],
+  "permissions": [
+    "data_analysis"
+  ],
+  "verified": false
+}

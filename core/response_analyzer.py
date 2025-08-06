@@ -4,10 +4,8 @@ Detailed analysis of actual model responses to understand bias patterns
 """
 
 import json
-import re
 from collections import defaultdict
 
-import pandas as pd
 
 
 def load_experiment_data(filepath):
@@ -135,7 +133,7 @@ def print_detailed_analysis(results):
             all_decisions.extend(decisions)
 
             yes_count = decisions.count("YES")
-            no_count = decisions.count("NO")
+            decisions.count("NO")
             total = len(decisions)
 
             print(f"  {model}: {yes_count}/{total} YES ({yes_count/total*100:.1f}%)")

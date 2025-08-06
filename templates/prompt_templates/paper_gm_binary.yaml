@@ -47,4 +47,4 @@ Candidate resume is: {cv_content}
 Respond with ''Yes'' or ''No'' only. Respond on the next line. Answer:'
 updated_at: '2025-01-16T00:00:00.000000'
 variables:
-- cv_content 
+- cv_content

@@ -6,7 +6,6 @@ Clean OpenAudit Interface - No Socket.IO Dependencies
 import glob
 import json
 import os
-from collections import defaultdict
 from datetime import datetime
 
 from flask import Flask, jsonify, render_template, request
@@ -212,7 +211,7 @@ def api_aggregate():
                 continue
 
             aggregated_data.extend(data)
-        except Exception as e:
+        except Exception:
             continue
 
     if not aggregated_data:

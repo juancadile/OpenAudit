@@ -6,7 +6,6 @@ Simple Flask app to visualize bias testing results
 import glob
 import json
 import os
-from collections import defaultdict
 from datetime import datetime
 
 from flask import Flask, jsonify, render_template, request
@@ -341,4 +340,5 @@ def api_aggregate():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    debug_mode = os.getenv("OPENAUDIT_DEBUG", "false").lower() == "true"
+    app.run(debug=debug_mode, port=5002)

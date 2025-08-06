@@ -1,0 +1,14 @@
+{
+  "name": "sample_detector",
+  "version": "1.0.0",
+  "description": "External module: sample_detector",
+  "author": "Unknown",
+  "module_class": "SampleDetectorModule",
+  "file_path": "external_modules/sample_detector.py",
+  "dependencies": [],
+  "permissions": [
+    "data_analysis"
+  ],
+  "checksum": "f5884cafd4b4514f069de66190f577ae816f6eec94082da305000a387aed8d10",
+  "verified": false
+}

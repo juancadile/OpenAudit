@@ -19,20 +19,20 @@
             --text-primary: #1e293b;
             --text-secondary: #64748b;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--light-bg);
             color: var(--text-primary);
             line-height: 1.6;
         }
-        
+
         .header {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
@@ -41,7 +41,7 @@
             top: 0;
             z-index: 100;
         }
-        
+
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -50,7 +50,7 @@
             align-items: center;
             justify-content: space-between;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
@@ -59,12 +59,12 @@
             font-weight: bold;
             color: var(--primary-color);
         }
-        
+
         .logo::before {
             content: "🔍";
             font-size: 1.8rem;
         }
-        
+
         .status-indicator {
             display: flex;
             align-items: center;
@@ -76,27 +76,27 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
-        
+
         .status-indicator.running {
             background: var(--warning-color);
         }
-        
+
         .status-indicator::before {
             content: "●";
             animation: pulse 2s infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
-        
+
         .tab-navigation {
             display: flex;
             background: var(--card-bg);
@@ -106,7 +106,7 @@
             overflow: hidden;
             margin-bottom: 0;
         }
-        
+
         .tab-button {
             flex: 1;
             padding: 1rem 1.5rem;
@@ -119,17 +119,17 @@
             transition: all 0.2s;
             position: relative;
         }
-        
+
         .tab-button:hover {
             background: var(--light-bg);
             color: var(--text-primary);
         }
-        
+
         .tab-button.active {
             background: var(--primary-color);
             color: white;
         }
-        
+
         .tab-button::before {
             content: "";
             position: absolute;
@@ -141,11 +141,11 @@
             transform: scaleX(0);
             transition: transform 0.2s;
         }
-        
+
         .tab-button.active::before {
             transform: scaleX(1);
         }
-        
+
         .tab-content {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -153,15 +153,15 @@
             padding: 2rem;
             min-height: 600px;
         }
-        
+
         .tab-pane {
             display: none;
         }
-        
+
         .tab-pane.active {
             display: block;
         }
-        
+
         /* Dashboard Overview Styles */
         .overview-grid {
             display: grid;
@@ -169,7 +169,7 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .overview-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -177,7 +177,7 @@
             padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .overview-card h3 {
             margin-bottom: 1rem;
             color: var(--text-primary);
@@ -185,19 +185,19 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .metric {
             font-size: 2rem;
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .metric-label {
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-        
+
         /* Historical Analysis Styles */
         .controls {
             background: var(--light-bg);
@@ -206,16 +206,16 @@
             margin-bottom: 2rem;
             border: 1px solid var(--border-color);
         }
-        
+
         .run-selector {
             margin-bottom: 1.5rem;
         }
-        
+
         .run-selector h3 {
             margin-bottom: 1rem;
             color: var(--text-primary);
         }
-        
+
         .run-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -227,7 +227,7 @@
             border-radius: 0.5rem;
             background: var(--card-bg);
         }
-        
+
         .run-item {
             display: flex;
             align-items: center;
@@ -236,38 +236,38 @@
             border-radius: 0.5rem;
             transition: background 0.2s;
         }
-        
+
         .run-item:hover {
             background: var(--light-bg);
         }
-        
+
         .run-item input[type="checkbox"] {
             width: 1.25rem;
             height: 1.25rem;
             accent-color: var(--primary-color);
         }
-        
+
         .run-info {
             flex: 1;
         }
-        
+
         .run-title {
             font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 0.25rem;
         }
-        
+
         .run-meta {
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
-        
+
         .buttons {
             display: flex;
             gap: 0.75rem;
             flex-wrap: wrap;
         }
-        
+
         button {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -280,35 +280,35 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-primary {
             background: var(--primary-color);
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #1d4ed8;
             transform: translateY(-1px);
         }
-        
+
         .btn-secondary {
             background: var(--secondary-color);
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background: #475569;
         }
-        
+
         .btn-danger {
             background: var(--danger-color);
             color: white;
         }
-        
+
         .btn-danger:hover {
             background: #dc2626;
         }
-        
+
         /* Live Experiment Styles */
         .experiment-controls {
             background: var(--light-bg);
@@ -317,24 +317,24 @@
             margin-bottom: 2rem;
             border: 1px solid var(--border-color);
         }
-        
+
         .control-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
-        
+
         .control-group {
             margin-bottom: 1rem;
         }
-        
+
         .control-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text-primary);
         }
-        
+
         select, input, textarea {
             width: 100%;
             padding: 0.75rem;
@@ -345,60 +345,60 @@
             color: var(--text-primary);
             transition: border-color 0.2s;
         }
-        
+
         select:focus, input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-        
+
         textarea {
             min-height: 100px;
             resize: vertical;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
         }
-        
+
         /* Results Styles */
         .results-section {
             margin-top: 2rem;
         }
-        
+
         .results-section.hidden {
             display: none;
         }
-        
+
         .bias-alert {
             padding: 1rem 1.5rem;
             border-radius: 0.75rem;
             margin-bottom: 1.5rem;
             font-weight: 500;
         }
-        
+
         .bias-alert.significant {
             background: #fef2f2;
             border: 1px solid #fecaca;
             color: #dc2626;
         }
-        
+
         .bias-alert.moderate {
             background: #fffbeb;
             border: 1px solid #fed7aa;
             color: #d97706;
         }
-        
+
         .bias-alert.minimal {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
             color: #16a34a;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        
+
         .stat-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -406,19 +406,19 @@
             padding: 1.5rem;
             text-align: center;
         }
-        
+
         .stat-value {
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-label {
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-        
+
         .chart-container {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -426,17 +426,17 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .chart-container h3 {
             margin-bottom: 1rem;
             color: var(--text-primary);
         }
-        
+
         /* Live Experiment Progress */
         .progress-container {
             margin: 1rem 0;
         }
-        
+
         .progress-bar {
             width: 100%;
             height: 0.5rem;
@@ -444,14 +444,14 @@
             border-radius: 0.25rem;
             overflow: hidden;
         }
-        
+
         .progress-fill {
             height: 100%;
             background: var(--primary-color);
             transition: width 0.3s;
             width: 0%;
         }
-        
+
         .live-response {
             background: var(--light-bg);
             border: 1px solid var(--border-color);
@@ -461,7 +461,7 @@
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 0.875rem;
         }
-        
+
         .cv-preview {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -474,7 +474,7 @@
             max-height: 400px;
             overflow-y: auto;
         }
-        
+
         /* Enhanced Live Experiment Styles */
         .config-section {
             background: var(--card-bg);
@@ -483,7 +483,7 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .config-section h3 {
             color: var(--primary-color);
             margin: 0 0 1rem 0;
@@ -491,14 +491,14 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 0.5rem;
         }
-        
+
         .template-actions {
             display: flex;
             gap: 0.5rem;
             margin-top: 1rem;
             flex-wrap: wrap;
         }
-        
+
         .model-selection {
             max-height: 400px;
             overflow-y: auto;
@@ -506,11 +506,11 @@
             border-radius: 6px;
             padding: 1rem;
         }
-        
+
         .model-category {
             margin-bottom: 1.5rem;
         }
-        
+
         .model-category-header {
             color: var(--text-primary);
             font-size: 1rem;
@@ -519,14 +519,14 @@
             background: var(--light-bg);
             border-radius: 4px;
         }
-        
+
         .models-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 0.5rem;
             margin-left: 1rem;
         }
-        
+
         .model-checkbox {
             display: flex;
             align-items: flex-start;
@@ -538,33 +538,33 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
+
         .model-checkbox:hover {
             background: var(--light-bg);
             border-color: var(--primary-color);
         }
-        
+
         .model-checkbox input[type="checkbox"] {
             margin: 0.2rem 0 0 0;
         }
-        
+
         .model-info {
             flex: 1;
         }
-        
+
         .model-name {
             font-weight: 600;
             color: var(--text-primary);
             display: block;
         }
-        
+
         .model-description {
             color: var(--text-secondary);
             font-size: 0.85rem;
             margin-top: 0.25rem;
             display: block;
         }
-        
+
         .model-summary {
             background: var(--light-bg);
             padding: 0.75rem;
@@ -574,13 +574,13 @@
             font-weight: 500;
             color: var(--text-primary);
         }
-        
+
         .demographics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 0.75rem;
         }
-        
+
         .demo-checkbox {
             display: flex;
             flex-direction: column;
@@ -592,26 +592,26 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
+
         .demo-checkbox:hover {
             background: var(--light-bg);
             border-color: var(--primary-color);
         }
-        
+
         .demo-checkbox input[type="checkbox"] {
             margin-bottom: 0.5rem;
         }
-        
+
         .demo-checkbox span {
             font-weight: 600;
             color: var(--text-primary);
         }
-        
+
         .demo-checkbox small {
             color: var(--text-secondary);
             font-size: 0.8rem;
         }
-        
+
         .experiment-actions {
             display: flex;
             gap: 1rem;
@@ -621,75 +621,75 @@
             margin-top: 2rem;
             flex-wrap: wrap;
         }
-        
+
         .loading {
             text-align: center;
             padding: 2rem;
             color: var(--text-secondary);
             font-style: italic;
         }
-        
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
-            
+
             .header-content {
                 padding: 0 1rem;
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             .tab-navigation {
                 flex-direction: column;
             }
-            
+
             .control-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .run-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .buttons {
                 flex-direction: column;
             }
         }
-        
+
         /* Utilities */
         .hidden {
             display: none !important;
         }
-        
+
         .loading {
             opacity: 0.6;
             pointer-events: none;
         }
-        
+
         .text-center {
             text-align: center;
         }
-        
+
         .mb-1 { margin-bottom: 0.5rem; }
         .mb-2 { margin-bottom: 1rem; }
         .mb-3 { margin-bottom: 1.5rem; }
         .mt-1 { margin-top: 0.5rem; }
         .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
-        
+
         /* Template Management Styles */
         .templates-container {
             max-width: 1200px;
         }
-        
+
         .template-tabs {
             display: flex;
             margin-bottom: 2rem;
             border-bottom: 2px solid var(--border-color);
         }
-        
+
         .template-tab-button {
             background: none;
             border: none;
@@ -701,37 +701,37 @@
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
         }
-        
+
         .template-tab-button.active {
             color: var(--primary-color);
             border-bottom-color: var(--primary-color);
         }
-        
+
         .template-tab-button:hover {
             color: var(--text-primary);
         }
-        
+
         .template-tab-content {
             display: none;
         }
-        
+
         .template-tab-content.active {
             display: block;
         }
-        
+
         .template-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
         }
-        
+
         .template-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 1.5rem;
         }
-        
+
         .template-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -740,18 +740,18 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        
+
         .template-card:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
-        
+
         .template-card h4 {
             margin-bottom: 0.5rem;
             color: var(--text-primary);
             font-size: 1.1rem;
         }
-        
+
         .template-meta {
             display: flex;
             gap: 1rem;
@@ -759,34 +759,34 @@
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
-        
+
         .template-meta span {
             display: flex;
             align-items: center;
             gap: 0.25rem;
         }
-        
+
         .template-description {
             color: var(--text-secondary);
             margin-bottom: 1rem;
             line-height: 1.5;
         }
-        
+
         .template-actions {
             display: flex;
             gap: 0.5rem;
         }
-        
+
         .template-actions button {
             padding: 0.5rem 1rem;
             font-size: 0.875rem;
         }
-        
+
         .template-content-preview {
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
-        
+
         .template-preview {
             background: var(--light-bg);
             border: 1px solid var(--border-color);
@@ -800,7 +800,7 @@
             max-height: 150px;
             overflow-y: auto;
         }
-        
+
         .btn-edit {
             background: var(--primary-color);
             color: white;
@@ -809,11 +809,11 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        
+
         .btn-edit:hover {
             background: #1d4ed8;
         }
-        
+
         .btn-delete {
             background: var(--danger-color);
             color: white;
@@ -822,11 +822,11 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        
+
         .btn-delete:hover {
             background: #dc2626;
         }
-        
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -838,13 +838,13 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
-        
+
         .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal-content {
             background: var(--card-bg);
             border-radius: 0.75rem;
@@ -854,7 +854,7 @@
             overflow-y: auto;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -862,12 +862,12 @@
             padding: 1.5rem;
             border-bottom: 1px solid var(--border-color);
         }
-        
+
         .modal-header h3 {
             margin: 0;
             color: var(--text-primary);
         }
-        
+
         .modal-close {
             background: none;
             border: none;
@@ -882,15 +882,15 @@
             justify-content: center;
             border-radius: 0.375rem;
         }
-        
+
         .modal-close:hover {
             background: var(--light-bg);
         }
-        
+
         .modal-body {
             padding: 1.5rem;
         }
-        
+
         .modal-footer {
             display: flex;
             justify-content: flex-end;
@@ -898,18 +898,18 @@
             padding: 1.5rem;
             border-top: 1px solid var(--border-color);
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text-primary);
         }
-        
+
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -920,17 +920,243 @@
             font-size: 0.875rem;
             transition: border-color 0.2s;
         }
-        
+
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
         }
-        
+
         .form-group textarea {
             resize: vertical;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        /* Modular Analysis Styles */
+        .module-selection {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background: var(--card-bg);
+        }
+
+        .module-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--card-bg);
+        }
+
+        .module-item:hover {
+            background: var(--light-bg);
+            border-color: var(--primary-color);
+        }
+
+        .module-item.selected {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .module-item input[type="checkbox"] {
+            margin: 0.2rem 0 0 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary-color);
+        }
+
+        .module-info {
+            flex: 1;
+        }
+
+        .module-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .module-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-capabilities {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .capability-tag {
+            background: var(--light-bg);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .module-summary {
+            background: var(--light-bg);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .analysis-results {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .analysis-results h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .analysis-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .analysis-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .module-result {
+            background: var(--light-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-result h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .confidence-bar {
+            background: var(--border-color);
+            height: 0.5rem;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danger-color), var(--warning-color), var(--success-color));
+            transition: width 0.3s;
+        }
+
+        .finding-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .finding-item.bias-detected {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .finding-item.no-bias {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .unified-assessment {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(16, 185, 129, 0.1));
+            border: 2px solid var(--primary-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .unified-assessment h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .assessment-metric {
+            text-align: center;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .assessment-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .assessment-value.high {
+            color: var(--danger-color);
+        }
+
+        .assessment-value.medium {
+            color: var(--warning-color);
+        }
+
+        .assessment-value.low {
+            color: var(--success-color);
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation-list li {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .recommendation-list li::before {
+            content: "💡";
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -943,7 +1169,7 @@
             </div>
         </div>
     </header>
-    
+
     <div class="container">
         <nav class="tab-navigation">
             <button class="tab-button active" data-tab="dashboard">📊 Dashboard</button>
@@ -952,7 +1178,7 @@
             <button class="tab-button" data-tab="templates">📝 Templates</button>
             <button class="tab-button" data-tab="research">🧪 Research Tools</button>
         </nav>
-        
+
         <div class="tab-content">
             <!-- Dashboard Overview Tab -->
             <div class="tab-pane active" id="dashboard">
@@ -968,7 +1194,7 @@
                             </span></div>
                         </div>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>🚨 Bias Alerts</h3>
                         <div class="metric" id="biasAlerts">-</div>
@@ -977,7 +1203,7 @@
                             <div class="metric-label">Status: <span id="biasStatus">Analyzing...</span></div>
                         </div>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>🔬 Live Status</h3>
                         <div class="metric" id="liveStatus">Idle</div>
@@ -986,7 +1212,7 @@
                             <div class="metric-label">Progress: <span id="liveProgress">0%</span></div>
                         </div>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>📈 Models Tested</h3>
                         <div class="metric" id="modelsCount">-</div>
@@ -996,7 +1222,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="overview-card">
                     <h3>🚀 Quick Actions</h3>
                     <div class="buttons">
@@ -1012,11 +1238,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Historical Analysis Tab -->
             <div class="tab-pane" id="historical">
                 <h2 class="mb-3">Historical Analysis</h2>
-                
+
                 <div class="controls">
                     <div class="run-selector">
                         <h3>Select Experiment Runs</h3>
@@ -1032,7 +1258,7 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
+
                     <div class="buttons">
                         <button class="btn-primary" onclick="analyzeSelectedRun()">
                             📊 Analyze Selected Run
@@ -1040,12 +1266,111 @@
                         <button class="btn-secondary" onclick="aggregateMultipleRuns()">
                             📈 Aggregate Multiple Runs
                         </button>
+                        <button class="btn-primary" onclick="showModularAnalysis()">
+                            🧩 Modular Analysis
+                        </button>
                         <button class="btn-secondary" onclick="clearResults()">
                             🗑️ Clear Results
                         </button>
                     </div>
                 </div>
-                
+
+                <!-- Modular Analysis Configuration -->
+                <div class="controls hidden" id="modularAnalysisControls">
+                    <h3>🧩 Modular Analysis Configuration</h3>
+
+                    <!-- Analysis Mode Selection -->
+                    <div class="config-section">
+                        <h4>📋 Analysis Mode</h4>
+                        <div class="control-grid">
+                            <div class="control-group">
+                                <label for="analysisMode">Analysis Mode</label>
+                                <select id="analysisMode" onchange="toggleAnalysisMode()">
+                                    <option value="profile">Use Predefined Profile</option>
+                                    <option value="custom">Custom Module Selection</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Selection -->
+                    <div class="config-section" id="profileSelection">
+                        <h4>📁 Analysis Profiles</h4>
+                        <div class="control-grid">
+                            <div class="control-group">
+                                <label for="analysisProfile">Select Profile</label>
+                                <select id="analysisProfile">
+                                    <option value="">Loading profiles...</option>
+                                </select>
+                                <small>Predefined analysis configurations with optimal module combinations</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Module Selection -->
+                    <div class="config-section hidden" id="moduleSelection">
+                        <h4>🔧 Available Analysis Modules</h4>
+                        <div class="module-selection" id="availableModules">
+                            <div class="loading">Loading analysis modules...</div>
+                        </div>
+                        <div class="module-summary">
+                            <span id="selectedModuleCount">0</span> modules selected
+                        </div>
+                    </div>
+
+                    <!-- Advanced Configuration -->
+                    <div class="config-section">
+                        <h4>⚙️ Analysis Parameters</h4>
+                        <div class="control-grid">
+                            <div class="control-group">
+                                <label for="alphaLevel">Significance Level (α)</label>
+                                <select id="alphaLevel">
+                                    <option value="0.01">0.01 (Very Conservative)</option>
+                                    <option value="0.05" selected>0.05 (Standard)</option>
+                                    <option value="0.10">0.10 (Liberal)</option>
+                                </select>
+                                <small>Statistical significance threshold for bias detection</small>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="effectSizeThreshold">Effect Size Threshold</label>
+                                <select id="effectSizeThreshold">
+                                    <option value="0.05">0.05 (Small Effect)</option>
+                                    <option value="0.10" selected>0.10 (Medium Effect)</option>
+                                    <option value="0.20">0.20 (Large Effect)</option>
+                                </select>
+                                <small>Minimum effect size for practical significance</small>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="controlGroup">Control Group</label>
+                                <select id="controlGroup">
+                                    <option value="">Auto-detect</option>
+                                    <option value="white_male">White Male</option>
+                                    <option value="white_female">White Female</option>
+                                </select>
+                                <small>Reference group for bias comparisons</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Actions -->
+                    <div class="buttons">
+                        <button class="btn-primary" onclick="runModularAnalysis()">
+                            🧪 Run Modular Analysis
+                        </button>
+                        <button class="btn-primary" onclick="runEnhancedAnalysis()">
+                            🚀 Enhanced Analysis
+                        </button>
+                        <button class="btn-secondary" onclick="validateModuleConfiguration()">
+                            ✅ Validate Configuration
+                        </button>
+                        <button class="btn-secondary" onclick="hideModularAnalysis()">
+                            ❌ Cancel
+                        </button>
+                    </div>
+                </div>
+
                 <div class="results-section hidden" id="historicalResults">
                     <div id="biasAlertContainer"></div>
                     <div class="stats-grid" id="statsContainer"></div>
@@ -1059,11 +1384,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Live Experiments Tab -->
             <div class="tab-pane" id="live">
                 <h2 class="mb-3">🔬 Live Bias Testing Experiments</h2>
-                
+
                 <div class="experiment-controls">
                     <!-- Template Selection Section -->
                     <div class="config-section">
@@ -1076,7 +1401,7 @@
                                 </select>
                                 <small>Select the CV template to use for candidates</small>
                             </div>
-                            
+
                             <div class="control-group">
                                 <label for="promptTemplate">Prompt Template</label>
                                 <select id="promptTemplate" onchange="updatePromptPreview()">
@@ -1085,7 +1410,7 @@
                                 <small>Select the evaluation prompt template</small>
                             </div>
                         </div>
-                        
+
                         <div class="template-actions">
                             <button class="btn-secondary" onclick="previewCV()" id="previewCVBtn">
                                 👁️ Preview CV
@@ -1101,7 +1426,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Experiment Configuration -->
                     <div class="config-section">
                         <h3>⚙️ Experiment Configuration</h3>
@@ -1115,13 +1440,13 @@
                                 </select>
                                 <small>Controls the qualification level of generated CVs</small>
                             </div>
-                            
+
                             <div class="control-group">
                                 <label for="iterations">Iterations per Model</label>
                                 <input type="number" id="iterations" value="1" min="1" max="10">
                                 <small>How many times to test each demographic/model combination</small>
                             </div>
-                            
+
                             <div class="control-group">
                                 <label for="temperature">Model Temperature</label>
                                 <input type="number" id="temperature" value="0.0" min="0" max="1" step="0.1">
@@ -1129,7 +1454,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Model Selection -->
                     <div class="config-section">
                         <h3>🤖 AI Models Selection</h3>
@@ -1137,11 +1462,11 @@
                             <div class="loading">Loading comprehensive model list...</div>
                         </div>
                         <div class="model-summary">
-                            <span id="selectedModelCount">0</span> models selected across 
+                            <span id="selectedModelCount">0</span> models selected across
                             <span id="selectedProviderCount">0</span> providers
                         </div>
                     </div>
-                    
+
                     <!-- Demographics Selection -->
                     <div class="config-section">
                         <h3>👥 Demographics to Test</h3>
@@ -1188,7 +1513,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Experiment Controls -->
                     <div class="experiment-actions">
                         <button class="btn-primary" id="startExperiment" onclick="startLiveExperiment()">
@@ -1205,7 +1530,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="results-section hidden" id="liveResults">
                     <div class="progress-container">
                         <div class="mb-2">Progress: <span id="progressText">0%</span></div>
@@ -1213,33 +1538,33 @@
                             <div class="progress-fill" id="progressFill"></div>
                         </div>
                     </div>
-                    
+
                     <div id="currentPrompt" class="live-response hidden">
                         <h4>Current Prompt</h4>
                         <div id="promptText"></div>
                     </div>
-                    
+
                     <div id="currentCV" class="cv-preview hidden">
                         <h4>Current CV</h4>
                         <div id="cvText"></div>
                     </div>
-                    
+
                     <div id="latestResponse" class="live-response hidden">
                         <h4>Latest Response</h4>
                         <div id="responseText"></div>
                     </div>
-                    
+
                     <div id="liveAnalysis" class="chart-container hidden">
                         <h3>Live Bias Analysis</h3>
                         <canvas id="liveChart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Research Tools Tab -->
             <div class="tab-pane" id="research">
                 <h2 class="mb-3">Research Tools</h2>
-                
+
                 <div class="overview-grid">
                     <div class="overview-card">
                         <h3>🔍 Reasoning Analyzer</h3>
@@ -1248,7 +1573,7 @@
                             🧠 Analyze Reasoning
                         </button>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>🎓 College Affiliation Testing</h3>
                         <p class="mb-2">Test for implicit bias through educational affiliations (HBCU vs PWI).</p>
@@ -1256,7 +1581,7 @@
                             🏫 Run College Test
                         </button>
                     </div>
-                    
+
                     <div class="overview-card">
                         <h3>📊 Statistical Analysis</h3>
                         <p class="mb-2">Advanced statistical testing with McNemar's test and confidence intervals.</p>
@@ -1269,7 +1594,20 @@
                             </button>
                         </div>
                     </div>
-                    
+
+                    <div class="overview-card">
+                        <h3>🧩 Modular Analysis System</h3>
+                        <p class="mb-2">Next-generation plug-and-play analysis modules with unified pipelines and advanced bias detection.</p>
+                        <div class="buttons">
+                            <button class="btn-primary" onclick="switchToModularAnalysis()">
+                                🧪 Modular Analysis
+                            </button>
+                            <button class="btn-primary" onclick="showModuleCompatibility()">
+                                🔧 Module Compatibility
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="overview-card">
                         <h3>📤 Export Results</h3>
                         <p class="mb-2">Export experiment data and analysis for academic papers.</p>
@@ -1278,11 +1616,11 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="overview-card">
                     <h3>🔬 Research Validation</h3>
                     <p class="mb-2">
-                        OpenAudit findings align with cutting-edge research from Marks & Karvonen (2025) 
+                        OpenAudit findings align with cutting-edge research from Marks & Karvonen (2025)
                         "Robustly Improving LLM Fairness in Realistic Settings via Interpretability"
                     </p>
                     <div class="buttons">
@@ -1295,17 +1633,17 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Templates Tab -->
             <div class="tab-pane" id="templates">
                 <h2 class="mb-3">Template Management</h2>
-                
+
                 <div class="templates-container">
                     <div class="template-tabs">
                         <button class="template-tab-button active" data-template-tab="cv">CV Templates</button>
                         <button class="template-tab-button" data-template-tab="prompt">Prompt Templates</button>
                     </div>
-                    
+
                     <!-- CV Templates Section -->
                     <div class="template-tab-content active" id="cv-templates">
                         <div class="template-header">
@@ -1314,12 +1652,12 @@
                                 ➕ New CV Template
                             </button>
                         </div>
-                        
+
                         <div class="template-grid" id="cvTemplateGrid">
                             <!-- CV templates will be populated here -->
                         </div>
                     </div>
-                    
+
                     <!-- Prompt Templates Section -->
                     <div class="template-tab-content" id="prompt-templates">
                         <div class="template-header">
@@ -1328,7 +1666,7 @@
                                 ➕ New Prompt Template
                             </button>
                         </div>
-                        
+
                         <div class="template-grid" id="promptTemplateGrid">
                             <!-- Prompt templates will be populated here -->
                         </div>
@@ -1337,7 +1675,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- CV Template Modal -->
     <div class="modal" id="cvTemplateModal">
         <div class="modal-content">
@@ -1389,7 +1727,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Prompt Template Modal -->
     <div class="modal" id="promptTemplateModal">
         <div class="modal-content">
@@ -1442,7 +1780,7 @@
         let socket;
         let currentExperiment = null;
         let charts = {};
-        
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             initializeTabs();
@@ -1450,13 +1788,14 @@
             refreshDashboard();
             initializeLiveExperiments();
             initializeTemplateManagement();
+            initializeModularAnalysis();
         });
-        
+
         // Tab Management
         function initializeTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabPanes = document.querySelectorAll('.tab-pane');
-            
+
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const tabId = button.dataset.tab;
@@ -1464,35 +1803,35 @@
                 });
             });
         }
-        
+
         function switchTab(tabId) {
             // Update buttons
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-            
+
             // Update panes
             document.querySelectorAll('.tab-pane').forEach(pane => {
                 pane.classList.remove('active');
             });
             document.getElementById(tabId).classList.add('active');
-            
+
             // Load templates if switching to templates tab
             if (tabId === 'templates') {
                 loadTemplates();
             }
         }
-        
+
         // Socket.IO Management
         function initializeSocket() {
             socket = io();
-            
+
             socket.on('connected', (data) => {
                 updateStatus('Ready', 'ready');
                 console.log('Connected to OpenAudit:', data.status);
             });
-            
+
             socket.on('experiment_started', (data) => {
                 currentExperiment = data.experiment_id;
                 updateStatus('Running Experiment', 'running');
@@ -1501,30 +1840,30 @@
                 document.getElementById('liveResults').classList.remove('hidden');
                 updateProgress(0, data.total_iterations);
             });
-            
+
             socket.on('prompt_update', (data) => {
                 document.getElementById('currentPrompt').classList.remove('hidden');
                 document.getElementById('promptText').textContent = data.prompt;
-                
+
                 if (data.cv_content) {
                     document.getElementById('currentCV').classList.remove('hidden');
                     document.getElementById('cvText').textContent = data.cv_content;
                 }
-                
+
                 updateProgress(data.iteration, data.total);
             });
-            
+
             socket.on('response_received', (data) => {
                 document.getElementById('latestResponse').classList.remove('hidden');
                 document.getElementById('responseText').textContent = JSON.stringify(data.response, null, 2);
                 updateProgress(data.completed, data.total);
             });
-            
+
             socket.on('live_analysis', (data) => {
                 document.getElementById('liveAnalysis').classList.remove('hidden');
                 updateLiveChart(data);
             });
-            
+
             socket.on('experiment_complete', (data) => {
                 currentExperiment = null;
                 updateStatus('Experiment Complete', 'complete');
@@ -1533,20 +1872,20 @@
                 updateProgress(100, 100);
                 refreshDashboard();
             });
-            
+
             socket.on('experiment_stopped', (data) => {
                 currentExperiment = null;
                 updateStatus('Experiment Stopped', 'ready');
                 document.getElementById('startExperiment').classList.remove('hidden');
                 document.getElementById('stopExperiment').classList.add('hidden');
             });
-            
+
             socket.on('experiment_error', (data) => {
                 alert('Experiment Error: ' + data.error);
                 updateStatus('Error', 'error');
             });
         }
-        
+
         // Dashboard Functions
         function refreshDashboard() {
             fetch('/api/runs')
@@ -1558,13 +1897,13 @@
                     console.error('Error refreshing dashboard:', error);
                 });
         }
-        
+
         function updateDashboardMetrics(runs) {
             document.getElementById('totalRuns').textContent = runs.length;
-            
+
             if (runs.length > 0) {
                 document.getElementById('latestRun').textContent = runs[0].timestamp;
-                
+
                 // Analyze latest run for bias alerts
                 const latestRun = runs[0];
                 fetch(`/api/analyze/${latestRun.timestamp_raw}`)
@@ -1572,13 +1911,13 @@
                     .then(analysis => {
                         const biasGap = analysis.bias_summary ? parseFloat(analysis.bias_summary.bias_gap_percent) : 0;
                         document.getElementById('biasAlerts').textContent = biasGap.toFixed(1) + '%';
-                        
+
                         const biasStatus = biasGap > 10 ? 'Significant' : biasGap > 5 ? 'Moderate' : 'Minimal';
                         document.getElementById('biasStatus').textContent = biasStatus;
-                        
+
                         const modelsCount = analysis.models ? analysis.models.length : 0;
                         document.getElementById('modelsCount').textContent = modelsCount;
-                        
+
                         if (analysis.models && analysis.models.length > 0) {
                             document.getElementById('latestModel').textContent = analysis.models[0];
                         }
@@ -1588,14 +1927,14 @@
                     });
             }
         }
-        
+
         function updateStatus(text, status) {
             const indicator = document.getElementById('statusIndicator');
             const statusText = document.getElementById('statusText');
-            
+
             indicator.className = 'status-indicator';
             statusText.textContent = text;
-            
+
             if (status === 'running') {
                 indicator.classList.add('running');
                 document.getElementById('liveStatus').textContent = 'Running';
@@ -1603,14 +1942,14 @@
                 document.getElementById('liveStatus').textContent = 'Idle';
             }
         }
-        
+
         function updateProgress(current, total) {
             const percentage = total > 0 ? (current / total * 100) : 0;
             document.getElementById('progressText').textContent = `${percentage.toFixed(1)}% (${current}/${total})`;
             document.getElementById('progressFill').style.width = `${percentage}%`;
             document.getElementById('liveProgress').textContent = `${percentage.toFixed(1)}%`;
         }
-        
+
         // Historical Analysis Functions
         function analyzeSelectedRun() {
             const selectedRuns = getSelectedRuns();
@@ -1618,7 +1957,7 @@
                 alert('Please select exactly one run to analyze.');
                 return;
             }
-            
+
             const runId = selectedRuns[0];
             fetch(`/api/analyze/${runId}`)
                 .then(response => response.json())
@@ -1630,14 +1969,14 @@
                     alert('Error analyzing run: ' + error.message);
                 });
         }
-        
+
         function aggregateMultipleRuns() {
             const selectedRuns = getSelectedRuns();
             if (selectedRuns.length < 2) {
                 alert('Please select at least two runs to aggregate.');
                 return;
             }
-            
+
             const runsParam = selectedRuns.join(',');
             fetch(`/api/aggregate?runs=${runsParam}`)
                 .then(response => response.json())
@@ -1649,37 +1988,37 @@
                     alert('Error aggregating runs: ' + error.message);
                 });
         }
-        
+
         function getSelectedRuns() {
             const checkboxes = document.querySelectorAll('#runSelector input[type="checkbox"]:checked');
             return Array.from(checkboxes).map(cb => cb.value);
         }
-        
+
         function displayHistoricalResults(analysis) {
             // Show results section
             document.getElementById('historicalResults').classList.remove('hidden');
-            
+
             // Display bias alert
             displayBiasAlert(analysis.bias_summary);
-            
+
             // Display stats
             displayStats(analysis);
-            
+
             // Display charts
             displayDemographicChart(analysis.demographics);
             displayModelChart(analysis.models_analysis);
         }
-        
+
         function displayBiasAlert(biasSummary) {
             const container = document.getElementById('biasAlertContainer');
             if (!biasSummary) {
                 container.innerHTML = '';
                 return;
             }
-            
+
             const biasGap = parseFloat(biasSummary.bias_gap_percent);
             let alertClass, alertText;
-            
+
             if (biasGap >= 10) {
                 alertClass = 'significant';
                 alertText = '🚨 SIGNIFICANT BIAS DETECTED';
@@ -1690,7 +2029,7 @@
                 alertClass = 'minimal';
                 alertText = '✅ MINIMAL BIAS DETECTED';
             }
-            
+
             container.innerHTML = `
                 <div class="bias-alert ${alertClass}">
                     <strong>${alertText}</strong><br>
@@ -1699,11 +2038,11 @@
                 </div>
             `;
         }
-        
+
         function displayStats(analysis) {
             const container = document.getElementById('statsContainer');
             const runsText = analysis.runs_aggregated ? ` (${analysis.runs_aggregated} runs)` : '';
-            
+
             container.innerHTML = `
                 <div class="stat-card">
                     <div class="stat-value">${analysis.total_responses}</div>
@@ -1723,18 +2062,18 @@
                 </div>
             `;
         }
-        
+
         function displayDemographicChart(demographics) {
             const ctx = document.getElementById('demographicChart').getContext('2d');
-            
+
             if (charts.demographic) {
                 charts.demographic.destroy();
             }
-            
+
             const labels = Object.keys(demographics);
             const data = labels.map(label => demographics[label].hire_rate * 100);
             const colors = labels.map(() => `hsl(${Math.random() * 360}, 70%, 60%)`);
-            
+
             charts.demographic = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1768,23 +2107,23 @@
                 }
             });
         }
-        
+
         function displayModelChart(modelsAnalysis) {
             const ctx = document.getElementById('modelChart').getContext('2d');
-            
+
             if (charts.model) {
                 charts.model.destroy();
             }
-            
+
             // Handle undefined modelsAnalysis gracefully
             if (!modelsAnalysis || typeof modelsAnalysis !== 'object') {
                 console.warn('modelsAnalysis is undefined or invalid, skipping model chart');
                 return;
             }
-            
+
             const labels = Object.keys(modelsAnalysis);
             const data = labels.map(label => modelsAnalysis[label].overall_hire_rate * 100);
-            
+
             charts.model = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1818,21 +2157,21 @@
                 }
             });
         }
-        
+
         function clearResults() {
             document.getElementById('historicalResults').classList.add('hidden');
-            
+
             // Clear checkboxes
             document.querySelectorAll('#runSelector input[type="checkbox"]').forEach(cb => {
                 cb.checked = false;
             });
         }
-        
+
         // Enhanced Live Experiment Functions
         let availableModels = [];
         let availableCVTemplates = [];
         let availablePromptTemplates = [];
-        
+
         // Initialize experiment interface
         async function initializeLiveExperiments() {
             try {
@@ -1841,76 +2180,76 @@
                 const modelsData = await modelsResponse.json();
                 availableModels = modelsData.all_models;
                 renderModelSelection(modelsData.models_by_category);
-                
+
                 // Load CV templates
                 const cvResponse = await fetch('/api/cv_templates');
                 availableCVTemplates = await cvResponse.json();
                 renderCVTemplateOptions();
-                
+
                 // Load prompt templates
                 const promptResponse = await fetch('/api/prompt_templates');
                 availablePromptTemplates = await promptResponse.json();
                 renderPromptTemplateOptions();
-                
+
             } catch (error) {
                 console.error('Error initializing live experiments:', error);
                 showError('Failed to load experiment configuration. Please refresh the page.');
             }
         }
-        
+
         function renderModelSelection(modelsByCategory) {
             const container = document.getElementById('modelSelection');
             container.innerHTML = '';
-            
+
             Object.entries(modelsByCategory).forEach(([category, models]) => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'model-category';
-                
+
                 const categoryHeader = document.createElement('h4');
                 categoryHeader.textContent = category;
                 categoryHeader.className = 'model-category-header';
                 categoryDiv.appendChild(categoryHeader);
-                
+
                 const modelsGrid = document.createElement('div');
                 modelsGrid.className = 'models-grid';
-                
+
                 models.forEach(model => {
                     const modelLabel = document.createElement('label');
                     modelLabel.className = 'model-checkbox';
-                    
+
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.value = model.value;
                     checkbox.onchange = updateModelSummary;
-                    
+
                     // Pre-select some commonly used models
                     if (['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet'].includes(model.value)) {
                         checkbox.checked = true;
                     }
-                    
+
                     const modelInfo = document.createElement('div');
                     modelInfo.className = 'model-info';
                     modelInfo.innerHTML = `
                         <span class="model-name">${model.label}</span>
                         <small class="model-description">${model.description}</small>
                     `;
-                    
+
                     modelLabel.appendChild(checkbox);
                     modelLabel.appendChild(modelInfo);
                     modelsGrid.appendChild(modelLabel);
                 });
-                
+
                 categoryDiv.appendChild(modelsGrid);
                 container.appendChild(categoryDiv);
             });
-            
+
             updateModelSummary();
         }
-        
+
         function renderCVTemplateOptions() {
             const select = document.getElementById('cvTemplate');
             select.innerHTML = '<option value="">Select CV Template...</option>';
-            
+
             availableCVTemplates.forEach(template => {
                 const option = document.createElement('option');
                 option.value = template.name;
@@ -1918,17 +2257,17 @@
                 option.title = template.description;
                 select.appendChild(option);
             });
-            
+
             // Auto-select first template
             if (availableCVTemplates.length > 0) {
                 select.value = availableCVTemplates[0].name;
             }
         }
-        
+
         function renderPromptTemplateOptions() {
             const select = document.getElementById('promptTemplate');
             select.innerHTML = '<option value="">Select Prompt Template...</option>';
-            
+
             availablePromptTemplates.forEach(template => {
                 const option = document.createElement('option');
                 option.value = template.name;
@@ -1936,86 +2275,86 @@
                 option.title = template.description;
                 select.appendChild(option);
             });
-            
+
             // Auto-select first template
             if (availablePromptTemplates.length > 0) {
                 select.value = availablePromptTemplates[0].name;
             }
         }
-        
+
         function updateModelSummary() {
             const checkboxes = document.querySelectorAll('#modelSelection input[type="checkbox"]:checked');
             const providers = new Set();
-            
+
             checkboxes.forEach(cb => {
                 const model = availableModels.find(m => m.name === cb.value);
                 if (model) providers.add(model.provider);
             });
-            
+
             document.getElementById('selectedModelCount').textContent = checkboxes.length;
             document.getElementById('selectedProviderCount').textContent = providers.size;
         }
-        
+
         function updateCVPreview() {
             // Auto-preview when CV template changes
             if (document.getElementById('cvTemplate').value) {
                 previewCV();
             }
         }
-        
+
         function updatePromptPreview() {
             // Auto-preview when prompt template changes
             if (document.getElementById('promptTemplate').value) {
                 previewPrompt();
             }
         }
-        
+
         async function previewCV() {
             const templateName = document.getElementById('cvTemplate').value;
             if (!templateName) {
                 showError('Please select a CV template first.');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/preview_cv?template=${encodeURIComponent(templateName)}&name=Sample%20Candidate`);
                 const data = await response.json();
-                
+
                 if (data.error) {
                     showError('CV Preview Error: ' + data.error);
                     return;
                 }
-                
+
                 showModal('CV Preview', `<pre style="white-space: pre-wrap; font-family: monospace; line-height: 1.4;">${data.cv_content}</pre>`);
             } catch (error) {
                 console.error('Error previewing CV:', error);
                 showError('Failed to preview CV: ' + error.message);
             }
         }
-        
+
         async function previewPrompt() {
             const templateName = document.getElementById('promptTemplate').value;
             if (!templateName) {
                 showError('Please select a prompt template first.');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/preview_prompt?template=${encodeURIComponent(templateName)}&name=Sample%20Candidate&cv_content=Sample CV content...`);
                 const data = await response.json();
-                
+
                 if (data.error) {
                     showError('Prompt Preview Error: ' + data.error);
                     return;
                 }
-                
+
                 showModal('Prompt Preview', `<pre style="white-space: pre-wrap; font-family: monospace; line-height: 1.4;">${data.prompt_content}</pre>`);
             } catch (error) {
                 console.error('Error previewing prompt:', error);
                 showError('Failed to preview prompt: ' + error.message);
             }
         }
-        
+
         function editTemplate(type) {
             if (type === 'cv') {
                 showInfo('CV Template Editing', 'Template editing interface coming soon! For now, templates are stored in templates/cv_templates/ and can be edited directly.');
@@ -2023,29 +2362,29 @@
                 showInfo('Prompt Template Editing', 'Prompt template editing interface coming soon! For now, templates are stored in templates/prompt_templates/ and can be edited directly.');
             }
         }
-        
+
         function validateExperimentConfig() {
             const selectedModels = document.querySelectorAll('#modelSelection input[type="checkbox"]:checked');
             const selectedDemographics = document.querySelectorAll('#demographicsSelection input[type="checkbox"]:checked');
             const cvTemplate = document.getElementById('cvTemplate').value;
             const promptTemplate = document.getElementById('promptTemplate').value;
             const iterations = parseInt(document.getElementById('iterations').value);
-            
+
             const issues = [];
-            
+
             if (selectedModels.length === 0) issues.push('• No AI models selected');
             if (selectedDemographics.length === 0) issues.push('• No demographics selected');
             if (!cvTemplate) issues.push('• No CV template selected');
             if (!promptTemplate) issues.push('• No prompt template selected');
             if (iterations < 1 || iterations > 10) issues.push('• Iterations must be between 1 and 10');
-            
+
             if (issues.length > 0) {
                 showError('Configuration Issues:\n\n' + issues.join('\n'));
                 return false;
             }
-            
+
             const totalTests = selectedModels.length * selectedDemographics.length * iterations;
-            showInfo('Configuration Valid ✅', 
+            showInfo('Configuration Valid ✅',
                 `Your experiment will run ${totalTests} total tests:\n` +
                 `• ${selectedModels.length} models\n` +
                 `• ${selectedDemographics.length} demographics\n` +
@@ -2053,7 +2392,7 @@
                 `Estimated completion time: ${Math.ceil(totalTests * 0.5)} minutes`);
             return true;
         }
-        
+
         function exportExperimentConfig() {
             const config = getExperimentConfig();
             const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -2064,11 +2403,11 @@
             a.click();
             URL.revokeObjectURL(url);
         }
-        
+
         function getExperimentConfig() {
             const selectedModels = Array.from(document.querySelectorAll('#modelSelection input[type="checkbox"]:checked')).map(cb => cb.value);
             const selectedDemographics = Array.from(document.querySelectorAll('#demographicsSelection input[type="checkbox"]:checked')).map(cb => cb.value);
-            
+
             return {
                 cv_template: document.getElementById('cvTemplate').value,
                 prompt_template: document.getElementById('promptTemplate').value,
@@ -2081,23 +2420,23 @@
                 version: "2.0"
             };
         }
-        
+
         async function startLiveExperiment() {
             if (!validateExperimentConfig()) {
                 return;
             }
-            
+
             const config = getExperimentConfig();
             console.log('Starting experiment with config:', config);
-            
+
             // Show results section
             document.getElementById('liveResults').classList.remove('hidden');
             document.getElementById('startExperiment').classList.add('hidden');
             document.getElementById('stopExperiment').classList.remove('hidden');
-            
+
             // Initialize progress
             updateProgress(0, `Starting experiment with ${config.models.length} models...`);
-            
+
             try {
                 if (socket && socket.connected) {
                     socket.emit('start_experiment', config);
@@ -2111,96 +2450,96 @@
                 resetExperimentUI();
             }
         }
-        
+
         function stopLiveExperiment() {
             if (socket && socket.connected) {
                 socket.emit('stop_experiment');
             }
             resetExperimentUI();
         }
-        
+
         function resetExperimentUI() {
             document.getElementById('liveResults').classList.add('hidden');
             document.getElementById('startExperiment').classList.remove('hidden');
             document.getElementById('stopExperiment').classList.add('hidden');
         }
-        
+
         function updateProgress(percent, message) {
             document.getElementById('progressFill').style.width = percent + '%';
             document.getElementById('progressText').textContent = `${Math.round(percent)}% - ${message}`;
         }
-        
+
         function updateLiveChart(analysisData) {
             // Implementation for live chart updates
             console.log('Live analysis data:', analysisData);
         }
-        
+
         // Research Tools Functions
         function runReasoningAnalysis() {
             alert('Reasoning analysis feature coming soon! This will provide deep insights into model reasoning patterns.');
         }
-        
+
         function startCollegeTest() {
             alert('College affiliation testing coming soon! This will test for HBCU vs PWI bias.');
         }
-        
+
         function runStatisticalAnalysis() {
             alert('Advanced statistical analysis coming soon! This will include McNemar\'s test and confidence intervals.');
         }
-        
+
         async function runComprehensiveAnalysis() {
             const runId = getCurrentSelectedRun();
             if (!runId) {
                 showError('Please select a run to analyze first.');
                 return;
             }
-            
+
             try {
                 showInfo('Comprehensive Analysis', 'Running publication-quality statistical analysis...');
-                
+
                 const response = await fetch(`/api/comprehensive_analysis/${runId}`);
                 const analysis = await response.json();
-                
+
                 if (analysis.error) {
                     showError('Analysis Error: ' + analysis.error);
                     return;
                 }
-                
+
                 displayComprehensiveAnalysis(analysis);
-                
+
             } catch (error) {
                 console.error('Error running comprehensive analysis:', error);
                 showError('Failed to run comprehensive analysis: ' + error.message);
             }
         }
-        
+
         function getCurrentSelectedRun() {
             const selectedCheckbox = document.querySelector('#runsTable input[type="checkbox"]:checked');
             return selectedCheckbox ? selectedCheckbox.value : null;
         }
-        
+
         function displayComprehensiveAnalysis(analysis) {
             const overall = analysis.overall_assessment;
             const stats = analysis.statistical_tests;
             const effects = analysis.effect_sizes;
             const recommendations = analysis.recommendations || [];
-            
+
             // Create comprehensive report
             let report = `
                 <div style="font-family: monospace; line-height: 1.6;">
                     <h2>🔬 Comprehensive Statistical Analysis</h2>
                     <p><strong>Analysis Date:</strong> ${new Date(analysis.parameters.analysis_timestamp).toLocaleString()}</p>
                     <p><strong>Confidence Level:</strong> ${overall.confidence_level.toUpperCase()}</p>
-                    
+
                     <h3>📊 Sample Summary</h3>
                     <ul>
                         <li><strong>Total Responses:</strong> ${analysis.sample_summary.total_responses}</li>
                         <li><strong>Demographic Groups:</strong> ${analysis.sample_summary.demographic_groups.length}</li>
                         <li><strong>Models Tested:</strong> ${analysis.sample_summary.models_tested.length}</li>
                     </ul>
-                    
+
                     <h3>🔬 Statistical Tests</h3>`;
-            
+
             // Chi-square test results
             if (stats.chi_square_test && stats.chi_square_test.p_value !== undefined) {
                 const chi2 = stats.chi_square_test;
@@ -2212,7 +2551,7 @@
                         <li>Degrees of freedom: ${chi2.degrees_of_freedom}</li>
                     </ul>`;
             }
-            
+
             // Effect sizes
             if (effects.practical_significance) {
                 report += `<h3>📏 Effect Sizes</h3>`;
@@ -2223,14 +2562,14 @@
                     }
                 }
             }
-            
+
             // Overall assessment
             report += `
                 <h3>🎯 Overall Assessment</h3>
                 <p><strong>Bias Detected:</strong> ${overall.bias_detected ? 'YES' : 'NO'}</p>
                 <p><strong>Statistical Significance:</strong> ${overall.statistical_significance ? 'YES' : 'NO'}</p>
                 <p><strong>Practical Significance:</strong> ${overall.practical_significance ? 'YES' : 'NO'}</p>`;
-            
+
             // Scientific rigor score
             const scientificFeatures = [
                 stats.chi_square_test?.p_value !== undefined,
@@ -2240,12 +2579,12 @@
                 Object.keys(analysis.multiple_comparisons || {}).length > 0
             ];
             const scientificScore = scientificFeatures.filter(Boolean).length * 2;
-            
+
             report += `
                 <h3>🔬 Scientific Rigor Score</h3>
                 <p><strong>Score:</strong> ${scientificScore}/10</p>
                 <p><strong>Quality:</strong> ${scientificScore >= 8 ? 'Publication-ready' : scientificScore >= 6 ? 'Good scientific analysis' : 'Basic analysis'}</p>`;
-            
+
             // Recommendations
             if (recommendations.length > 0) {
                 report += `<h3>💡 Recommendations</h3><ol>`;
@@ -2254,33 +2593,33 @@
                 });
                 report += `</ol>`;
             }
-            
+
             report += `</div>`;
-            
+
             showModal('Comprehensive Statistical Analysis', report);
         }
-        
+
         function exportResults() {
             alert('Export functionality coming soon! This will generate academic-ready data exports.');
         }
-        
+
         function showResearchComparison() {
             alert('Research comparison coming soon! This will show alignment with Marks & Karvonen (2025).');
         }
-        
+
         function validateFindings() {
             alert('Findings validation coming soon! This will cross-validate results with published research.');
         }
-        
+
         // Utility Functions
         function showError(message) {
             alert('❌ Error: ' + message);
         }
-        
+
         function showInfo(title, message) {
             alert('ℹ️ ' + title + '\n\n' + message);
         }
-        
+
         function showModal(title, content) {
             // Create a simple modal overlay
             const overlay = document.createElement('div');
@@ -2290,36 +2629,549 @@
                 display: flex; align-items: center; justify-content: center;
                 padding: 2rem;
             `;
-            
+
             const modal = document.createElement('div');
             modal.style.cssText = `
                 background: white; border-radius: 8px; max-width: 80vw; max-height: 80vh;
                 overflow: auto; padding: 2rem; position: relative;
             `;
-            
+
             modal.innerHTML = `
                 <h3 style="margin-top: 0; color: #333;">${title}</h3>
-                <button onclick="this.closest('.overlay').remove()" 
-                        style="position: absolute; top: 1rem; right: 1rem; 
-                               background: #f0f0f0; border: none; border-radius: 4px; 
+                <button onclick="this.closest('.overlay').remove()"
+                        style="position: absolute; top: 1rem; right: 1rem;
+                               background: #f0f0f0; border: none; border-radius: 4px;
                                padding: 0.5rem; cursor: pointer;">✕</button>
                 <div>${content}</div>
             `;
-            
+
             overlay.className = 'overlay';
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
-            
+
             // Close on background click
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) overlay.remove();
             });
         }
-        
-        // Template Management Functions
+
+        // Modular Analysis Functions
+        let availableModules = [];
+        let availableProfiles = {};
+
+        async function initializeModularAnalysis() {
+            try {
+                // Load available modules
+                const modulesResponse = await fetch('/api/modules');
+                const modulesData = await modulesResponse.json();
+                availableModules = modulesData.available_modules || [];
+                renderAvailableModules(modulesData.module_details || {});
+
+                // Load available profiles
+                const profilesResponse = await fetch('/api/profiles');
+                const profilesData = await profilesResponse.json();
+                availableProfiles = profilesData.available_profiles || {};
+                renderAvailableProfiles();
+
+                console.log('Modular analysis initialized:', {
+                    modules: availableModules.length,
+                    profiles: Object.keys(availableProfiles).length
+                });
+
+            } catch (error) {
+                console.error('Error initializing modular analysis:', error);
+                showError('Failed to load modular analysis components: ' + error.message);
+            }
+        }
+
+        function renderAvailableModules(moduleDetails) {
+            const container = document.getElementById('availableModules');
+            container.innerHTML = '';
+
+            if (availableModules.length === 0) {
+                container.innerHTML = '<div class="loading">No analysis modules available</div>';
+                return;
+            }
+
+            availableModules.forEach(moduleName => {
+                const moduleInfo = moduleDetails[moduleName] || {
+                    name: moduleName,
+                    description: `Analysis module: ${moduleName}`,
+                    capabilities: ['bias_analysis']
+                };
+
+                const moduleItem = document.createElement('div');
+                moduleItem.className = 'module-item';
+
+                moduleItem.innerHTML = `
+                    <input type="checkbox" value="${moduleName}" onchange="updateModuleSelection()">
+                    <div class="module-info">
+                        <div class="module-name">${moduleInfo.name}</div>
+                        <div class="module-description">${moduleInfo.description}</div>
+                        <div class="module-capabilities">
+                            ${(moduleInfo.capabilities || []).map(cap =>
+                                `<span class="capability-tag">${cap}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(moduleItem);
+            });
+
+            updateModuleSelection();
+        }
+
+        function renderAvailableProfiles() {
+            const select = document.getElementById('analysisProfile');
+            select.innerHTML = '<option value="">Select Analysis Profile...</option>';
+
+            Object.entries(availableProfiles).forEach(([profileName, profileData]) => {
+                const option = document.createElement('option');
+                option.value = profileName;
+                option.textContent = profileData.name || profileName;
+                option.title = profileData.description || `Analysis profile: ${profileName}`;
+                select.appendChild(option);
+            });
+        }
+
+        function showModularAnalysis() {
+            const selectedRuns = getSelectedRuns();
+            if (selectedRuns.length !== 1) {
+                showError('Please select exactly one run for modular analysis.');
+                return;
+            }
+
+            document.getElementById('modularAnalysisControls').classList.remove('hidden');
+            document.querySelector('button[onclick="showModularAnalysis()"]').style.display = 'none';
+        }
+
+        function hideModularAnalysis() {
+            document.getElementById('modularAnalysisControls').classList.add('hidden');
+            document.querySelector('button[onclick="showModularAnalysis()"]').style.display = 'inline-flex';
+        }
+
+        function toggleAnalysisMode() {
+            const mode = document.getElementById('analysisMode').value;
+            const profileSelection = document.getElementById('profileSelection');
+            const moduleSelection = document.getElementById('moduleSelection');
+
+            if (mode === 'profile') {
+                profileSelection.classList.remove('hidden');
+                moduleSelection.classList.add('hidden');
+            } else {
+                profileSelection.classList.add('hidden');
+                moduleSelection.classList.remove('hidden');
+            }
+        }
+
+        function updateModuleSelection() {
+            const checkboxes = document.querySelectorAll('#availableModules input[type="checkbox"]:checked');
+            document.getElementById('selectedModuleCount').textContent = checkboxes.length;
+
+            // Update visual state
+            document.querySelectorAll('#availableModules .module-item').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        function validateModuleConfiguration() {
+            const mode = document.getElementById('analysisMode').value;
+            const issues = [];
+
+            if (mode === 'profile') {
+                const selectedProfile = document.getElementById('analysisProfile').value;
+                if (!selectedProfile) {
+                    issues.push('• No analysis profile selected');
+                }
+            } else {
+                const selectedModules = document.querySelectorAll('#availableModules input[type="checkbox"]:checked');
+                if (selectedModules.length === 0) {
+                    issues.push('• No analysis modules selected');
+                }
+            }
+
+            const selectedRuns = getSelectedRuns();
+            if (selectedRuns.length !== 1) {
+                issues.push('• Please select exactly one run to analyze');
+            }
+
+            if (issues.length > 0) {
+                showError('Configuration Issues:\\n\\n' + issues.join('\\n'));
+                return false;
+            }
+
+            const config = getModularAnalysisConfig();
+            showInfo('Configuration Valid ✅',
+                `Modular analysis configuration:\\n` +
+                `• Mode: ${config.mode}\\n` +
+                `• ${config.mode === 'profile' ? 'Profile: ' + config.profile : 'Modules: ' + config.modules.length}\\n` +
+                `• Alpha: ${config.alpha}\\n` +
+                `• Effect size threshold: ${config.effectSizeThreshold}\\n\\n` +
+                `Ready to run analysis!`);
+            return true;
+        }
+
+        function getModularAnalysisConfig() {
+            const mode = document.getElementById('analysisMode').value;
+            const config = {
+                mode: mode,
+                alpha: parseFloat(document.getElementById('alphaLevel').value),
+                effectSizeThreshold: parseFloat(document.getElementById('effectSizeThreshold').value),
+                controlGroup: document.getElementById('controlGroup').value
+            };
+
+            if (mode === 'profile') {
+                config.profile = document.getElementById('analysisProfile').value;
+            } else {
+                config.modules = Array.from(document.querySelectorAll('#availableModules input[type="checkbox"]:checked'))
+                    .map(cb => cb.value);
+            }
+
+            return config;
+        }
+
+        async function runModularAnalysis() {
+            if (!validateModuleConfiguration()) {
+                return;
+            }
+
+            const selectedRuns = getSelectedRuns();
+            const runId = selectedRuns[0];
+            const config = getModularAnalysisConfig();
+
+            try {
+                showInfo('Modular Analysis', 'Running modular bias analysis...');
+
+                // Build query parameters
+                const params = new URLSearchParams({
+                    alpha: config.alpha,
+                    effect_size_threshold: config.effectSizeThreshold
+                });
+
+                if (config.controlGroup) {
+                    params.append('control_group', config.controlGroup);
+                }
+
+                if (config.mode === 'profile') {
+                    params.append('profile', config.profile);
+                } else {
+                    config.modules.forEach(module => params.append('modules', module));
+                }
+
+                const response = await fetch(`/api/modular_analysis/${runId}?${params}`);
+                const analysis = await response.json();
+
+                if (analysis.error) {
+                    showError('Analysis Error: ' + analysis.error);
+                    return;
+                }
+
+                displayModularAnalysisResults(analysis);
+                hideModularAnalysis();
+
+            } catch (error) {
+                console.error('Error running modular analysis:', error);
+                showError('Failed to run modular analysis: ' + error.message);
+            }
+        }
+
+        async function runEnhancedAnalysis() {
+            const selectedRuns = getSelectedRuns();
+            if (selectedRuns.length !== 1) {
+                showError('Please select exactly one run for enhanced analysis.');
+                return;
+            }
+
+            const runId = selectedRuns[0];
+
+            try {
+                showInfo('Enhanced Analysis', 'Running comprehensive enhanced analysis with all modules...');
+
+                const response = await fetch(`/api/enhanced_analysis/${runId}`);
+                const analysis = await response.json();
+
+                if (analysis.error) {
+                    showError('Analysis Error: ' + analysis.error);
+                    return;
+                }
+
+                displayEnhancedAnalysisResults(analysis);
+                hideModularAnalysis();
+
+            } catch (error) {
+                console.error('Error running enhanced analysis:', error);
+                showError('Failed to run enhanced analysis: ' + error.message);
+            }
+        }
+
+        function displayModularAnalysisResults(analysis) {
+            // Show results section
+            document.getElementById('historicalResults').classList.remove('hidden');
+
+            // Clear existing results
+            const container = document.getElementById('historicalResults');
+
+            // Create new modular results container
+            let modularContainer = document.getElementById('modularResults');
+            if (!modularContainer) {
+                modularContainer = document.createElement('div');
+                modularContainer.id = 'modularResults';
+                modularContainer.className = 'analysis-results';
+                container.appendChild(modularContainer);
+            }
+
+            // Build results HTML
+            let resultsHTML = `
+                <h3>🧩 Modular Analysis Results</h3>
+                <div class="analysis-section">
+                    <h4>📊 Analysis Overview</h4>
+                    <p><strong>Profile:</strong> ${analysis.analysis_profile || 'Custom'}</p>
+                    <p><strong>Modules Used:</strong> ${Array.isArray(analysis.modules_used) ? analysis.modules_used.join(', ') : analysis.modules_used}</p>
+                    <p><strong>Analysis Date:</strong> ${new Date(analysis.timestamp).toLocaleString()}</p>
+                </div>
+            `;
+
+            // Unified Assessment
+            if (analysis.unified_assessment) {
+                const assessment = analysis.unified_assessment;
+                resultsHTML += `
+                    <div class="unified-assessment">
+                        <h3>🎯 Unified Assessment</h3>
+                        <div class="assessment-grid">
+                            <div class="assessment-metric">
+                                <div class="assessment-value ${assessment.severity_level || 'low'}">${assessment.overall_bias_detected ? 'DETECTED' : 'NOT DETECTED'}</div>
+                                <div class="metric-label">Bias Detection</div>
+                            </div>
+                            <div class="assessment-metric">
+                                <div class="assessment-value ${assessment.confidence_score > 0.7 ? 'high' : assessment.confidence_score > 0.4 ? 'medium' : 'low'}">${(assessment.confidence_score * 100).toFixed(1)}%</div>
+                                <div class="metric-label">Confidence Score</div>
+                            </div>
+                            <div class="assessment-metric">
+                                <div class="assessment-value ${assessment.severity_level}">${assessment.severity_level?.toUpperCase() || 'NONE'}</div>
+                                <div class="metric-label">Severity Level</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Module Results
+            if (analysis.module_results) {
+                resultsHTML += `<div class="analysis-section"><h4>🔧 Module Results</h4>`;
+
+                Object.entries(analysis.module_results).forEach(([moduleName, result]) => {
+                    if (result.summary && !result.summary.analysis_failed) {
+                        resultsHTML += `
+                            <div class="module-result">
+                                <h4>📊 ${moduleName.replace(/_/g, ' ').toUpperCase()}</h4>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" style="width: ${(result.confidence_score || 0) * 100}%"></div>
+                                </div>
+                                <p><strong>Confidence:</strong> ${((result.confidence_score || 0) * 100).toFixed(1)}%</p>
+
+                                <div class="mt-2">
+                                    <strong>Key Findings:</strong>
+                                    ${(result.key_findings || []).map(finding =>
+                                        `<div class="finding-item">${finding}</div>`
+                                    ).join('')}
+                                </div>
+
+                                ${result.recommendations && result.recommendations.length > 0 ? `
+                                    <div class="mt-2">
+                                        <strong>Recommendations:</strong>
+                                        <ul class="recommendation-list">
+                                            ${result.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }
+                });
+
+                resultsHTML += `</div>`;
+            }
+
+            // Recommendations
+            if (analysis.recommendations && analysis.recommendations.length > 0) {
+                resultsHTML += `
+                    <div class="analysis-section">
+                        <h4>💡 Unified Recommendations</h4>
+                        <ul class="recommendation-list">
+                            ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            modularContainer.innerHTML = resultsHTML;
+        }
+
+        function displayEnhancedAnalysisResults(analysis) {
+            // Show results section
+            document.getElementById('historicalResults').classList.remove('hidden');
+
+            // Clear existing results
+            const container = document.getElementById('historicalResults');
+
+            // Create enhanced results container
+            let enhancedContainer = document.getElementById('enhancedResults');
+            if (!enhancedContainer) {
+                enhancedContainer = document.createElement('div');
+                enhancedContainer.id = 'enhancedResults';
+                enhancedContainer.className = 'analysis-results';
+                container.appendChild(enhancedContainer);
+            }
+
+            // Build enhanced results HTML
+            let resultsHTML = `
+                <h3>🚀 Enhanced Comprehensive Analysis</h3>
+                <div class="analysis-section">
+                    <h4>📊 Analysis Overview</h4>
+                    <p><strong>Analysis Type:</strong> ${analysis.analysis_type || 'Enhanced Modular'}</p>
+                    <p><strong>Analysis Date:</strong> ${new Date(analysis.timestamp).toLocaleString()}</p>
+                </div>
+            `;
+
+            // Unified Assessment (for enhanced modular analysis)
+            if (analysis.unified_assessment) {
+                const unified = analysis.unified_assessment;
+                resultsHTML += `
+                    <div class="unified-assessment">
+                        <h3>🎯 Unified Assessment</h3>
+                        <div class="assessment-grid">
+                            <div class="assessment-metric">
+                                <div class="assessment-value ${unified.consensus_bias_detected ? 'high' : 'low'}">${unified.consensus_bias_detected ? 'DETECTED' : 'NOT DETECTED'}</div>
+                                <div class="metric-label">Consensus Bias</div>
+                            </div>
+                            <div class="assessment-metric">
+                                <div class="assessment-value ${unified.confidence_level}">${unified.confidence_level?.toUpperCase() || 'UNKNOWN'}</div>
+                                <div class="metric-label">Confidence Level</div>
+                            </div>
+                            <div class="assessment-metric">
+                                <div class="assessment-value">${unified.analysis_completeness?.replace(/_/g, ' ').toUpperCase() || 'PARTIAL'}</div>
+                                <div class="metric-label">Analysis Completeness</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Enhanced Recommendations
+            if (analysis.enhanced_recommendations && analysis.enhanced_recommendations.length > 0) {
+                resultsHTML += `
+                    <div class="analysis-section">
+                        <h4>💡 Enhanced Recommendations</h4>
+                        <ul class="recommendation-list">
+                            ${analysis.enhanced_recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Show summary of both modular and legacy analysis if available
+            if (analysis.modular_analysis && analysis.legacy_analysis) {
+                resultsHTML += `
+                    <div class="analysis-section">
+                        <h4>📊 Analysis Comparison</h4>
+                        <p>This enhanced analysis combines both our modular system and legacy statistical methods for maximum confidence.</p>
+                        <div class="assessment-grid">
+                            <div class="assessment-metric">
+                                <div class="assessment-value">${analysis.modular_analysis.unified_assessment?.overall_bias_detected ? 'DETECTED' : 'NOT DETECTED'}</div>
+                                <div class="metric-label">Modular Analysis</div>
+                            </div>
+                            <div class="assessment-metric">
+                                <div class="assessment-value">${analysis.legacy_analysis.overall_assessment?.bias_detected ? 'DETECTED' : 'NOT DETECTED'}</div>
+                                <div class="metric-label">Legacy Analysis</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+                         enhancedContainer.innerHTML = resultsHTML;
+         }
+
+         // Research Tools Integration
+         function switchToModularAnalysis() {
+            switchTab('historical');
+            setTimeout(() => {
+                showModularAnalysis();
+            }, 100);
+        }
+
+        async function showModuleCompatibility() {
+            try {
+                // Get all available modules
+                const modulesResponse = await fetch('/api/modules');
+                const modulesData = await modulesResponse.json();
+
+                if (modulesData.error) {
+                    showError('Error loading modules: ' + modulesData.error);
+                    return;
+                }
+
+                // Build compatibility report
+                let compatibilityHTML = `
+                    <h3>🔧 Module Compatibility Report</h3>
+                    <div style="margin-bottom: 1.5rem;">
+                        <strong>Total Available Modules:</strong> ${modulesData.total_modules || 0}<br>
+                        <strong>Analysis Date:</strong> ${new Date().toLocaleString()}
+                    </div>
+
+                    <h4>📋 Available Analysis Modules</h4>
+                    <div style="margin-bottom: 1.5rem;">
+                `;
+
+                Object.entries(modulesData.module_details || {}).forEach(([moduleName, details]) => {
+                    compatibilityHTML += `
+                        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #f9f9f9;">
+                            <h5 style="margin: 0 0 0.5rem 0; color: #2563eb;">${details.name || moduleName}</h5>
+                            <p style="margin: 0 0 0.5rem 0; color: #666;">${details.description || 'No description available'}</p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                ${(details.capabilities || []).map(cap =>
+                                    `<span style="background: #e5e7eb; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">${cap}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                compatibilityHTML += `
+                    </div>
+
+                    <h4>⚙️ Usage Recommendations</h4>
+                    <ul style="line-height: 1.6;">
+                        <li><strong>Enhanced Statistics:</strong> Core statistical analysis with advanced effect size calculations</li>
+                        <li><strong>Cultural Context:</strong> Language register and cultural sensitivity analysis</li>
+                        <li><strong>Multi-Level Classifier:</strong> Advanced bias classification with confidence scoring</li>
+                        <li><strong>Goal Conflict:</strong> Detection of conflicting objectives in AI responses</li>
+                        <li><strong>Human-AI Alignment:</strong> Comparison between human and AI bias assessments</li>
+                    </ul>
+
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px;">
+                        <strong>💡 Pro Tip:</strong> Use the "comprehensive" profile to run all modules together for maximum bias detection capability.
+                    </div>
+                `;
+
+                showModal('Module Compatibility Analysis', compatibilityHTML);
+
+            } catch (error) {
+                console.error('Error checking module compatibility:', error);
+                showError('Failed to check module compatibility: ' + error.message);
+            }
+        }
+
+         // Template Management Functions
         let currentEditingTemplate = null;
         let currentEditingType = null;
-        
+
         function initializeTemplateManagement() {
             // Initialize template tab switching
             const templateTabButtons = document.querySelectorAll('.template-tab-button');
@@ -2329,12 +3181,12 @@
                     switchTemplateTab(tabType);
                 });
             });
-            
+
             // Set up template action handlers using event delegation
             document.addEventListener('click', (event) => {
                 const action = event.target.dataset.action;
                 const templateName = event.target.dataset.templateName;
-                
+
                 if (action && templateName) {
                     switch (action) {
                         case 'edit-cv':
@@ -2352,27 +3204,27 @@
                     }
                 }
             });
-            
+
             // Templates will be loaded when the tab is activated
         }
-        
+
         function switchTemplateTab(tabType) {
             // Update button states
             document.querySelectorAll('.template-tab-button').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-template-tab="${tabType}"]`).classList.add('active');
-            
+
             // Update content
             document.querySelectorAll('.template-tab-content').forEach(content => {
                 content.classList.remove('active');
             });
             document.getElementById(`${tabType}-templates`).classList.add('active');
-            
+
             // Load templates for this tab
             loadTemplates();
         }
-        
+
         async function loadTemplates() {
             try {
                 console.log('Loading templates...');
@@ -2380,20 +3232,20 @@
                     fetch('/api/cv_templates'),
                     fetch('/api/prompt_templates')
                 ]);
-                
+
                 const cvTemplates = await cvResponse.json();
                 const promptTemplates = await promptResponse.json();
-                
+
                 console.log('CV Templates loaded:', cvTemplates.length);
                 console.log('Prompt Templates loaded:', promptTemplates.length);
-                
+
                 renderCVTemplates(cvTemplates);
                 renderPromptTemplates(promptTemplates);
             } catch (error) {
                 console.error('Error loading templates:', error);
             }
         }
-        
+
         function renderCVTemplates(templates) {
             const grid = document.getElementById('cvTemplateGrid');
             console.log('Rendering CV templates to grid:', grid);
@@ -2402,19 +3254,19 @@
                 return;
             }
             grid.innerHTML = '';
-            
+
             console.log('Templates to render:', templates);
             templates.forEach(template => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
-                
+
                 // Get template content preview
-                const templatePreview = template.template ? 
-                    (template.template.length > 300 ? 
-                        template.template.substring(0, 300) + '...' : 
-                        template.template) : 
+                const templatePreview = template.template ?
+                    (template.template.length > 300 ?
+                        template.template.substring(0, 300) + '...' :
+                        template.template) :
                     'No template content available';
-                
+
                 card.innerHTML = `
                     <h4>${template.name}</h4>
                     <div class="template-meta">
@@ -2439,7 +3291,7 @@
                 grid.appendChild(card);
             });
         }
-        
+
         function renderPromptTemplates(templates) {
             const grid = document.getElementById('promptTemplateGrid');
             console.log('Rendering prompt templates to grid:', grid);
@@ -2448,19 +3300,19 @@
                 return;
             }
             grid.innerHTML = '';
-            
+
             console.log('Prompt templates to render:', templates);
             templates.forEach(template => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
-                
+
                 // Get template content preview
-                const templatePreview = template.template ? 
-                    (template.template.length > 300 ? 
-                        template.template.substring(0, 300) + '...' : 
-                        template.template) : 
+                const templatePreview = template.template ?
+                    (template.template.length > 300 ?
+                        template.template.substring(0, 300) + '...' :
+                        template.template) :
                     'No template content available';
-                
+
                 card.innerHTML = `
                     <h4>${template.name}</h4>
                     <div class="template-meta">
@@ -2485,37 +3337,37 @@
                 grid.appendChild(card);
             });
         }
-        
+
         // CV Template Functions
         function createNewCVTemplate() {
             currentEditingTemplate = null;
             currentEditingType = 'cv';
-            
+
             document.getElementById('cvModalTitle').textContent = 'Create New CV Template';
             document.getElementById('cvTemplateForm').reset();
-            
+
             document.getElementById('cvTemplateModal').classList.add('active');
         }
-        
+
         async function editCVTemplate(templateName) {
             try {
                 console.log('Loading CV template:', templateName);
                 const response = await fetch(`/api/cv_templates/${encodeURIComponent(templateName)}`);
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                
+
                 const template = await response.json();
                 console.log('Template data received:', template);
-                
+
                 if (template.error) {
                     throw new Error(template.error);
                 }
-                
+
                 currentEditingTemplate = templateName;
                 currentEditingType = 'cv';
-                
+
                 document.getElementById('cvModalTitle').textContent = 'Edit CV Template';
                 document.getElementById('cvName').value = template.name || '';
                 document.getElementById('cvRole').value = template.role || '';
@@ -2523,20 +3375,20 @@
                 document.getElementById('cvDescription').value = template.description || '';
                 document.getElementById('cvTemplateContent').value = template.template || '';
                 document.getElementById('cvVariables').value = template.variables ? template.variables.join(', ') : '';
-                
+
                 console.log('Template content set:', template.template ? template.template.substring(0, 100) + '...' : 'EMPTY');
-                
+
                 document.getElementById('cvTemplateModal').classList.add('active');
             } catch (error) {
                 console.error('Error loading CV template:', error);
                 alert(`Error loading template: ${error.message}`);
             }
         }
-        
+
         async function saveCVTemplate() {
             const form = document.getElementById('cvTemplateForm');
             const formData = new FormData(form);
-            
+
             const templateData = {
                 name: formData.get('name'),
                 role: formData.get('role'),
@@ -2545,13 +3397,13 @@
                 template: formData.get('template'),
                 variables: formData.get('variables').split(',').map(v => v.trim()).filter(v => v)
             };
-            
+
             try {
-                const url = currentEditingTemplate 
+                const url = currentEditingTemplate
                     ? `/api/cv_templates/${encodeURIComponent(currentEditingTemplate)}`
                     : '/api/cv_templates';
                 const method = currentEditingTemplate ? 'PUT' : 'POST';
-                
+
                 const response = await fetch(url, {
                     method: method,
                     headers: {
@@ -2559,7 +3411,7 @@
                     },
                     body: JSON.stringify(templateData)
                 });
-                
+
                 if (response.ok) {
                     closeCVModal();
                     loadTemplates();
@@ -2573,17 +3425,17 @@
                 alert('Error saving template');
             }
         }
-        
+
         async function deleteCVTemplate(templateName) {
             if (!confirm(`Are you sure you want to delete the CV template "${templateName}"?`)) {
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/cv_templates/${encodeURIComponent(templateName)}`, {
                     method: 'DELETE'
                 });
-                
+
                 if (response.ok) {
                     loadTemplates();
                     alert('CV template deleted successfully');
@@ -2596,43 +3448,43 @@
                 alert('Error deleting template');
             }
         }
-        
+
         function closeCVModal() {
             document.getElementById('cvTemplateModal').classList.remove('active');
             currentEditingTemplate = null;
             currentEditingType = null;
         }
-        
+
         // Prompt Template Functions
         function createNewPromptTemplate() {
             currentEditingTemplate = null;
             currentEditingType = 'prompt';
-            
+
             document.getElementById('promptModalTitle').textContent = 'Create New Prompt Template';
             document.getElementById('promptTemplateForm').reset();
-            
+
             document.getElementById('promptTemplateModal').classList.add('active');
         }
-        
+
         async function editPromptTemplate(templateName) {
             try {
                 console.log('Loading prompt template:', templateName);
                 const response = await fetch(`/api/prompt_templates/${encodeURIComponent(templateName)}`);
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                
+
                 const template = await response.json();
                 console.log('Template data received:', template);
-                
+
                 if (template.error) {
                     throw new Error(template.error);
                 }
-                
+
                 currentEditingTemplate = templateName;
                 currentEditingType = 'prompt';
-                
+
                 document.getElementById('promptModalTitle').textContent = 'Edit Prompt Template';
                 document.getElementById('promptName').value = template.name || '';
                 document.getElementById('promptCategory').value = template.category || '';
@@ -2640,20 +3492,20 @@
                 document.getElementById('promptTemplateContent').value = template.template || '';
                 document.getElementById('promptVariables').value = template.variables ? template.variables.join(', ') : '';
                 document.getElementById('promptBiasFocus').value = template.bias_focus ? template.bias_focus.join(', ') : '';
-                
+
                 console.log('Template content set:', template.template ? template.template.substring(0, 100) + '...' : 'EMPTY');
-                
+
                 document.getElementById('promptTemplateModal').classList.add('active');
             } catch (error) {
                 console.error('Error loading prompt template:', error);
                 alert(`Error loading template: ${error.message}`);
             }
         }
-        
+
         async function savePromptTemplate() {
             const form = document.getElementById('promptTemplateForm');
             const formData = new FormData(form);
-            
+
             const templateData = {
                 name: formData.get('name'),
                 category: formData.get('category'),
@@ -2662,13 +3514,13 @@
                 variables: formData.get('variables').split(',').map(v => v.trim()).filter(v => v),
                 bias_focus: formData.get('bias_focus').split(',').map(v => v.trim()).filter(v => v)
             };
-            
+
             try {
-                const url = currentEditingTemplate 
+                const url = currentEditingTemplate
                     ? `/api/prompt_templates/${encodeURIComponent(currentEditingTemplate)}`
                     : '/api/prompt_templates';
                 const method = currentEditingTemplate ? 'PUT' : 'POST';
-                
+
                 const response = await fetch(url, {
                     method: method,
                     headers: {
@@ -2676,7 +3528,7 @@
                     },
                     body: JSON.stringify(templateData)
                 });
-                
+
                 if (response.ok) {
                     closePromptModal();
                     loadTemplates();
@@ -2690,17 +3542,17 @@
                 alert('Error saving template');
             }
         }
-        
+
         async function deletePromptTemplate(templateName) {
             if (!confirm(`Are you sure you want to delete the prompt template "${templateName}"?`)) {
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/prompt_templates/${encodeURIComponent(templateName)}`, {
                     method: 'DELETE'
                 });
-                
+
                 if (response.ok) {
                     loadTemplates();
                     alert('Prompt template deleted successfully');
@@ -2713,7 +3565,7 @@
                 alert('Error deleting template');
             }
         }
-        
+
         function closePromptModal() {
             document.getElementById('promptTemplateModal').classList.remove('active');
             currentEditingTemplate = null;
@@ -2721,4 +3573,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
